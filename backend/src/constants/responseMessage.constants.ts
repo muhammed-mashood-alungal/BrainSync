@@ -6,5 +6,7 @@ export const HttpResponse = {
     INVALID_CREDENTIALS : 'Invalid Credentials',
     NO_TOKEN : "Token Not Provided",
     OTP_INCORRECT : 'Incorrect OTP , try again',
-    OTP_EXPIRED : "OTP Expired , Please Resend OTP"
+    OTP_EXPIRED : "OTP Expired , Please Resend OTP",
+    CREATED : 'Created Successfully',
+    USER_CREATION_FAILED : 'User Creation Failed'
 }

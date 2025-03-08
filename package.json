@@ -7,5 +7,9 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.10.0"
+  }
 }

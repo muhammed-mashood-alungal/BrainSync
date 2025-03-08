@@ -10,11 +10,13 @@ import { env } from './configs/env.config'
 import { connectDB } from './configs/mongo.config'
 import { errorHandler } from './middlewares/error.middleware'
 import { pageNotFound } from './middlewares/notFound.middleware'
+import { connectRedis } from './configs/redis.config'
 
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 connectDB()
+connectRedis()
 app.use(cors({
     origin : env.CLIENT_ORIGIN,
     credentials:true,
