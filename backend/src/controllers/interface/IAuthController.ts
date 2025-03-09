@@ -9,4 +9,5 @@ export interface IAuthController {
     refreshAccessToken(req: Request, res: Response, next: NextFunction): Promise<void>
     logout(req: Request, res: Response, next: NextFunction): Promise<void>
     googleAuthRedirect(req: Request, res: Response , next : NextFunction) : Promise<void>
+    forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> 
 }

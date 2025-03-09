@@ -18,6 +18,8 @@ authRouter.post('/signin', authController.signin.bind(authController))
 authRouter.post('/me',authController.authMe.bind(authController))
 authRouter.post('/refresh-token',authController.refreshAccessToken.bind(authController))
 authRouter.post('/logout',authController.logout.bind(authController))
+authRouter.post('/forgot-password',authController.forgotPassword.bind(authController))
+authRouter.post('/reset-password',authController.resetPassword.bind(authController))
 authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }))
 authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), authController.googleAuthRedirect.bind(authController))
 export default authRouter

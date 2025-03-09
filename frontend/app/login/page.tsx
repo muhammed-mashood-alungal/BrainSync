@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
 
-export default function SignUpForm() {
+export default function LoginPage() {
   const { user, loading  , checkAuth} = useAuth()
   useEffect(() => {
     if (user) {
@@ -93,7 +93,7 @@ export default function SignUpForm() {
                   <span className='text-red-600 ml-1'  > {formDataErr?.password}</span>
                 </div>
                 <div className='text-start'>
-                  <Link href="/login" className="text-cyan-400 hover:text-cyan-300   mb-4">
+                  <Link href="/forgot-password" className="text-cyan-400 hover:text-cyan-300   mb-4">
                     Forgotten Password?
                   </Link>
                 </div>

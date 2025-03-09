@@ -39,3 +39,26 @@ export const validateLoginForm = (formData: IuserLogin) => {
     }
     return {status ,err}
 }
+export const validateEmail=(email : string)=>{
+    if (email.trim() == '') {
+        return {status : false ,err: 'Please Provide a Email'}
+    }
+    return {status : true , err:''}
+}
+export const validateResetPasswords = (password : string , confirmPassword : string) =>{
+    const err : {password :string , confirmPassword : string}  = {password : '' , confirmPassword : ''}
+    let status = true
+    if (password.trim() == '') {
+        err.password = 'Please Provide a Password'
+        status = false
+    }
+    if (confirmPassword.trim() == '') {
+        err.confirmPassword = 'Please Provide a ConfirmPassword'
+        status = false
+    }
+    if (password != confirmPassword && confirmPassword.trim() != '') {
+        err.confirmPassword = 'Your Password is Matching'
+        status = false
+    }
+    return {status : status , err}
+}

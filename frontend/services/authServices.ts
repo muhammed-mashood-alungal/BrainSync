@@ -63,10 +63,31 @@ export const AuthServices = {
             throw new Error(errorMessage)
         }
     },
+    forgotPassword:async(email : string) : Promise<{status : number , message : string}>=>{
+        try {
+            const response = await authInstance.post('/forgot-password' , {email})
+            return response.data
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>;
+            const errorMessage = err.response?.data?.error || "Google Auth failed. Please try again.";
+            throw new Error(errorMessage)
+        }
+    },
     logout: async (): Promise<{ id: string, email: string, role: string }> => {
         try {
             console.log('inside ologu')
             const response = await authInstance.post('/logout')
+            return response.data
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>;
+            const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
+            console.log(err)
+            throw new Error(errorMessage)
+        }
+    },
+    resetPassword:async (token :string , password : string )  : Promise<{status : number , mesasge : string}> =>{
+        try {
+            const response = await authInstance.post('/reset-password',{ token , password })
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-export default function LoginPage() {
+export default function SignUpPage() {
    const { user, loading } = useAuth()
     useEffect(() => {
       if (user) {
@@ -129,10 +129,8 @@ export default function LoginPage() {
                 </Button>
 
                 <div className="flex items-center justify-between mt-6">
-                  
                   <button
                     type="button"
-                    onClick={AuthServices.googleAuth}
                     className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800"
                   >
                     Google

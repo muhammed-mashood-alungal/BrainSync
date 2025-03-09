@@ -9,8 +9,10 @@ import { comparePassword, hashPassword } from "../../utils/bcrypt.util";
 import generateOtp from "../../utils/generate-otp.util";
 import { createHttpsError } from "../../utils/httpError.utils";
 import { generateAccesToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "../../utils/jwt.util";
-import { sendOtp } from "../../utils/sendOtp.utils";
+import { sendOtp, sendResetLink } from "../../utils/sendEmail.utils";
 import { IAuthService } from "../interface/IAuthService";
+import { v4 as uuidv4 } from "uuid";
+import { assign } from "nodemailer/lib/shared";
 
 export class AuthService implements IAuthService {
   constructor(private _userRepository: IUserRepository) { }
@@ -145,13 +147,44 @@ export class AuthService implements IAuthService {
 
     return user
   }
-  generateTokens(user : IUserModel) : {accessToken:string , refreshToken :string}{
-    const payload  = { id : user._id , email : user.email , role : user.email}
+  generateTokens(user: IUserModel): { accessToken: string, refreshToken: string } {
+    const payload = { id: user._id, email: user.email, role: user.email }
     const accessToken = generateAccesToken(payload)
     const refreshToken = generateRefreshToken(payload)
- 
-    return {accessToken , refreshToken}
+
+    return { accessToken, refreshToken }
+  }
+  async forgotPassword(email: string): Promise<{ status: number, message: string }> {
+    const isExist = await this._userRepository.findByEmail(email);
+
+    if (!isExist) {
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+    const resetToken = uuidv4()
+
+    const response = await redisClient.set(resetToken, email, { EX: 300 })
+    if (!response) {
+      throw createHttpsError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.SERVER_ERROR)
+    }
+
+    await sendResetLink(email, resetToken)
+
+    return {
+      status: HttpStatus.OK,
+      message: HttpResponse.RESET_LINK_SEND
+    }
+  }
+  async resetPassword(token: string, password: string): Promise<Boolean> {
+    const email = await redisClient.get(token)
+    if (!email) {
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.RESET_PASS_FAILED)
+    }
+    const hashedPassword =await hashPassword(password)
+
+    await this._userRepository.updatePassword(email, hashedPassword)
+
+    return true
   }
 
-  
+
 } 

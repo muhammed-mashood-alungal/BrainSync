@@ -3,6 +3,9 @@ import { BaseRepository } from "../base.repositry";
 import { IUserRepository } from "../interface/IUserRepository";
 import User from "../../models/user.model";
 import { Profile } from "passport";
+import { createHttpsError } from "../../utils/httpError.utils";
+import { HttpStatus } from "../../constants/status.constants";
+import { HttpResponse } from "../../constants/responseMessage.constants";
 export class UserRepository extends BaseRepository<IUserModel> implements IUserRepository {
     constructor() {
         super(User)
@@ -37,6 +40,21 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
         }
 
         return user;
+    }
+    async updatePassword(email: string , hashedPassword : string): Promise<IUserModel | null> {
+        try {
+            const user = await this.findOne({ email })
+            if(!user){
+                 throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
+            }
+
+            user.password = hashedPassword
+            user.save()
+            return user
+        } catch (error) {
+            console.error(error)
+            throw new Error('Error While Finding user by email')
+        }
     }
 
 }

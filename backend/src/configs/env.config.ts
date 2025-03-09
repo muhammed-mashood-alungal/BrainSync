@@ -30,5 +30,8 @@ export const env = {
    },
    get CLIENT_SECRET(){
       return process.env.CLIENT_SECRET
+   },
+   get CLIENT_RESET_URL(){
+      return process.env.CLIENT_RESET_URL
    }
 }
