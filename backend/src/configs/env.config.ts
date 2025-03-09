@@ -33,5 +33,14 @@ export const env = {
    },
    get CLIENT_RESET_URL(){
       return process.env.CLIENT_RESET_URL
+   },
+   get CLOUD_NAME(){
+      return process.env.CLOUD_NAME
+   },
+   get CLOUD_API_KEY(){
+      return process.env.CLOUD_API_KEY
+   },
+   get CLOUD_API_SECRET(){
+      return process.env.CLOUD_API_SECRET
    }
 }

@@ -8,7 +8,10 @@ export interface IUser {
     googleId:string;
     role: 'student' | 'admin';
     isAcitve: Boolean;
-    profilePicture?: string;
+    profilePicture?: {
+        url :string , 
+        publicId : string
+    };
     createdAt: Date;
     updatedAt: Date;
 } 

@@ -50,7 +50,7 @@ export const AuthServices = {
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
-            const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
+            const errorMessage = err.response?.data?.error || "Failed. Please try again.";
             throw new Error(errorMessage)
         }
     },
@@ -69,7 +69,7 @@ export const AuthServices = {
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
-            const errorMessage = err.response?.data?.error || "Google Auth failed. Please try again.";
+            const errorMessage = err.response?.data?.error || "Sending Reset Link failed. Please try again.";
             throw new Error(errorMessage)
         }
     },
@@ -80,7 +80,7 @@ export const AuthServices = {
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
-            const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
+            const errorMessage = err.response?.data?.error || "Logout failed. Please try again.";
             console.log(err)
             throw new Error(errorMessage)
         }
@@ -91,7 +91,7 @@ export const AuthServices = {
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
-            const errorMessage = err.response?.data?.error || "Registration failed. Please try again.";
+            const errorMessage = err.response?.data?.error || "Reset Password failed. Please try again.";
             console.log(err)
             throw new Error(errorMessage)
         }

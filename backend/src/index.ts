@@ -37,8 +37,9 @@ app.use(cors({
 }))
 
 import authRouter from './routers/auth.router'
+import userRouter from './routers/user.router'
 app.use('/api/auth/',authRouter) 
-
+app.use('/api/users/',userRouter) 
 app.use(pageNotFound)
 app.use(errorHandler)
 

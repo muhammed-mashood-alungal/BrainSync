@@ -57,7 +57,7 @@ export class AuthService implements IAuthService {
       throw createHttpsError(HttpStatus.UNAUTHORIZED, HttpResponse.INVALID_CREDENTIALS)
     }
 
-    const payload = { _id: user._id, role: user.role, email: user.email }
+    const payload = { id: user._id, role: user.role, email: user.email }
 
     const accessToken = generateAccesToken(payload)
     const refreshToken = generateRefreshToken(payload)
@@ -93,7 +93,7 @@ export class AuthService implements IAuthService {
     const newUser = await this._userRepository.create(user as IUserModel)
     await redisClient.del(email)
     if (!newUser) throw createHttpsError(HttpStatus.CONFLICT, HttpResponse.USER_CREATION_FAILED)
-    const payload = { _id: newUser._id, role: newUser.role, email: newUser.email }
+    const payload = { id: newUser._id, role: newUser.role, email: newUser.email }
 
 
     const accessToken = generateAccesToken(payload)

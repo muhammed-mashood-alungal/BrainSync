@@ -30,7 +30,8 @@ const userSchema = new Schema<IUserModel>({
         enum: ['student', "admin"]
     },
     profilePicture: {
-        type: String
+        url : {type : String },
+        publicId : {type : String}
     }
 
 }, {

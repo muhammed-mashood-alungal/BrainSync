@@ -12,5 +12,8 @@ export const HttpResponse = {
     TOKEN_EXPIRED :'Token Expired',
     RESET_LINK_SEND :'Reset Password Sended To your Email , Check Your Mail',
     RESET_PASS_FAILED : 'Reset Password Failed',
-    RESET_PASS_SUCCESS : 'Password Resetted Succesfully'
+    RESET_PASS_SUCCESS : 'Password Resetted Succesfully',
+    IMAGE_NOT_PROVIDED : 'Please Provide a Image to upload',
+    UPDATED : 'Updated Successfully',
+    OLD_PASS_NOT_MATCHED : 'Old Password you provided is incorrect , Try another one'
 }
