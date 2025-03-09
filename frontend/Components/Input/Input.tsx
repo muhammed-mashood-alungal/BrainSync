@@ -1,21 +1,23 @@
-import React, { ChangeEventHandler } from 'react'
+import React, { ChangeEventHandler, InputHTMLAttributes } from 'react'
 
-function Input(props: {
-    value: string,
-    onChange: ChangeEventHandler<HTMLInputElement>,
-    type: string, name: string,
-    placeholder: string
-}) {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+    value: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+    type: string;
+    name: string;
+    placeholder: string;
+  }
+
+function Input({ value, onChange, type, name, placeholder, ...rest }: InputProps) {
     return (
         <input
-            type={props.type}
-            name={props.name}
-            value={props.value}
-            onChange={props.onChange}
-            placeholder={props.placeholder}
+            type={type}
+            name={name}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
             className="w-full px-4 py-3 bg-transparent border border-gray-700 rounded-md focus:outline-none focus:border-cyan-400"
-            required
-        />
+            {...rest}       />
     )
 }
 

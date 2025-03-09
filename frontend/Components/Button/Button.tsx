@@ -16,5 +16,5 @@ const Button : React.FC<ButtonProps> = ({ children, className ="", ...props }) =
     );
   };
   
-  export default Button;
+export default Button;
   

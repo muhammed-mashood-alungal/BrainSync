@@ -1,3 +1,5 @@
+import { get } from "mongoose"
+
 export const env = {
    get PORT(){
      return process.env.PORT
@@ -22,5 +24,11 @@ export const env = {
    },
    get JWT_REFRESH_KEY(){
       return process.env.JWT_REFRESH_KEY
+   },
+   get CLIENT_ID(){
+      return process.env.CLIENT_ID
+   },
+   get CLIENT_SECRET(){
+      return process.env.CLIENT_SECRET
    }
 }

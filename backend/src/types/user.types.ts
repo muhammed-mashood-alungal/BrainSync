@@ -5,6 +5,7 @@ export interface IUser {
     username: string;
     email: string;
     password: string;
+    googleId:string;
     role: 'student' | 'admin';
     isAcitve: Boolean;
     profilePicture?: string;

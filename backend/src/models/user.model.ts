@@ -18,6 +18,9 @@ const userSchema = new Schema<IUserModel>({
     password: {
         type: String
     },
+    googleId:{
+        type:String
+    },
     isAcitve: {
         type: Boolean,
         default: true

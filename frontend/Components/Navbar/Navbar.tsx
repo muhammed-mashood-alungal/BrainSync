@@ -1,23 +1,35 @@
 // components/Navbar.jsx
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/Context/auth.context';
+import { AuthServices } from '@/services/authServices';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, loading  ,checkAuth} = useAuth()
+  const logout =async () => {
+     try{
+      
+        await AuthServices.logout()
+        checkAuth()
+     }catch(err){
+        toast.error("Logout Failed")
+     }
+  }
 
   return (
     <nav className="py-4 px-4 md:px-12 bg-black text-white ">
       <div className="flex flex-wrap justify-between items-center ">
-        {/* Logo */}
+
         <div className="text-2xl md:text-3xl font-bold">
           <Link href="/" className="text-cyan-400 hover:text-cyan-300">
             Brain Sync
           </Link>
         </div>
 
-        {/* Mobile menu button */}
-        <button 
+        <button
           className="block md:hidden text-white"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
@@ -31,7 +43,7 @@ const Navbar = () => {
             </svg>
           )}
         </button>
-        
+
         {/* Desktop navigation */}
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
           <Link href="/" className="hover:text-gray-300">
@@ -43,12 +55,25 @@ const Navbar = () => {
           <Link href="/about" className="hover:text-gray-300">
             About Us
           </Link>
-          <Link href="/login" className="text-cyan-400 hover:text-cyan-300">
-            Login
-          </Link>
-          <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
-            Sign Up
-          </Link>
+          {
+            user ? <>
+              <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
+                Logout
+              </button>
+              <Link href="/dashboard" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+                Go to Dashboard
+              </Link>
+            </> : <>
+              <Link href="/login" className="text-cyan-400 hover:text-cyan-300">
+                Login
+              </Link>
+              <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+                Sign Up
+              </Link>
+            </>
+
+          }
+
         </div>
       </div>
 

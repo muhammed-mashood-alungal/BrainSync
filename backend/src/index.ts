@@ -1,8 +1,9 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
-
-
+import cookieParser from 'cookie-parser'
+import morgan from 'morgan'
+import session from "express-session";
 dotenv.config()
 
 const app = express()
@@ -15,19 +16,32 @@ import { connectRedis } from './configs/redis.config'
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 connectDB()
-connectRedis()
-app.use(cors({
-    origin : env.CLIENT_ORIGIN,
-    credentials:true,
-    methods:["GET","POST","PUT","DELETE"],
-    allowedHeaders:["Content-Type" , "AUthorization"]
+connectRedis() 
+
+app.use(morgan("dev"))
+
+app.use(session({
+    secret: "mysecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } 
+}));
+
+app.use(cors({ 
+    origin: env.CLIENT_ORIGIN,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }))
 
+import authRouter from './routers/auth.router'
+app.use('/api/auth/',authRouter) 
 
 app.use(pageNotFound)
 app.use(errorHandler)
 
-app.listen(env.PORT , ()=>{
-    console.log(`Server Started on Port ${env.PORT}`)
-})
+app.listen(env.PORT, () => {
+    console.log(`Server Started on Port ${env.PORT}`) 
+}) 

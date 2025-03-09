@@ -8,5 +8,6 @@ export const HttpResponse = {
     OTP_INCORRECT : 'Incorrect OTP , try again',
     OTP_EXPIRED : "OTP Expired , Please Resend OTP",
     CREATED : 'Created Successfully',
-    USER_CREATION_FAILED : 'User Creation Failed'
+    USER_CREATION_FAILED : 'User Creation Failed',
+    TOKEN_EXPIRED :'Token Expired'
 }
