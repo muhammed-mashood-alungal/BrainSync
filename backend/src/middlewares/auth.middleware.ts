@@ -8,7 +8,6 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-    console.log(accessToken, refreshToken)
 
     if (!accessToken) {
         return res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);

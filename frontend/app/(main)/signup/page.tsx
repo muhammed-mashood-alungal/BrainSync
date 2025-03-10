@@ -5,7 +5,7 @@ import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/authServices';
 import { validateSignUpForm } from '@/validations';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -17,6 +17,17 @@ export default function SignUpPage() {
         router.push('/')
       }
     }, [user, loading])
+
+    const searchParams = useSearchParams()
+    
+
+    useEffect(()=>{
+      const error = searchParams.get('$error')
+      console.log(error)
+      if(error){
+        toast.error(error)
+      }
+    },[searchParams])
 
   const [formData, setFormData] = useState({
     username: '',
@@ -131,6 +142,7 @@ export default function SignUpPage() {
                 <div className="flex items-center justify-between mt-6">
                   <button
                     type="button"
+                    onClick={AuthServices.googleAuth}
                     className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800"
                   >
                     Google

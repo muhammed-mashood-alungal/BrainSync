@@ -9,6 +9,10 @@ export const userInstances = axios.create({
     baseURL : "http://localhost:5000/api/users/",
     withCredentials :true
 })
+export const adminInstance = axios.create({
+    baseURL : "http://localhost:5000/api/admin/",
+    withCredentials :true
+})
 
 authInstance.interceptors.response.use(
     response => response,

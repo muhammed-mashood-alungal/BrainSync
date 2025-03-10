@@ -15,5 +15,6 @@ export const HttpResponse = {
     RESET_PASS_SUCCESS : 'Password Resetted Succesfully',
     IMAGE_NOT_PROVIDED : 'Please Provide a Image to upload',
     UPDATED : 'Updated Successfully',
-    OLD_PASS_NOT_MATCHED : 'Old Password you provided is incorrect , Try another one'
+    OLD_PASS_NOT_MATCHED : 'Old Password you provided is incorrect , Try another one',
+    USER_BLOCKED : 'You are Blocked By admin'
 }

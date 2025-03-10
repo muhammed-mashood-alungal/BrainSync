@@ -23,11 +23,11 @@ export const validateSignUpForm = (formData: IuserSignUp) => {
         err.confirmPassword = 'Your Password is Matching'
         status = false
     }
-    return {status ,err}
+    return { status, err }
 }
 
 export const validateLoginForm = (formData: IuserLogin) => {
-    let err: IuserLogin = { email: '', password: ''}
+    let err: IuserLogin = { email: '', password: '' }
     let status = true
     if (formData.email.trim() == '') {
         err.email = 'Please Provide a Email'
@@ -37,16 +37,31 @@ export const validateLoginForm = (formData: IuserLogin) => {
         err.password = 'Please Provide a Password'
         status = false
     }
-    return {status ,err}
+    return { status, err }
 }
-export const validateEmail=(email : string)=>{
-    if (email.trim() == '') {
-        return {status : false ,err: 'Please Provide a Email'}
+
+export const validateAdminForm = (username: string, password: string) => {
+    let err : {username : string , password : string} = {username : '' , password : ''}
+    let status = true
+    if (username.trim() == '') {
+        err.username = 'Please Provide a Email'
+        status = false
     }
-    return {status : true , err:''}
+    if (password.trim() == '') {
+        err.password = 'Please Provide a Password'
+        status = false
+    }
+    return { status, err }
 }
-export const validateResetPasswords = (password : string , confirmPassword : string) =>{
-    const err : {password :string , confirmPassword : string}  = {password : '' , confirmPassword : ''}
+
+export const validateEmail = (email: string) => {
+    if (email.trim() == '') {
+        return { status: false, err: 'Please Provide a Email' }
+    }
+    return { status: true, err: '' }
+}
+export const validateResetPasswords = (password: string, confirmPassword: string) => {
+    const err: { password: string, confirmPassword: string } = { password: '', confirmPassword: '' }
     let status = true
     if (password.trim() == '') {
         err.password = 'Please Provide a Password'
@@ -60,5 +75,5 @@ export const validateResetPasswords = (password : string , confirmPassword : str
         err.confirmPassword = 'Your Password is Matching'
         status = false
     }
-    return {status : status , err}
+    return { status: status, err }
 }

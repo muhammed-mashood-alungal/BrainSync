@@ -12,7 +12,7 @@ export default function VerifyOtp() {
   const [otp, setOtp] = useState('')
   const [timer, setTimer] = useState(60)
   const email = sessionStorage.getItem("email")
-  const { user, loading } = useAuth()
+  const { user, loading , checkAuth } = useAuth()
   useEffect(() => {
     if (user) {
       console.log(user)
@@ -44,11 +44,12 @@ export default function VerifyOtp() {
   };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       console.log(email)
       // 173417
       await AuthServices.verifyOtp(otp, email as string)
+      checkAuth()
       router.push('/')
     } catch (error) {
       if (error instanceof Error) {

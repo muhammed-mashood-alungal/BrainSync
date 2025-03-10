@@ -27,14 +27,14 @@ export class AuthService implements IAuthService {
     user.password = await hashPassword(user.password as string)
 
     const otp = generateOtp()
-
+    console.log(otp)
     await sendOtp(user.email, otp)
 
 
     const response = await redisClient.set(user.email, JSON.stringify({
       ...user,
       otp
-    }), { EX: 300 })
+    }), { EX : 300 })
 
 
     if (!response) {
@@ -50,6 +50,9 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND)
     }
+    if(!user.isAcitve){
+      throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
+    }
 
     const isMatch = await comparePassword(password, user.password)
 
@@ -64,8 +67,6 @@ export class AuthService implements IAuthService {
     return { accessToken, refreshToken }
   }
   async verifyOtp(otp: string, email: string): Promise<{ accessToken: string, refreshToken: string }> {
-    console.log('-------------------------------------')
-    console.log(otp, email)
 
     const storedDataString = await redisClient.get(email as string)
 
@@ -102,7 +103,7 @@ export class AuthService implements IAuthService {
   }
   async resendOtp(email: string): Promise<string> {
     const otp = generateOtp()
-    console.log(email)
+    console.log(otp)
     await sendOtp(email, otp)
 
     let storedDataString = await redisClient.get(email as string)
@@ -138,17 +139,25 @@ export class AuthService implements IAuthService {
     return accessToken
 
   }
-  authMe(token: string): JwtPayload | string {
-    const user = verifyAccessToken(token)
+  async authMe(token: string): Promise<JwtPayload | string> {
+    const decoded = verifyAccessToken(token) as JwtPayload
 
-    if (!user) {
+    if (!decoded) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
     }
 
-    return user
+    const user = await this._userRepository.findByEmail(decoded.email as string)
+    if(!user){
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
+    }
+    if(!user.isAcitve){
+      throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
+    }
+
+    return decoded
   }
   generateTokens(user: IUserModel): { accessToken: string, refreshToken: string } {
-    const payload = { id: user._id, email: user.email, role: user.email }
+    const payload = { id: user._id, email: user.email, role: user.role }
     const accessToken = generateAccesToken(payload)
     const refreshToken = generateRefreshToken(payload)
 
@@ -185,6 +194,7 @@ export class AuthService implements IAuthService {
 
     return true
   }
+  
 
 
 } 

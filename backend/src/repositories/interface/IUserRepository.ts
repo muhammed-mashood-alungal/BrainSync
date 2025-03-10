@@ -11,6 +11,6 @@ export interface IUserRepository {
     findOrCreateUser(user : Profile) :Promise<IUserModel | null>
 
     //findOneWithUsernameOrEmail(value : string) : Promise<IUserModel | null>
-
+    
     updatePassword(email : string , hashedPassword : string) : Promise<IUserModel | null >
 }

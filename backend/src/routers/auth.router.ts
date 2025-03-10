@@ -3,13 +3,16 @@ import { UserRepository } from "../repositories/implementation/user.repository"
 import { AuthService } from "../services/implementation/auth.services"
 import { AuthController } from "../controllers/implementation/auth.controller"
 import passport from '../utils/passport.utils'
+import { UserServices } from "../services/implementation/user.services"
+import { env } from "../configs/env.config"
 
 const authRouter = Router()
 
 
 const userRepository = new UserRepository()
 const authService = new AuthService(userRepository)
-const authController = new AuthController(authService)
+const userService = new UserServices(userRepository)
+const authController = new AuthController(authService,userService)
 
 authRouter.post('/signup', authController.signup.bind(authController))
 authRouter.post('/verify-otp', authController.verifyOtp.bind(authController))
@@ -21,5 +24,5 @@ authRouter.post('/logout',authController.logout.bind(authController))
 authRouter.post('/forgot-password',authController.forgotPassword.bind(authController))
 authRouter.post('/reset-password',authController.resetPassword.bind(authController))
 authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }))
-authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: "/login" }), authController.googleAuthRedirect.bind(authController))
+authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: `${env.CLIENT_ORIGIN}/login` }), authController.googleAuthRedirect.bind(authController))
 export default authRouter
