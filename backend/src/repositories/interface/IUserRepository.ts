@@ -14,4 +14,5 @@ export interface IUserRepository {
     updatePassword(email : string , hashedPassword : string) : Promise<IUserModel | null >
     findById(id: Types.ObjectId): Promise<IUserModel | null>
     searchByEmail(query : string ) :Promise<{email :string , _id : Types.ObjectId}[]>
+    deleteAvatar(userId : Types.ObjectId ) :Promise<string  | undefined>
 }

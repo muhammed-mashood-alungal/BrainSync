@@ -21,4 +21,4 @@ export const deleteImage = async (publicId: string): Promise<void> => {
   } catch (error) {
     throw new Error(`Failed to delete image: ${error}`);
   }
-};
+}

@@ -74,13 +74,24 @@ export class UserController implements IUserController {
         try {
             const {query} = req.query
             if(!query){
-                res.status(200).json({users : []})
+                res.status(HttpStatus.OK).json({users : []})
                 return
             }
-
+            
             const users = await this._userServices.searchUserByEmail(query as string)
-            res.status(200).json({ message : HttpResponse.UPDATED  , users:users})
+            res.status(HttpStatus.OK).json({ message : HttpResponse.UPDATED  , users:users})
         } catch (error) {
+            next(error)
+        }
+    }
+    async deleteAvatar(req : Request , res : Response , next  : NextFunction) : Promise<void> {
+        try{
+            console.log('HIT API')
+            
+            const {userId} = req.params
+            await this._userServices.deleteProfilePic(userId)
+            res.status(HttpStatus.OK).json(HttpResponse.UPDATED)
+        }catch(error){
             next(error)
         }
     }

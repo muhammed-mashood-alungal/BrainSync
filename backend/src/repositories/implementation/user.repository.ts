@@ -57,5 +57,19 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
     async searchByEmail(query : string ) :Promise<{email :string , _id : Types.ObjectId}[]>{
         return await this.find({email : {$regex : query , $options : "i"} , isAcitve : true , role:'student'})
     }
+    async deleteAvatar(userId : Types.ObjectId ) :Promise<string  | undefined>{
+        const user = await this.findById(userId)
+        const publicId = user?.profilePicture?.publicId
+        if(user){
+            user.profilePicture = {publicId : '' , url : ''}
+
+            await user?.save()
+    
+            return publicId
+        }
+        return undefined
+        
+        
+    }
 
 }

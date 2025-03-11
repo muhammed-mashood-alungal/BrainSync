@@ -18,4 +18,6 @@ userRouter.get('/search',authMiddleware,userController.searchUserbyEmail.bind(us
 userRouter.get('/:userId' , authMiddleware,userController.getUserData.bind(userController))
 userRouter.put('/edit-username/:userId' ,authMiddleware, userController.editUsername.bind(userController))
 userRouter.put('/change-password/:userId' ,authMiddleware, userController.changePassword.bind(userController))
+userRouter.delete('/delete-profile-photo/:userId' ,authMiddleware, userController.deleteAvatar.bind(userController))
+
 export default userRouter

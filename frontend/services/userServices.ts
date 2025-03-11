@@ -54,5 +54,15 @@ export const UserServices = {
             const errorMessage = err.response?.data?.error || "Search User. Please try again."
             throw new Error(errorMessage)
         }
+    },
+    deleteProfilePic : async (userId :string) =>{
+        try {
+            const response = await userInstances.delete(`/delete-profile-photo/${userId}`)
+            return response.data
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Search User. Please try again."
+            throw new Error(errorMessage)
+        }
     }
 }

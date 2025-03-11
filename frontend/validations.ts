@@ -13,16 +13,17 @@ export const validateSignUpForm = (formData: IuserSignUp) => {
         err.email = 'Please Provide a Email'
         status = false
     }
-    if (formData.password.trim() == '') {
-        err.password = 'Please Provide a Password'
+    const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    if (formData.password.trim() == '' ||  !passReg.test(formData.password)) {
+        err.password = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
         status = false
     }
     if (formData.confirmPassword.trim() == '') {
-        err.confirmPassword = 'Please Provide a ConfirmPassword'
+        err.confirmPassword = 'Please Confirm Your Password'
         status = false
     }
     if (formData.password != formData.confirmPassword && formData.confirmPassword.trim() != '') {
-        err.confirmPassword = 'Your Password is Matching'
+        err.confirmPassword = 'Your Password is NotMatching'
         status = false
     }
     return { status, err }
@@ -35,8 +36,11 @@ export const validateLoginForm = (formData: IuserLogin) => {
         err.email = 'Please Provide a Email'
         status = false
     }
-    if (formData.password.trim() == '') {
-        err.password = 'Please Provide a Password'
+    
+    const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    
+    if (formData.password.trim() == '' ||  !passReg.test(formData.password)) {
+        err.password = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
         status = false
     }
     return { status, err }
@@ -65,7 +69,8 @@ export const validateEmail = (email: string) => {
 export const validateResetPasswords = (password: string, confirmPassword: string) => {
     const err: { password: string, confirmPassword: string } = { password: '', confirmPassword: '' }
     let status = true
-    if (password.trim() == '') {
+       const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    if (password.trim() == '' || !passReg.test(password)) {
         err.password = 'Please Provide a Password'
         status = false
     }
@@ -74,7 +79,7 @@ export const validateResetPasswords = (password: string, confirmPassword: string
         status = false
     }
     if (password != confirmPassword && confirmPassword.trim() != '') {
-        err.confirmPassword = 'Your Password is Matching'
+        err.confirmPassword = 'Your Password is Not Matching'
         status = false
     }
     return { status: status, err }

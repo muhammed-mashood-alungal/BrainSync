@@ -25,6 +25,7 @@ export default function ForgotPassword() {
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
+        setEmailErr('')
         try {
             let result = validateEmail(email)
             if (result.status) {
@@ -40,8 +41,7 @@ export default function ForgotPassword() {
                 toast.error("An unexpected error occurred.")
             }
         }
-
-    };
+    }
 
     return (
         <div className="min-h-screen bg-black text-white flex items-center justify-center">

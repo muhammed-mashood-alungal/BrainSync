@@ -10,4 +10,5 @@ export interface IUserService {
     blockOrUnblock(id: unknown): Promise<boolean> 
     isStudentsBlocked(id: unknown): Promise<boolean> 
     searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]>
+    deleteProfilePic(userId : unknown ) : Promise<Boolean>
 }

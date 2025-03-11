@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { ChangeEvent, use, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { Trash } from "lucide-react";
 
 export default function ProfilePage() {
     const { user } = useAuth()
@@ -54,47 +55,60 @@ export default function ProfilePage() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [isNameEditOn , setIsNameEdit] = useState(false)
-    const [isChangePass , setIsChangePass] = useState(false)
+    const [isNameEditOn, setIsNameEdit] = useState(false)
+    const [isChangePass, setIsChangePass] = useState(false)
     const [isUploading, setIsUploading] = useState(false)
 
-    const [newUsername , setNewUsername] = useState('')
-    const [pass , setPass] = useState('')
-    const [confirmPass ,setConfirmPass] = useState('')
-    const [oldPass , setOldPass] =  useState('')
-    const [changePassErr , setChangePassErr] = useState({
-        oldPass : '',
-        password : '',
-        confirmPassword : ''
+    const [newUsername, setNewUsername] = useState('')
+    const [pass, setPass] = useState('')
+    const [confirmPass, setConfirmPass] = useState('')
+    const [oldPass, setOldPass] = useState('')
+    const [changePassErr, setChangePassErr] = useState({
+        oldPass: '',
+        password: '',
+        confirmPassword: ''
     })
-   
+
+    const handleImageDelete = async () => {
+        try {
+            await UserServices.deleteProfilePic(user?.id as string)
+            setPreview(null)
+            toast.success('Profile Picture Deleted Successfully')
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                toast.error(err.name)
+            }
+        }
+
+    }
 
 
-    const editUsername = async ()=>{
-        try{
-            if(newUsername.trim() == ''){
-                
+
+    const editUsername = async () => {
+        try {
+            if (newUsername.trim() == '') {
+
                 return toast.error("Plese Provide a Username")
             }
-            if(newUsername == userData?.username){
+            if (newUsername == userData?.username) {
                 return toast.error('Nothing To Update')
             }
-            await UserServices.editUsername(user?.id as string , newUsername)
-            
+            await UserServices.editUsername(user?.id as string, newUsername)
+
             toast.success("Username Updated Successfully")
-            setUserData({...userData , username : newUsername} as { username: string, email: string, profilePic: string } )
-        }catch(err : unknown){
-           if(err instanceof Error){
-            toast.error(err.message)
-           }else{
-            toast.error("Unexpected Error Occured")
-           }
-        }finally{
+            setUserData({ ...userData, username: newUsername } as { username: string, email: string, profilePic: string })
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                toast.error(err.message)
+            } else {
+                toast.error("Unexpected Error Occured")
+            }
+        } finally {
             setIsNameEdit(false)
         }
     }
 
- 
+
     const setProfilePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
 
@@ -125,33 +139,33 @@ export default function ProfilePage() {
         }
     }
 
-    const changePassword =async()=> {
-        setChangePassErr({oldPass : ''  , password : '' , confirmPassword : ''})
-        if(oldPass.trim() == ''){
+    const changePassword = async () => {
+        setChangePassErr({ oldPass: '', password: '', confirmPassword: '' })
+        if (oldPass.trim() == '') {
             console.log('asdf')
-            setChangePassErr({...changePassErr , oldPass : "Please Enter Your Old Password"})
+            setChangePassErr({ ...changePassErr, oldPass: "Please Enter Your Old Password" })
             return
         }
-       const res =  validateResetPasswords(pass , confirmPass)
-       if(res.status){
-        try {
-           await  UserServices.changePassword(user?.id as string, oldPass , pass)
-           toast.success('Password Changed Successfully')
-        } catch (error) {
-            if (error instanceof Error) {
-                toast.error(error.message)
-              } else {
-                toast.error("An unexpected error occurred.")
-              }
-        }finally{
-            setOldPass('')
-            setPass('')
-            setConfirmPass('')
-            setIsChangePass(false)
+        const res = validateResetPasswords(pass, confirmPass)
+        if (res.status) {
+            try {
+                await UserServices.changePassword(user?.id as string, oldPass, pass)
+                toast.success('Password Changed Successfully')
+            } catch (error) {
+                if (error instanceof Error) {
+                    toast.error(error.message)
+                } else {
+                    toast.error("An unexpected error occurred.")
+                }
+            } finally {
+                setOldPass('')
+                setPass('')
+                setConfirmPass('')
+                setIsChangePass(false)
+            }
+        } else {
+            setChangePassErr({ oldPass: changePassErr.oldPass, ...res.err })
         }
-       }else{
-          setChangePassErr({oldPass:changePassErr.oldPass , ...res.err})
-       }
     }
 
     return (
@@ -167,7 +181,7 @@ export default function ProfilePage() {
                         </Link>
                         <div className="w-10 h-10 rounded-full overflow-hidden">
                             <img
-                                src="/profilePic.png"
+                                src={preview ? preview : "/profilePic.png"}
                                 alt="Profile"
                                 className="w-full h-full object-cover"
                             />
@@ -180,20 +194,22 @@ export default function ProfilePage() {
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                         <div className="relative">
                             <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-[#00D2D9]">
-                                <img
-                                    src={preview ? preview : "/profilePic.png"}
-                                    alt="Profile"
-                                    className="w-full h-full object-cover"
-                                />
+                                <label htmlFor="profile-image"  >
+                                    <img
+                                        src={preview ? preview : "/profilePic.png"}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover hover:cursor-pointer"
+                                    />
+                                </label>
 
                             </div>
                             <input type="file" hidden id='profile-image' onChange={setProfilePhoto} />
-                            <label htmlFor="profile-image" className="absolute bottom-0 right-0 bg-[#00D2D9] text-white rounded-full p-1 hover:cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M12 20h9"></path>
-                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-                                </svg>
-                            </label>
+                            {
+                                preview && <label onClick={handleImageDelete} className="absolute bottom-0 right-0 bg-[#00D2D9] text-white rounded-full p-1 hover:cursor-pointer">
+                                    <Trash size={15} />
+                                </label>
+                            }
+
 
                         </div>
 
@@ -203,12 +219,12 @@ export default function ProfilePage() {
                         </div>
 
                         <button className="bg-[#00D2D9] text-[#1E1E1E] px-4 py-2 rounded-lg font-medium hover:cursor-pointer"
-                         onClick={()=>setIsNameEdit(true)}
+                            onClick={() => setIsNameEdit(true)}
                         >
                             Edit Username
                         </button>
                         <button className="bg-[#00D2D9] text-[#1E1E1E] px-4 py-2 rounded-lg font-medium hover:cursor-pointer"
-                         onClick={()=>setIsChangePass(true)}
+                            onClick={() => setIsChangePass(true)}
                         >
                             Change Password
                         </button>
@@ -260,7 +276,7 @@ export default function ProfilePage() {
 
             <BaseModal
                 isOpen={isNameEditOn}
-                onClose={()=>setIsNameEdit(false)}
+                onClose={() => setIsNameEdit(false)}
                 onSubmit={editUsername}
                 title="Edit User Name"
                 submitText="Update"
@@ -280,7 +296,7 @@ export default function ProfilePage() {
 
             <BaseModal
                 isOpen={isChangePass}
-                onClose={()=>setIsChangePass(false)}
+                onClose={() => setIsChangePass(false)}
                 onSubmit={changePassword}
                 title="Edit User Name"
                 submitText="Update"

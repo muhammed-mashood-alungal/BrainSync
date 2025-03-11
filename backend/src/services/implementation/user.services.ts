@@ -1,7 +1,7 @@
 import { Multer } from "multer";
 import { UserRepository } from "../../repositories/implementation/user.repository";
 import { IUserService } from "../interface/IUserService";
-import { handleUpload } from "../../utils/imageUpload.util";
+import { deleteImage, handleUpload } from "../../utils/imageUpload.util";
 import { Mongoose, Types, Unpacked } from "mongoose";
 import { createHttpsError, HttpError } from "../../utils/httpError.utils";
 import { IUser } from "../../types/user.types";
@@ -59,5 +59,16 @@ export class UserServices implements IUserService {
     }
     async searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]> {
         return await this._userRepository.searchByEmail(query)
-      }
+    }
+    async deleteProfilePic(userId : unknown ) : Promise<Boolean> {
+
+        const publicId  = await this._userRepository.deleteAvatar(userId as Types.ObjectId)
+        if(publicId){
+            await deleteImage(publicId)
+        }else{
+            throw createHttpsError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        }
+
+        return true
+    }
 } 
