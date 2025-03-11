@@ -1,6 +1,7 @@
 import { authInstance } from "@/axios/createInstance";
 import { IuserLogin, IuserSignUp } from "@/types/userSignUp.types";
 import { AxiosError } from "axios";
+import { verify } from "crypto";
 
 export const AuthServices = {
     registerService: async (data: IuserSignUp): Promise<{ status: number, message: string }> => {
@@ -54,7 +55,40 @@ export const AuthServices = {
             throw new Error(errorMessage)
         }
     },
-    googleAuth : async () : Promise<void> =>{
+    verifyToken: async (token: string): Promise<{ id: string, email: string, role: string } | null> => {
+        try {
+            const response = await authInstance.post('/verify-token', {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                })
+            return response.data
+        } catch (error) {
+            console.log(error)
+            const err = error as AxiosError<{ error: string }>;
+            const errorMessage = err.response?.data?.error || "Failed. Please try again.";
+            return null
+        }
+    },
+    refreshToken: async (token: string): Promise<{ id: string, email: string, role: string } | null> => {
+        try {
+            const response = await authInstance.post('/refresh-token', {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    withCredentials: true,
+                })
+            return response.data?.user
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>;
+            const errorMessage = err.response?.data?.error || "Failed. Please try again.";
+            return null
+        }
+    },
+    googleAuth: async (): Promise<void> => {
         try {
             window.location.href = "http://localhost:5000/api/auth/google";
         } catch (error) {
@@ -63,9 +97,9 @@ export const AuthServices = {
             throw new Error(errorMessage)
         }
     },
-    forgotPassword:async(email : string) : Promise<{status : number , message : string}>=>{
+    forgotPassword: async (email: string): Promise<{ status: number, message: string }> => {
         try {
-            const response = await authInstance.post('/forgot-password' , {email})
+            const response = await authInstance.post('/forgot-password', { email })
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
@@ -85,9 +119,9 @@ export const AuthServices = {
             throw new Error(errorMessage)
         }
     },
-    resetPassword:async (token :string , password : string )  : Promise<{status : number , mesasge : string}> =>{
+    resetPassword: async (token: string, password: string): Promise<{ status: number, mesasge: string }> => {
         try {
-            const response = await authInstance.post('/reset-password',{ token , password })
+            const response = await authInstance.post('/reset-password', { token, password })
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
