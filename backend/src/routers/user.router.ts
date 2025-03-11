@@ -13,7 +13,8 @@ const userController = new UserController(userServices)
 
 
 userRouter.put('/change-profile-photo/:userId', upload.single('image'),userController.changeProfilePic.bind(userController))
-userRouter.get('/:userId' , userController.getUserData.bind(userController) )
+userRouter.get('/search',userController.searchUserbyEmail.bind(userController))
+userRouter.get('/:userId' , userController.getUserData.bind(userController))
 userRouter.put('/edit-username/:userId' , userController.editUsername.bind(userController))
 userRouter.put('/change-password/:userId' , userController.changePassword.bind(userController))
 export default userRouter

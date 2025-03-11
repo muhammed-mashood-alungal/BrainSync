@@ -1,3 +1,4 @@
+import { Types } from "mongoose"
 import { IUser } from "../../types/user.types"
 
 export interface IUserService {
@@ -8,4 +9,5 @@ export interface IUserService {
     getAllStudents() : Promise<IUser[]>
     blockOrUnblock(id: unknown): Promise<boolean> 
     isStudentsBlocked(id: unknown): Promise<boolean> 
+    searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]>
 }

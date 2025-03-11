@@ -1,4 +1,6 @@
+import { stat } from "fs"
 import { IuserLogin, IuserSignUp } from "./types/userSignUp.types"
+import { IUserType } from "./types/userTypes"
 
 export const validateSignUpForm = (formData: IuserSignUp) => {
     let err: IuserSignUp = { username: '', email: '', password: '', confirmPassword: '' }
@@ -41,7 +43,7 @@ export const validateLoginForm = (formData: IuserLogin) => {
 }
 
 export const validateAdminForm = (username: string, password: string) => {
-    let err : {username : string , password : string} = {username : '' , password : ''}
+    let err: { username: string, password: string } = { username: '', password: '' }
     let status = true
     if (username.trim() == '') {
         err.username = 'Please Provide a Email'
@@ -76,4 +78,19 @@ export const validateResetPasswords = (password: string, confirmPassword: string
         status = false
     }
     return { status: status, err }
+}
+
+export const validateCreateGroup = (groupName: string, members: IUserType[]) => {
+    const err: { groupName: string, members: string } = { groupName: '', members: '' }
+    let status = true
+    if (groupName.trim() == '') {
+        err.groupName = 'Please Provide the a group Name'
+        status = false
+    }
+    if (members.length == 0) {
+        err.members = 'Please Atleast add one member to the group.'
+        status = false
+    }
+    return {status : status , err }
+
 }

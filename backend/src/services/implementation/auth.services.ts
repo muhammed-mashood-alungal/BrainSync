@@ -130,7 +130,7 @@ export class AuthService implements IAuthService {
     const decoded = verifyRefreshToken(token) as JwtPayload
     if (!decoded) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
-    }
+    } 
 
     const payload = { id: decoded.id, role: decoded.role, email: decoded.email }
 

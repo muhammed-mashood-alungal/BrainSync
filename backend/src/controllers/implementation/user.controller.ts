@@ -70,5 +70,19 @@ export class UserController implements IUserController {
             next(error)
         }
     }
+    async searchUserbyEmail(req:Request , res: Response , next : NextFunction ) : Promise<void> {
+        try {
+            const {query} = req.query
+            if(!query){
+                res.status(200).json({users : []})
+                return
+            }
+
+            const users = await this._userServices.searchUserByEmail(query as string)
+            res.status(200).json({ message : HttpResponse.UPDATED  , users:users})
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }

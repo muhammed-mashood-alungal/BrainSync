@@ -16,5 +16,8 @@ export const HttpResponse = {
     IMAGE_NOT_PROVIDED : 'Please Provide a Image to upload',
     UPDATED : 'Updated Successfully',
     OLD_PASS_NOT_MATCHED : 'Old Password you provided is incorrect , Try another one',
-    USER_BLOCKED : 'You are Blocked By admin'
+    USER_BLOCKED : 'You are Blocked By admin',
+    ADDED_TO_GROUP :"Added To Group",
+    LEFT_GROUP : 'Left From group',
+    RESOURCE_NOT_FOUND  :'Resource not found'
 }

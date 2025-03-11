@@ -10,10 +10,10 @@ import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
 export class UserServices implements IUserService {
 
-    constructor(private _userRepository: UserRepository) { }
+    constructor(private _userRepository: UserRepository) {}
 
     async changeProfilePic(userId: unknown, file: Express.Multer.File): Promise<Boolean> {
-
+        
         const response = await handleUpload(file)
 
         await this._userRepository.findByIdAndUpdate(userId as Types.ObjectId, { $set: { profilePicture: response } })
@@ -57,4 +57,7 @@ export class UserServices implements IUserService {
         const stud = await this._userRepository.findById(id as Types.ObjectId)
         return stud?.isAcitve == false
     }
+    async searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]> {
+        return await this._userRepository.searchByEmail(query)
+      }
 } 

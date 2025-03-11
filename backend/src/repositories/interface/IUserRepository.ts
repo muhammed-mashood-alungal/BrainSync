@@ -1,5 +1,6 @@
 import { Profile } from "passport";
 import { IUserModel } from "../../models/user.model";
+import { Types } from "mongoose";
 
 
 
@@ -9,8 +10,8 @@ export interface IUserRepository {
     findByEmail(email :string) : Promise<IUserModel | null>
 
     findOrCreateUser(user : Profile) :Promise<IUserModel | null>
-
-    //findOneWithUsernameOrEmail(value : string) : Promise<IUserModel | null>
     
     updatePassword(email : string , hashedPassword : string) : Promise<IUserModel | null >
+    findById(id: Types.ObjectId): Promise<IUserModel | null>
+    searchByEmail(query : string ) :Promise<{email :string , _id : Types.ObjectId}[]>
 }

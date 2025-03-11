@@ -6,4 +6,5 @@ export  interface  IUserController {
     editUsername(req:Request , res : Response , next : NextFunction) : Promise<void>
     changePassword(req: Request, res: Response, next: NextFunction): Promise<void>
     getAllStudents(req: Request, res: Response, next: NextFunction): Promise<void>
+    searchUserbyEmail(req:Request , res: Response , next : NextFunction ) : Promise<void>
 } 

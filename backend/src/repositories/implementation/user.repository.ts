@@ -1,11 +1,12 @@
-import { IUserModel } from "../../models/user.model";
+import User, { IUserModel } from "../../models/user.model";
 import { BaseRepository } from "../base.repositry";
 import { IUserRepository } from "../interface/IUserRepository";
-import User from "../../models/user.model";
 import { Profile } from "passport";
 import { createHttpsError } from "../../utils/httpError.utils";
 import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
+import { Types } from "mongoose";
+
 export class UserRepository extends BaseRepository<IUserModel> implements IUserRepository {
     constructor() {
         super(User)
@@ -18,7 +19,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
             console.error(error)
             throw new Error('Error while Creating New User')
         }
-    }
+    } 
 
     async findByEmail(email: string): Promise<IUserModel | null> {
         try {
@@ -41,20 +42,20 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
 
         return user;
     }
+    async findById(id: Types.ObjectId): Promise<IUserModel | null> {
+        return await super.findById(id)
+    }
     async updatePassword(email: string , hashedPassword : string): Promise<IUserModel | null> {
-        try {
             const user = await this.findOne({ email })
             if(!user){
                  throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
-            }
-
+            } 
             user.password = hashedPassword
             user.save()
             return user
-        } catch (error) {
-            console.error(error)
-            throw new Error('Error While Finding user by email')
-        }
+    }
+    async searchByEmail(query : string ) :Promise<{email :string , _id : Types.ObjectId}[]>{
+        return await this.find({email : {$regex : query , $options : "i"} , isAcitve : true , role:'student'})
     }
 
 }
