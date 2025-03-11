@@ -19,5 +19,6 @@ export const HttpResponse = {
     USER_BLOCKED : 'You are Blocked By admin',
     ADDED_TO_GROUP :"Added To Group",
     LEFT_GROUP : 'Left From group',
-    RESOURCE_NOT_FOUND  :'Resource not found'
+    RESOURCE_NOT_FOUND  :'Resource not found',
+    ENTRY_RESTRICTED : 'Entry Restricted'
 }

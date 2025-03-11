@@ -1,22 +1,23 @@
-import { NextFunction, Request, Response } from 'express';
-import { generateAccesToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
+import {  RequestHandler } from 'express';
+import { generateAccesToken, verifyAccessToken, verifyRefreshToken } from '../utils/jwt.util';
 import { JwtPayload } from 'jsonwebtoken';
 import { HttpStatus } from '../constants/status.constants';
 import { HttpResponse } from '../constants/responseMessage.constants';
 
-export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
-
+export const authMiddleware: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
 
     if (!accessToken && !refreshToken) {
-        return res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN);
+        res.status(HttpStatus.NOT_FOUND).json(HttpResponse.NO_TOKEN)
+        return
     }
     try {
         if (accessToken) {
             try {
                 await verifyAccessToken(accessToken)
-                return next()
+                next()
+                return
             } catch (accessTokenErr) {
                 if (refreshToken) {
                     const decoded = await verifyRefreshToken(refreshToken)
@@ -27,10 +28,13 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
                             secure: false,
                             maxAge: 1 * 24 * 60 * 60 * 1000,
                             sameSite: "strict",
-                        });
+                        })
                     }
+                    next()
+                    return
                 } else {
-                    return res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN)
+                    res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN)
+                    return
                 }
             }
 
@@ -45,10 +49,12 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
                     maxAge: 1 * 24 * 60 * 60 * 1000,
                     sameSite: "strict",
                 })
+                next()
+                return
             }
         }
-        next()
     } catch (err) {
-        return res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.TOKEN_EXPIRED)
+        res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.TOKEN_EXPIRED)
+        return
     }
 }
