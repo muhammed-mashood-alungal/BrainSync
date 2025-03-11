@@ -8,7 +8,7 @@ export interface IAuthService {
     signin(email : string , password : string) : Promise<{accessToken :string  , refreshToken : string}>
     verifyOtp(otp : string , email : string) : Promise<{accessToken : string , refreshToken : string}>
     resendOtp(email: string):Promise<string> 
-    refreshAccessToken(token: string): Promise<string>
+    refreshAccessToken(token: string): Promise<{newAccessToken : string, payload : JwtPayload}>
     authMe(token: string): JwtPayload  | string 
     generateTokens(user : IUserModel) : {accessToken:string , refreshToken :string}
     forgotPassword(email :string) :Promise<{status : number , message : string}>

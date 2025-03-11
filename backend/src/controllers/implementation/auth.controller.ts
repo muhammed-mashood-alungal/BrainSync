@@ -11,7 +11,7 @@ import { IUserService } from "../../services/interface/IUserService";
 import { IUser } from "../../types/user.types";
 
 export class AuthController implements IAuthController {
-    constructor(private _authService: IAuthService , private _userService :IUserService) { }
+    constructor(private _authService: IAuthService, private _userService: IUserService) { }
 
     async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
@@ -36,8 +36,8 @@ export class AuthController implements IAuthController {
                 secure: false,
                 maxAge: 1 * 24 * 60 * 60 * 1000,
                 sameSite: "strict",
-            }) 
- 
+            })
+
             res.cookie("refreshToken", tokens.refreshToken, {
                 httpOnly: true,
                 secure: false,
@@ -88,11 +88,26 @@ export class AuthController implements IAuthController {
     }
     async refreshAccessToken(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { refreshToken } = req.cookies;
+            const authHeader = req.headers.authorization
+            if (!authHeader || !authHeader.startsWith("Bearer ")) {
+                res.status(401).json({ message: "Unauthorized" })
+                return
+            }
 
-            const accessToken = await this._authService.refreshAccessToken(refreshToken);
-            
-            res.status(HttpStatus.OK).json(accessToken);
+            const accessToken = authHeader.split(" ")[1]
+            console.log(accessToken)
+            if (!accessToken) {
+                throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
+            }
+
+            const {newAccessToken,payload} = await this._authService.refreshAccessToken(accessToken);
+            res.cookie("accessToken", accessToken, {
+                httpOnly: true,
+                secure: false,
+                maxAge: 1 * 24 * 60 * 60 * 1000,
+                sameSite: "strict",
+            })
+            res.status(HttpStatus.OK).json({newAccessToken,user : payload})
         } catch (error) {
             next(error)
         }
@@ -101,16 +116,39 @@ export class AuthController implements IAuthController {
         try {
             const { accessToken } = req.cookies;
             if (!accessToken) {
+                console.log('No acces token')
                 throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
             }
-            const user =await this._authService.authMe(accessToken)
+            const user = await this._authService.authMe(accessToken)
 
             res.status(HttpStatus.OK).json(user)
         } catch (error) {
             console.log(error)
             next(error)
         }
-    } 
+    }
+    async verifyToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const authHeader = req.headers.authorization
+            if (!authHeader || !authHeader.startsWith("Bearer ")) {
+                res.status(401).json({ message: "Unauthorized" })
+                return
+            }
+
+            const accessToken = authHeader.split(" ")[1]
+            console.log(accessToken)
+            if (!accessToken) {
+                console.log('NOw token foundd..................')
+                throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
+            }
+            const user = await this._authService.authMe(accessToken)
+
+            res.status(HttpStatus.OK).json(user)
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
+    }
     async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             console.log('api hit')
@@ -124,16 +162,16 @@ export class AuthController implements IAuthController {
     async googleAuthRedirect(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             if (!req.user) {
-                res.status(401).json({ message:HttpResponse.INVALID_CREDENTIALS })
+                res.status(401).json({ message: HttpResponse.INVALID_CREDENTIALS })
                 return
             }
-            
-            const userData :{id : string , email : string , role : string} = req.user as {id : string , email : string , role : string}
+
+            const userData: { id: string, email: string, role: string } = req.user as { id: string, email: string, role: string }
 
             const tokens = this._authService.generateTokens(req.user as IUserModel)
-            const isBlocked =await this._userService.isStudentsBlocked(userData.id as string)
-            if(isBlocked){
-               throw createHttpsError(HttpStatus.FORBIDDEN,HttpResponse.USER_BLOCKED)
+            const isBlocked = await this._userService.isStudentsBlocked(userData.id as string)
+            if (isBlocked) {
+                throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
             }
             res.cookie("accessToken", tokens.accessToken, {
                 httpOnly: true,
@@ -151,31 +189,31 @@ export class AuthController implements IAuthController {
 
 
             res.redirect(`${env.CLIENT_ORIGIN}`)
-        } catch (err :unknown) {
-            if(err instanceof HttpError){
+        } catch (err: unknown) {
+            if (err instanceof HttpError) {
                 res.redirect(`${env.CLIENT_ORIGIN}/signup?$error=${err.message as string}`)
-            }else{
+            } else {
                 res.redirect(`${env.CLIENT_ORIGIN}/signup?$error=${HttpResponse.SERVER_ERROR}`)
             }
         }
     }
     async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const {email} = req.body
+            const { email } = req.body
             const response = await this._authService.forgotPassword(email)
             res.status(HttpStatus.OK).json(response)
         } catch (err) {
             next(err)
         }
     }
-    async resetPassword(req : Request , res : Response , next : NextFunction) : Promise<void> {
-       try{
-         const {token , password} = req.body
-         await this._authService.resetPassword(token , password)
+    async resetPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { token, password } = req.body
+            await this._authService.resetPassword(token, password)
 
-         res.status(HttpStatus.OK).json({message : HttpResponse.RESET_PASS_SUCCESS})
-       }catch(err){
-        next(err)
-       }
+            res.status(HttpStatus.OK).json({ message: HttpResponse.RESET_PASS_SUCCESS })
+        } catch (err) {
+            next(err)
+        }
     }
 } 

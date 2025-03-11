@@ -121,7 +121,7 @@ export class AuthService implements IAuthService {
 
     return email
   }
-  async refreshAccessToken(token: string): Promise<string> {
+  async refreshAccessToken(token: string): Promise<{newAccessToken : string, payload : JwtPayload}> {
 
     if (!token) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN);
@@ -134,9 +134,9 @@ export class AuthService implements IAuthService {
 
     const payload = { id: decoded.id, role: decoded.role, email: decoded.email }
 
-    const accessToken = generateAccesToken(payload);
+    const newAccessToken = generateAccesToken(payload);
 
-    return accessToken
+    return {newAccessToken,payload}
 
   }
   async authMe(token: string): Promise<JwtPayload | string> {
