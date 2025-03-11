@@ -46,8 +46,7 @@ export default function VerifyOtp() {
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     try {
-      console.log(email)
-      // 173417
+      console.log(email,otp)
       await AuthServices.verifyOtp(otp, email as string)
       checkAuth()
       router.push('/')
@@ -64,7 +63,7 @@ export default function VerifyOtp() {
     e.preventDefault();
     try {
       await AuthServices.resendOtp(email as string)
-      setTimer(10)
+      setTimer(60)
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -72,7 +71,7 @@ export default function VerifyOtp() {
         toast.error("An unexpected error occurred.");
       }
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">

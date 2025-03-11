@@ -109,10 +109,11 @@ export const AuthServices = {
     },
     logout: async (): Promise<{ id: string, email: string, role: string }> => {
         try {
-            console.log('inside ologu')
             const response = await authInstance.post('/logout')
+            console.log(response)
             return response.data
         } catch (error) {
+            console.log(error)
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Logout failed. Please try again.";
             console.log(err)

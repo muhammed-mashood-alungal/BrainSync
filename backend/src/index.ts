@@ -23,7 +23,7 @@ connectRedis()
 app.use(morgan("dev"))
 
 app.use(session({
-    secret: "mysecret",
+    secret: env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: false } 

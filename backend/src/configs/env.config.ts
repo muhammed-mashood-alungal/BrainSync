@@ -42,5 +42,8 @@ export const env = {
    },
    get CLOUD_API_SECRET(){
       return process.env.CLOUD_API_SECRET
-   }
+   },
+   get SESSION_SECRET(){
+      return process.env.SESSION_SECRET
+   } 
 }

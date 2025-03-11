@@ -27,7 +27,7 @@ export class GroupRepository extends BaseRepository<IGroupModel> implements IGro
         return await this.model.find({ members: userId, isActive: true }).populate('createdBy').populate('members')
     }
     async getAllGroups(): Promise<IGroupModel[]> {
-        return await this.findAll()
+        return await this.model.find().populate('createdBy').populate('members')
     }
     async handleActivation(groupId : Types.ObjectId) : Promise<Boolean>{
         const groupData =  await this.findById(groupId)

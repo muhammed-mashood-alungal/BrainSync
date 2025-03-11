@@ -3,6 +3,7 @@ import { IGroupService } from "../../services/interface/IGroupService";
 import { IGroupController } from "../interface/IGroupController";
 import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
+import { createHttpsError } from "../../utils/httpError.utils";
 
 export class GroupController implements IGroupController {
      constructor(private  _groupServices : IGroupService) {}
@@ -49,6 +50,10 @@ export class GroupController implements IGroupController {
      async getMyGroups(req: Request, res: Response, next: NextFunction): Promise<void> {
         try{
             const {userId} = req.params
+            
+            if(userId == undefined){
+               throw createHttpsError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
+            }
            const groups =  await this._groupServices.myGroups(userId)
            console.log(groups)
            res.status(HttpStatus.OK).json({groups:groups})

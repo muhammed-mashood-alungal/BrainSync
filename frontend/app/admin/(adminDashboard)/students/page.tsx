@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import BaseModal from '@/Components/Modal/Modal'
 import { toast } from 'react-hot-toast'
 import { AdminServices } from '@/services/admin.services'
+import Confirm from '@/Components/ConfirmModal/ConfirmModal'
 
 export interface User {
     _id: string;
@@ -18,11 +19,12 @@ export interface User {
 }
 
 const StudentListing: React.FC = () => {
-    const [students, setStudents] = useState<User[]>([]);
-    const [selectedStudent, setSelectedStudent] = useState<User | null>(null);
-    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [students, setStudents] = useState<User[]>([])
+    const [selectedStudent, setSelectedStudent] = useState<User | null>(null)
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [blockingStudent, setblockingStudents] = useState('')
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -45,18 +47,20 @@ const StudentListing: React.FC = () => {
         setIsLoading(false)
     }, []);
 
-    const handleToggleActiveStatus = async (studentId: string, currentStatus: boolean) => {
+    const blockOrUnblock = async () => {
         try {
+            let studentId = blockingStudent
             await AdminServices.blockOrUnBlockStudent(studentId)
-            setStudents(prevStudents => 
+            setStudents(prevStudents =>
                 prevStudents.map(student =>
                     student._id === studentId
-                        ? { ...student, isAcitve: !currentStatus }
+                        ? { ...student, isAcitve: !student.isAcitve }
                         : student
                 )
-            );
-
-            toast.success(`User ${currentStatus ? 'blocked' : 'unblocked'} successfully`);
+            )
+            setblockingStudents('')
+     
+           // toast.success(`User ${currentStatus ? 'blocked' : 'unblocked'} successfully`);
         } catch (error) {
             console.error('Failed to update user status:', error);
             toast.error('Failed to update user status');
@@ -164,8 +168,8 @@ const StudentListing: React.FC = () => {
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isAcitve
-                                                    ? 'bg-green-900 text-green-300'
-                                                    : 'bg-red-900 text-red-300'
+                                                ? 'bg-green-900 text-green-300'
+                                                : 'bg-red-900 text-red-300'
                                                 }`}>
                                                 {student.isAcitve ? 'Active' : 'Blocked'}
                                             </span>
@@ -178,10 +182,13 @@ const StudentListing: React.FC = () => {
                                                 View
                                             </button>
                                             <button
-                                                onClick={() => handleToggleActiveStatus(student._id, student.isAcitve)}
+                                                onClick={() => {
+                                                  //  handleToggleActiveStatus(student._id)
+                                                    setblockingStudents(student._id)
+                                                }}
                                                 className={`${student.isAcitve
-                                                        ? 'text-red-400 hover:text-red-300'
-                                                        : 'text-green-400 hover:text-green-300'
+                                                    ? 'text-red-400 hover:text-red-300'
+                                                    : 'text-green-400 hover:text-green-300'
                                                     } transition-colors`}
                                             >
                                                 {student.isAcitve ? 'Block' : 'Unblock'}
@@ -240,9 +247,9 @@ const StudentListing: React.FC = () => {
                             <div className="bg-gray-800 p-4 rounded-lg">
                                 <p className="text-gray-400 text-sm mb-1">User ID</p>
                                 <div className='w-full'>
-                                <p className="text-base font-medium break-words">{selectedStudent._id}</p>
+                                    <p className="text-base font-medium break-words">{selectedStudent._id}</p>
                                 </div>
-                               
+
                             </div>
                         </div>
 
@@ -255,12 +262,13 @@ const StudentListing: React.FC = () => {
                             </button>
                             <button
                                 onClick={() => {
-                                    handleToggleActiveStatus(selectedStudent._id, selectedStudent.isAcitve);
-                                    setIsViewModalOpen(false);
+                                   // handleToggleActiveStatus(selectedStudent._id);
+                                    setIsViewModalOpen(false)
+                                    setblockingStudents(selectedStudent._id)
                                 }}
                                 className={`px-4 py-2 rounded-lg transition-colors ${selectedStudent.isAcitve
-                                        ? 'bg-red-700 hover:bg-red-600 text-white'
-                                        : 'bg-green-700 hover:bg-green-600 text-white'
+                                    ? 'bg-red-700 hover:bg-red-600 text-white'
+                                    : 'bg-green-700 hover:bg-green-600 text-white'
                                     }`}
                             >
                                 {selectedStudent.isAcitve ? 'Block User' : 'Unblock User'}
@@ -269,6 +277,11 @@ const StudentListing: React.FC = () => {
                     </div>
                 )}
             </BaseModal>
+            <Confirm isOpen={Boolean(blockingStudent)} onClose={() => setblockingStudents('')}
+                onConfirm={()=>blockOrUnblock() }
+            >
+            </Confirm>
+            
         </div>
     );
 };

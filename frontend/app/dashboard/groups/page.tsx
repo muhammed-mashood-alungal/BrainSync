@@ -9,6 +9,9 @@ import { useAuth } from '@/Context/auth.context';
 import { toast } from 'react-toastify';
 import { UserServices } from '@/services/userServices';
 import { IUserType } from '@/types/userTypes';
+import { IGroupType } from '@/types/groupTypes';
+import GroupDetails from '@/Components/GroupDetails/GroupDetails';
+import EmptyList from '@/Components/EmptyList/EmptyList';
 
 
 type Member = {
@@ -27,7 +30,7 @@ type Group = {
 }
 
 const GroupsPage: React.FC = () => {
-    const [groups, setGroups] = useState<Group[]>();
+    const [groups, setGroups] = useState<IGroupType[]>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
     const [memberEmail, setMemberEmail] = useState('')
@@ -35,7 +38,7 @@ const GroupsPage: React.FC = () => {
     const [selectedMembers, setSelectedMembers] = useState<IUserType[]>([])
     const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([])
     const [selectedGroup, setSelectedGroup] = useState('')
-
+    const [viewGroup, setViewGroup] = useState<IGroupType>()
     const [err, setErr] = useState({
         groupName: '',
         members: ''
@@ -46,7 +49,7 @@ const GroupsPage: React.FC = () => {
             setGroups(res.groups as [])
         }
         fetchGroups()
-    }, [])
+    }, [user])
     const handleMemberEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setMemberEmail(e.target.value)
         const res = await UserServices.searchUser(e.target.value)
@@ -129,10 +132,7 @@ const GroupsPage: React.FC = () => {
         setSelectedMembers([]);
     };
 
-    //   const getRandomColor = () => {
-    //     const colors = ['#5E686B', '#30A5BF', '#5B54B8', '#8B0000', '#FFFFFF'];
-    //     return colors[Math.floor(Math.random() * colors.length)];
-    //   };
+   
 
     return (
         <div className="flex-1 min-h-screen bg-[#1E1E1E] text-white p-6 ml-1">
@@ -147,6 +147,7 @@ const GroupsPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {groups?.length == 0 && <EmptyList/>}
                 {groups?.map((group) => (
                     <div key={group._id} className="bg-zinc-900 border text-[#00D2D9] rounded-lg overflow-hidden">
                         <div className="bg-[#00D2D9] p-3 text-center">
@@ -156,7 +157,7 @@ const GroupsPage: React.FC = () => {
                             <div className="mb-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-gray-300 text-sm">{group.members.length} Members</span>
-                                    <a href="#" className="text-[#00D2D9] text-xs hover:underline">view all</a>
+                                    <a onClick={()=>setViewGroup(group)} className="text-[#00D2D9] text-xs hover:cursor-pointer">view all</a>
                                 </div>
                                 <div className="flex items-center">
                                     {group.members.slice(0, 5).map((member) => (
@@ -179,7 +180,7 @@ const GroupsPage: React.FC = () => {
                                 Admin :  <span className="text-[#00D2D9]">  {group.createdBy?.username} </span> {group.createdBy?._id == user?.id && '(You)'}
                             </div>
                             <div className="text-sm text-gray-300 mb-4">
-                                Next Session: {group.nextSessionDate || "Not Assigned"}
+                                Next Session: { "Not Assigned"}
                             </div>
                             {group.createdBy?._id == user?.id ? <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
                                 onClick={() => setSelectedGroup(group._id)}
@@ -200,8 +201,6 @@ const GroupsPage: React.FC = () => {
 
             <BaseModal title='Create New Group' isOpen={isModalOpen} onClose={closeModal}>
                 <div className="p-6">
-                    {/* <h2 className="text-2xl font-bold mb-6 text-white">Create New Group</h2> */}
-
                     <div className="mb-4">
 
                         <Input
@@ -225,14 +224,6 @@ const GroupsPage: React.FC = () => {
                                 className="flex-1 p-2 bg-zinc-800 border border-zinc-700 rounded-l-md text-white focus:outline-none focus:text-[#00D2D9]"
                                 placeholder="Enter email address"
                             />
-
-                            {/* <button
-                                onClick={addMember}
-                                className="bg-[#00D2D9] hover:bg-teal-600 text-white px-4 rounded-r-md"
-                            >
-                                Add
-                            </button> */}
-
                         </div>
                         <span className='text-red-600 ml-1'  > {err?.members}</span>
 
@@ -303,14 +294,6 @@ const GroupsPage: React.FC = () => {
                             className="flex-1 p-2 bg-zinc-800 border border-zinc-700 rounded-l-md text-white focus:outline-none focus:text-[#00D2D9]"
                             placeholder="Enter email address"
                         />
-
-                        {/* <button
-                                onClick={addMember}
-                                className="bg-[#00D2D9] hover:bg-teal-600 text-white px-4 rounded-r-md"
-                            >
-                                Add
-                            </button> */}
-
                     </div>
                     <span className='text-red-600 ml-1'  > {err?.members}</span>
 
@@ -354,6 +337,11 @@ const GroupsPage: React.FC = () => {
                     )}
                 </div>
 
+            </BaseModal>
+            <BaseModal isOpen={Boolean(viewGroup?._id)} onClose={()=>setViewGroup(undefined)} title={viewGroup?.name as string} 
+            
+            >
+           <GroupDetails currentUserId={user?.id as string} group={viewGroup} onRemoveMember={()=>console.log('removing')}/>
             </BaseModal>
 
 

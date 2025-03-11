@@ -10,22 +10,26 @@ import { toast } from 'react-toastify';
 import { UserServices } from '@/services/userServices';
 import { IUserType } from '@/types/userTypes';
 import { IGroupType } from '@/types/groupTypes';
+import Confirm from '@/Components/ConfirmModal/ConfirmModal';
+import { group } from 'console';
+import GroupDetails from '../../../../Components/GroupDetails/GroupDetails';
+import EmptyList from '@/Components/EmptyList/EmptyList';
 
 
-type Member = {
-    id: string;
-    color: string;
-    name?: string;
-}
+// type Member = {
+//     id: string;
+//     color: string;
+//     name?: string;
+// }
 
-type Group = {
-    _id: string;
-    name: string;
-    createdBy?: IUserType;
-    members: IUserType[];
-    sessionsCompleted: number;
-    nextSessionDate: string;
-}
+// type Group = {
+//     _id: string;
+//     name: string;
+//     createdBy?: IUserType;
+//     members: IUserType[];
+//     sessionsCompleted: number;
+//     nextSessionDate: string;
+// }
 
 const GroupsPage: React.FC = () => {
     const [groups, setGroups] = useState<IGroupType[]>();
@@ -35,6 +39,7 @@ const GroupsPage: React.FC = () => {
     const { user } = useAuth()
     const [selectedMembers, setSelectedMembers] = useState<IUserType[]>([])
     const [selectedGroup, setSelectedGroup] = useState('')
+    const [viewGroup, setViewGroup] = useState<IGroupType>()
 
     const [err, setErr] = useState({
         groupName: '',
@@ -46,21 +51,28 @@ const GroupsPage: React.FC = () => {
             setGroups(res)
         }
         fetchGroups()
-    }, [])
+    }, [user])
 
 
-   
-    const deactivate = async(groupId : string)=>{
+
+    const handleActivation = async () => {
         try {
+            let groupId = selectedGroup
             await GroupServices.deactivate(groupId)
-            toast.success("Deactivated Group Successfully")
-        }  catch (error: unknown) {
+            toast.success("Updated Group Status")
+            setGroups((grps) => {
+                return grps?.map(group => {
+                    return group._id == groupId ? { ...group, isActive: !group.isActive } : group
+                })
+            })
+        } catch (error: unknown) {
             if (err instanceof Error) {
                 toast.error(err.message)
             } else {
                 toast.error("Unexpected Error Occured")
             }
         } finally {
+            setSelectedGroup('')
             closeModal()
         }
     }
@@ -74,16 +86,11 @@ const GroupsPage: React.FC = () => {
     return (
         <div className="flex-1 min-h-screen bg-[#1E1E1E] text-white p-6 ml-1">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-white">My Groups</h1>
-                <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="bg-[#8979FF] hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
-                >
-                    Create Group
-                </button>
+                <h1 className="text-3xl font-bold text-white">All Groups</h1>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groups?.length == 0 && <EmptyList/>}
                 {groups?.map((group) => (
                     <div key={group._id} className="bg-zinc-900 border text-[#8979FF] rounded-lg overflow-hidden">
                         <div className="bg-[#8979FF] p-3 text-center">
@@ -93,7 +100,7 @@ const GroupsPage: React.FC = () => {
                             <div className="mb-4">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-gray-300 text-sm">{group.members.length} Members</span>
-                                    <a href="#" className="text-[#8979FF] text-xs hover:underline">view all</a>
+                                    <a onClick={()=>setViewGroup(group)} className="text-[#8979FF] text-xs hover:cursor-pointer">view all</a>
                                 </div>
                                 <div className="flex items-center">
                                     {group.members.slice(0, 5).map((member) => (
@@ -119,13 +126,13 @@ const GroupsPage: React.FC = () => {
                                 Next Session: {"Not Assigned"}
                             </div>
                             {group.isActive ? <button className=" bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                                onClick={() =>deactivate(group._id)}
+                                onClick={() => setSelectedGroup(group._id)}
                             >
                                 Deactivate
-                            </button> :  <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                             onClick={()=>deactivate(group._id)}
+                            </button> : <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
+                                onClick={() => setSelectedGroup(group._id)}
                             >
-                               Activate
+                                Activate
                             </button>
                             }
 
@@ -133,7 +140,15 @@ const GroupsPage: React.FC = () => {
                     </div>
                 ))}
             </div>
-
+            <Confirm isOpen={Boolean(selectedGroup)} onClose={() => setSelectedGroup('')}
+                onConfirm={() => handleActivation()}
+            >
+            </Confirm>
+            <BaseModal isOpen={Boolean(viewGroup?._id)} onClose={()=>setViewGroup(undefined)} title={viewGroup?.name as string} 
+            
+            >
+           <GroupDetails currentUserId={user?.id as string} group={viewGroup} onRemoveMember={()=>console.log('removing')}/>
+            </BaseModal>
 
 
 

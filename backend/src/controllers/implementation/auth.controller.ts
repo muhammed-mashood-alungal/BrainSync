@@ -151,7 +151,6 @@ export class AuthController implements IAuthController {
     }
     async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log('api hit')
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
             res.status(HttpStatus.OK).json()

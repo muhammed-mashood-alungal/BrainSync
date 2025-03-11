@@ -34,7 +34,7 @@ export class AuthService implements IAuthService {
     const response = await redisClient.set(user.email, JSON.stringify({
       ...user,
       otp
-    }), { EX : 300 })
+    }), { EX: 300 })
 
 
     if (!response) {
@@ -50,7 +50,7 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND)
     }
-    if(!user.isAcitve){
+    if (!user.isAcitve) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
     }
 
@@ -109,11 +109,12 @@ export class AuthService implements IAuthService {
     let storedDataString = await redisClient.get(email as string)
 
     const storedData = JSON.parse(storedDataString as string)
-
+    console.log(storedData)
     const response = await redisClient.set(email, JSON.stringify({
       ...storedData,
       otp: otp
     }), { EX: 300 })
+    console.log(response)
 
     if (!response) {
       throw createHttpsError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.SERVER_ERROR);
@@ -121,7 +122,7 @@ export class AuthService implements IAuthService {
 
     return email
   }
-  async refreshAccessToken(token: string): Promise<{newAccessToken : string, payload : JwtPayload}> {
+  async refreshAccessToken(token: string): Promise<{ newAccessToken: string, payload: JwtPayload }> {
 
     if (!token) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN);
@@ -130,13 +131,13 @@ export class AuthService implements IAuthService {
     const decoded = verifyRefreshToken(token) as JwtPayload
     if (!decoded) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
-    } 
+    }
 
     const payload = { id: decoded.id, role: decoded.role, email: decoded.email }
 
     const newAccessToken = generateAccesToken(payload);
 
-    return {newAccessToken,payload}
+    return { newAccessToken, payload }
 
   }
   async authMe(token: string): Promise<JwtPayload | string> {
@@ -147,10 +148,10 @@ export class AuthService implements IAuthService {
     }
 
     const user = await this._userRepository.findByEmail(decoded.email as string)
-    if(!user){
+    if (!user) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
     }
-    if(!user.isAcitve){
+    if (!user.isAcitve) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
     }
 
@@ -188,13 +189,13 @@ export class AuthService implements IAuthService {
     if (!email) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.RESET_PASS_FAILED)
     }
-    const hashedPassword =await hashPassword(password)
+    const hashedPassword = await hashPassword(password)
 
     await this._userRepository.updatePassword(email, hashedPassword)
 
     return true
   }
-  
+
 
 
 } 

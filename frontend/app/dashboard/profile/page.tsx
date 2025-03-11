@@ -11,9 +11,11 @@ import { ChangeEvent, use, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Trash } from "lucide-react";
+import { AuthServices } from '@/services/authServices';
+import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-    const { user } = useAuth()
+    const { user, checkAuth } = useAuth()
     const [userData, setUserData] = useState<{ username: string, email: string, profilePic: string } | null>(null)
     console.log(user)
     const data = [
@@ -68,6 +70,7 @@ export default function ProfilePage() {
         password: '',
         confirmPassword: ''
     })
+    const router = useRouter()
 
     const handleImageDelete = async () => {
         try {
@@ -135,18 +138,20 @@ export default function ProfilePage() {
         } catch (error) {
             console.error('Error uploading image:', error)
         } finally {
-            setIsUploading(false);
+            setIsUploading(false)
         }
     }
 
     const changePassword = async () => {
         setChangePassErr({ oldPass: '', password: '', confirmPassword: '' })
-        if (oldPass.trim() == '') {
-            console.log('asdf')
-            setChangePassErr({ ...changePassErr, oldPass: "Please Enter Your Old Password" })
+    
+        if (oldPass.trim() === '') {
+            setChangePassErr(prev => ({ ...prev, oldPass: "Please Enter Your Old Password" }))
             return
         }
+    
         const res = validateResetPasswords(pass, confirmPass)
+    
         if (res.status) {
             try {
                 await UserServices.changePassword(user?.id as string, oldPass, pass)
@@ -164,7 +169,18 @@ export default function ProfilePage() {
                 setIsChangePass(false)
             }
         } else {
-            setChangePassErr({ oldPass: changePassErr.oldPass, ...res.err })
+            setChangePassErr(prev => ({ ...prev, ...res.err }))
+        }
+    }
+    
+    const logout = async () => {
+        try {
+            console.log('LOging OUt..........')
+            await AuthServices.logout()
+            checkAuth()
+            router.push('/login')
+        } catch (err) {
+            toast.error("Logout Failed")
         }
     }
 
@@ -172,13 +188,12 @@ export default function ProfilePage() {
         <div className="flex min-h-screen bg-[#1E1E1E] ml-1">
 
             <div className="flex-1 p-8">
-                {/* Header with profile title and logout */}
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-white">My Profile</h1>
                     <div className="flex items-center gap-4">
-                        <Link href="/logout" className="text-[#00D2D9] hover:underline">
+                        <button onClick={logout} className="text-[#00D2D9] hover:underline">
                             Logout
-                        </Link>
+                        </button>
                         <div className="w-10 h-10 rounded-full overflow-hidden">
                             <img
                                 src={preview ? preview : "/profilePic.png"}
