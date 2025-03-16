@@ -9,7 +9,7 @@ const createAxiosInstance = (baseUrl: string) => {
   return instance;
 };
 
-export const authInstance = createAxiosInstance("http://localhost:5000/api/auth/");
-export const userInstances = createAxiosInstance("http://localhost:5000/api/users/");
-export const adminInstance = createAxiosInstance("http://localhost:5000/api/admin/");
-export const groupInstance = createAxiosInstance("http://localhost:5000/api/groups/");
+export const authInstance = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/`)
+export const userInstances = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/`)
+export const adminInstance = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/`)
+export const groupInstance = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/groups/`)

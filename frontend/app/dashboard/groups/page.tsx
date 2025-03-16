@@ -14,27 +14,13 @@ import GroupDetails from '@/Components/GroupDetails/GroupDetails';
 import EmptyList from '@/Components/EmptyList/EmptyList';
 
 
-type Member = {
-    id: string;
-    color: string;
-    name?: string;
-}
-
-type Group = {
-    _id: string;
-    name: string;
-    createdBy?: IUserType;
-    members: IUserType[];
-    sessionsCompleted: number;
-    nextSessionDate: string;
-}
 
 const GroupsPage: React.FC = () => {
     const [groups, setGroups] = useState<IGroupType[]>();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
     const [memberEmail, setMemberEmail] = useState('')
-    const { user } = useAuth()
+    const { user ,checkAuth} = useAuth()
     const [selectedMembers, setSelectedMembers] = useState<IUserType[]>([])
     const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([])
     const [selectedGroup, setSelectedGroup] = useState('')
@@ -43,13 +29,15 @@ const GroupsPage: React.FC = () => {
         groupName: '',
         members: ''
     })
+    
     useEffect(() => {
         async function fetchGroups() {
             const res = await GroupServices.getMyGroups(user?.id as string)
             setGroups(res.groups as [])
         }
         fetchGroups()
-    }, [user])
+    }, [user ])
+
     const handleMemberEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setMemberEmail(e.target.value)
         const res = await UserServices.searchUser(e.target.value)
@@ -60,12 +48,14 @@ const GroupsPage: React.FC = () => {
         if (!selectedMembers.some(member => member._id === usr._id) && user?.id as string != usr._id) {
             setSelectedMembers([...selectedMembers, usr])
         }
-        setMemberEmail('');
-        setSearchedUsers([]);
+        setMemberEmail('')
+        setSearchedUsers([])
+        
     }
 
     const removeMember = (email: string) => {
-        setSelectedMembers(selectedMembers.filter(member => member._id !== email));
+        setSelectedMembers(selectedMembers.filter(member => member._id !== email))
+        
     };
 
     const createGroup = () => {
@@ -84,6 +74,7 @@ const GroupsPage: React.FC = () => {
                     toast.error("Unexpected Error Occured")
                 }
             } finally {
+                checkAuth()
                 closeModal()
             }
         } else {
@@ -96,7 +87,8 @@ const GroupsPage: React.FC = () => {
         try {
             const members = [...selectedMembers.map((user) => user._id), user?.id as string]
             GroupServices.addToGroup(selectedGroup, members)
-            toast.success("Your Group Created Successfully")
+            toast.success("Added Member Successfully")
+            
         } catch (error: unknown) {
             if (err instanceof Error) {
                 toast.error(err.message)
@@ -104,13 +96,16 @@ const GroupsPage: React.FC = () => {
                 toast.error("Unexpected Error Occured")
             }
         } finally {
-            closeModal()
+            setSelectedGroup('')
+            checkAuth()
+            
         }
     }
     const leaveGroup = async(groupId :string ) =>{
         try {
             GroupServices.leftGroup(groupId , user?.id as string)
             toast.success("Leaved Group Successfully")
+            checkAuth()
         }  catch (error: unknown) {
             if (err instanceof Error) {
                 toast.error(err.message)

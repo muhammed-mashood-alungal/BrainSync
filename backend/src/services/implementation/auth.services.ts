@@ -1,4 +1,4 @@
-import { JwtPayload } from "jsonwebtoken";
+import { decode, JwtPayload } from "jsonwebtoken";
 import { redisClient } from "../../configs/redis.config";
 import { HttpResponse } from "../../constants/responseMessage.constants";
 import { HttpStatus } from "../../constants/status.constants";
@@ -131,6 +131,11 @@ export class AuthService implements IAuthService {
     const decoded = verifyRefreshToken(token) as JwtPayload
     if (!decoded) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED)
+    }
+    const user = await this._userRepository.findByEmail(decoded.email as string)
+
+    if (!user?.isAcitve) {
+      throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED)
     }
 
     const payload = { id: decoded.id, role: decoded.role, email: decoded.email }

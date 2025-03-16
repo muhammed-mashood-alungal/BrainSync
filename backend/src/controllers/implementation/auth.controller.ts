@@ -138,7 +138,6 @@ export class AuthController implements IAuthController {
             const accessToken = authHeader.split(" ")[1]
             console.log(accessToken)
             if (!accessToken) {
-                console.log('NOw token foundd..................')
                 throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
             }
             const user = await this._authService.authMe(accessToken)
