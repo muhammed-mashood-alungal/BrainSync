@@ -7,7 +7,8 @@ import { HttpResponse } from '../constants/responseMessage.constants';
 export const adminAuth: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
-
+    console.log('inside amdin ----auth')
+    console.log(accessToken,refreshToken)
     if (!accessToken && !refreshToken) {
         res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN)
         return
@@ -20,7 +21,7 @@ export const adminAuth: RequestHandler = async (req, res, next) => {
         }
 
         if (!decoded && accessToken) {
-            decoded = await verifyRefreshToken(refreshToken) as JwtPayload
+            decoded = await verifyRefreshToken(refreshToken) as JwtPayload 
             if (decoded) {
                 const newAccessToken = await generateAccesToken(decoded)
                 res.cookie("accessToken", newAccessToken, {
@@ -30,7 +31,6 @@ export const adminAuth: RequestHandler = async (req, res, next) => {
                     sameSite: "strict",
                 })
             }
-
         }
 
         if (!decoded) {

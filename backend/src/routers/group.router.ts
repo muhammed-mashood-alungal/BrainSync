@@ -13,15 +13,15 @@ const userRepo = new UserRepository()
 const groupServices = new GroupServices(groupRepo, userRepo)
 const groupController = new GroupController(groupServices)
 
-groupRouter.use(authMiddleware)
 
 
-groupRouter.post('/',authMiddleware, groupController.createGroup.bind(groupController))
-groupRouter.put('/:groupId/add-members',authMiddleware, groupController.addToGroup.bind(groupController))
-groupRouter.put('/left-group/:groupId', authMiddleware,groupController.leftGroup.bind(groupController))
+
+groupRouter.post('/', authMiddleware, groupController.createGroup.bind(groupController))
+groupRouter.put('/:groupId/add-members', authMiddleware, groupController.addToGroup.bind(groupController))
+groupRouter.put('/left-group/:groupId', authMiddleware, groupController.leftGroup.bind(groupController))
 groupRouter.get('/', adminAuth, groupController.getAllGroups.bind(groupController))
-groupRouter.get('/my-groups/:userId', authMiddleware,groupController.getMyGroups.bind(groupController))
+groupRouter.get('/my-groups/:userId', authMiddleware, groupController.getMyGroups.bind(groupController))
 groupRouter.get('/:groupId', groupController.getGroupData.bind(groupController))
-groupRouter.put('/:groupId/handle-activation', adminAuth , groupController.handleActivation.bind(groupController))
+groupRouter.put('/:groupId/handle-activation', adminAuth, groupController.handleActivation.bind(groupController))
 
 export default groupRouter

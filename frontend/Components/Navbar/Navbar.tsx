@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/Context/auth.context';
-import { AuthServices } from '@/services/authServices';
+import { AuthServices } from '@/services/client/auth.client';
 import { toast } from 'react-toastify';
 
 const Navbar = () => {
@@ -64,10 +64,10 @@ const Navbar = () => {
                 Go to Dashboard
               </Link>
             </> : <>
-              <Link href="/login" className="text-cyan-400 hover:text-cyan-300">
+              <Link href="/login" className="text-cyan-400 hover:text-cyan-300" prefetch={false} >
                 Login
               </Link>
-              <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+              <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full" prefetch={false}>
                 Sign Up
               </Link>
             </>

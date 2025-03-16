@@ -2,7 +2,7 @@
 import Button from '@/Components/Button/Button';
 import Input from '@/Components/Input/Input';
 import { useAuth } from '@/Context/auth.context';
-import { AuthServices } from '@/services/authServices';
+import { AuthServices } from '@/services/client/auth.client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

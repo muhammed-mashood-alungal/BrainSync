@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { AuthServices } from "./services/authServices"
+import { AuthServices } from "./services/client/auth.client"
 import { JwtPayload } from 'jsonwebtoken'
 const adminRoutes = ["/admin", "/admin/dashboard", "/admin/users"]
 const protectedRoutes = ["/dashboard", "/profile", "/settings"]

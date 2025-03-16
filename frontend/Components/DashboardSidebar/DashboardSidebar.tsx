@@ -18,6 +18,7 @@ export default function Sidebar() {
   return (
     <div className="w-72 min-h-screen bg-[#1E1E1E] border-r border-gray-800">
       <div className="p-6">
+        
         <h1 className="text-3xl font-bold text-[#00D2D9]">Brain Sync</h1>
       </div>
       

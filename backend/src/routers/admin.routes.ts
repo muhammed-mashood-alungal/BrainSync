@@ -6,7 +6,6 @@ import { adminAuth } from "../middlewares/admin.middleware";
 
 const adminRouter = Router()
 
-
 const userRepo = new UserRepository()
 const userServices = new UserServices(userRepo)
 const userController = new UserController(userServices)

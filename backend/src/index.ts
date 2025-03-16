@@ -19,14 +19,14 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 connectDB()
 connectRedis() 
-
+ 
 app.use(morgan("dev"))
 
 app.use(session({
     secret: env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false } 
+    cookie: { secure: false }  
 }));
 
 app.use(cors({ 

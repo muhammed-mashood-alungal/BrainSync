@@ -1,30 +1,15 @@
 import axios from "axios"
-import { redirect } from "next/navigation";
-export const authInstance = axios.create({
-    baseURL : "http://localhost:5000/api/auth/",
-    withCredentials :true
-})
 
-export const userInstances = axios.create({
-    baseURL : "http://localhost:5000/api/users/",
-    withCredentials :true
-})
-export const adminInstance = axios.create({
-    baseURL : "http://localhost:5000/api/admin/",
-    withCredentials :true
-})
-export const groupInstance = axios.create({
-    baseURL : "http://localhost:5000/api/groups/",
-    withCredentials :true
-})
+const createAxiosInstance = (baseUrl: string) => {
+  const instance = axios.create({
+    baseURL: baseUrl,
+    withCredentials: true
+  });
 
+  return instance;
+};
 
-authInstance.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && error.response.status === 401) {
-            redirect('/login')
-        }
-        return Promise.reject(error)
-    }
-);
+export const authInstance = createAxiosInstance("http://localhost:5000/api/auth/");
+export const userInstances = createAxiosInstance("http://localhost:5000/api/users/");
+export const adminInstance = createAxiosInstance("http://localhost:5000/api/admin/");
+export const groupInstance = createAxiosInstance("http://localhost:5000/api/groups/");

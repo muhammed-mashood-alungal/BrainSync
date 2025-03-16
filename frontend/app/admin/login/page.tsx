@@ -1,5 +1,5 @@
 'use client'
-import { AuthServices } from '@/services/authServices';
+import { AuthServices } from '@/services/client/auth.client';
 import { validateLoginForm } from '@/validations';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';

@@ -41,6 +41,7 @@ export class GroupController implements IGroupController {
      }
      async getAllGroups(req: Request, res: Response, next: NextFunction): Promise<void> {
          try{
+            console.log('hello')
             const groups =  await this._groupServices.allGroups()
             res.status(HttpStatus.OK).json({groups : groups})
          } catch (error) {

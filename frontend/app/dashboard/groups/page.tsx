@@ -4,10 +4,10 @@ import Image from 'next/image';
 import BaseModal from '@/Components/Modal/Modal'
 import Input from '@/Components/Input/Input';
 import { validateCreateGroup } from '@/validations';
-import { GroupServices } from '@/services/groupServices';
+import { GroupServices } from '@/services/client/group.client';
 import { useAuth } from '@/Context/auth.context';
 import { toast } from 'react-toastify';
-import { UserServices } from '@/services/userServices';
+import { UserServices } from '@/services/client/user.client';
 import { IUserType } from '@/types/userTypes';
 import { IGroupType } from '@/types/groupTypes';
 import GroupDetails from '@/Components/GroupDetails/GroupDetails';

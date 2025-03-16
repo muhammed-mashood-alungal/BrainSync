@@ -4,6 +4,8 @@ import { IUserType } from "@/types/userTypes";
 import { AxiosError } from "axios";
 
 
+
+
 export const GroupServices = {
      createNewGroup: async (groupName: string, members: string[], userId: string): Promise<void> => {
         try {
@@ -22,16 +24,6 @@ export const GroupServices = {
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Your Groups Loading Failed. Please try again."
-            throw new Error(errorMessage)
-        }
-    },
-    getAllGroups : async () : Promise<IGroupType[]> => {
-        try {
-            const response = await groupInstance.get(`/`)
-            return response.data?.groups
-        } catch (error) {
-            const err = error as AxiosError<{ error: string }>
-            const errorMessage = err.response?.data?.error || "Loading all groups failed. Please try again."
             throw new Error(errorMessage)
         }
     },
@@ -55,16 +47,6 @@ export const GroupServices = {
             throw new Error(errorMessage)
         }
     },
-    getGroupData : async (groupId : string) : Promise<IGroupType> => {
-        try {
-            const response = await groupInstance.put(`/${groupId}`)
-            return response.data
-        } catch (error) {
-            const err = error as AxiosError<{ error: string }>
-            const errorMessage = err.response?.data?.error || "Loading Group Data failed. Please try again."
-            throw new Error(errorMessage)
-        }
-    },
     deactivate: async (groupId : string): Promise<void> => {
         try {
             const response = await groupInstance.put(`/${groupId}/handle-activation`, {groupId})
@@ -74,5 +56,5 @@ export const GroupServices = {
             const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
             throw new Error(errorMessage)
         }
-    },
+    }
 }

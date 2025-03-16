@@ -7,12 +7,13 @@ import { HttpResponse } from '../constants/responseMessage.constants';
 export const authMiddleware: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
-
+    
     if (!accessToken && !refreshToken) {
+        console.log('NO TOKEN PROVIDED')
         res.status(HttpStatus.NOT_FOUND).json(HttpResponse.NO_TOKEN)
         return
     }
-    try {
+    try {      
         if (accessToken) {
             try {
                 await verifyAccessToken(accessToken)
