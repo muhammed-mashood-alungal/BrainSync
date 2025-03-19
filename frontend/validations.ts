@@ -1,6 +1,7 @@
 import { stat } from "fs"
 import { IuserLogin, IuserSignUp } from "./types/userSignUp.types"
 import { IUserType } from "./types/userTypes"
+import { ISessionTypes } from "./types/sessionTypes"
 
 export const validateSignUpForm = (formData: IuserSignUp) => {
     let err: IuserSignUp = { username: '', email: '', password: '', confirmPassword: '' }
@@ -99,3 +100,57 @@ export const validateCreateGroup = (groupName: string, members: IUserType[]) => 
     return {status : status , err }
 
 }
+
+export const validateSessionForm = (formData: Partial<ISessionTypes>) : {status : Boolean , errors : Partial<ISessionTypes> } => {
+    const errors : Partial<ISessionTypes> = {
+        sessionName: '',
+        subject: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        groupId: ''
+    }
+  
+    let status = true
+    // Check if session name is provided
+    if (!formData?.sessionName?.trim()) {
+        errors.sessionName = "Session name is required."
+        status = false
+    }
+
+    // Check if subject is provided
+    if (!formData?.subject?.trim()) {
+        errors.subject = "Subject is required.";
+        status = false
+    }
+    
+    // Validate date (should be in the future)
+    const currentDate = new Date().toISOString().split("T")[0]; // Get today's date (YYYY-MM-DD)
+    if (!formData.date) {
+        errors.date = "Date is required.";
+        status = false
+    } else if (formData.date < currentDate) {
+        errors.date = "Date must be in the future.";
+        status = false
+    }
+
+    // Validate time (should not be empty)
+    if (!formData.startTime) {
+        errors.startTime = "Time is required.";
+        status = false
+    }
+
+    if (!formData.endTime) {
+        errors.endTime = "Duration is required.";
+        status = false
+    } 
+
+    // Check if group is selected
+    if (!formData.groupId) {
+        errors.groupId = "Group selection is required.";
+        status = false
+    }
+
+    // Return errors (if any)
+    return {status ,errors};
+};

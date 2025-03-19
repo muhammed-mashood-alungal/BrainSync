@@ -2,7 +2,8 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { UserRepository } from "../repositories/implementation/user.repository";
 import { env } from "../configs/env.config";
-import {  Types } from "mongoose";
+import { Types } from "mongoose";
+import { redisClient } from "../configs/redis.config";
 
 
 const _userRepository = new UserRepository()
@@ -17,8 +18,8 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log('------------------')
         const user = await _userRepository.findOrCreateUser(profile)
+
         return done(null, user)
       } catch (error) {
         return done(error)

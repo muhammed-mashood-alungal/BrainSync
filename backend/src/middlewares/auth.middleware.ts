@@ -9,19 +9,20 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken
     
     if (!accessToken && !refreshToken) {
-        console.log('NO TOKEN PROVIDED')
         res.status(HttpStatus.NOT_FOUND).json(HttpResponse.NO_TOKEN)
         return
     }
     try {      
         if (accessToken) {
             try {
-                await verifyAccessToken(accessToken)
+                const decoded = await verifyAccessToken(accessToken)
+                req.user = decoded?.id as string
                 next()
                 return
             } catch (accessTokenErr) {
                 if (refreshToken) {
                     const decoded = await verifyRefreshToken(refreshToken)
+                    req.user = decoded?.id as string
                     if (decoded) {
                         const newAccessToken = await generateAccesToken(decoded as JwtPayload)
                         res.cookie("accessToken", newAccessToken, {
@@ -41,6 +42,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
 
         } else {
             const decoded = await verifyRefreshToken(refreshToken)
+            req.user = decoded?.id as JwtPayload
             if (decoded) {
                 const newAccessToken = await generateAccesToken(decoded as JwtPayload)
 

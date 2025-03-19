@@ -24,6 +24,9 @@ authRouter.post('/refresh-token', authController.refreshAccessToken.bind(authCon
 authRouter.post('/logout', authMiddleware, authController.logout.bind(authController))
 authRouter.post('/forgot-password', authController.forgotPassword.bind(authController))
 authRouter.post('/reset-password', authController.resetPassword.bind(authController))
-authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"]  , prompt: 'select_account'}))
+authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email" ,
+    "https://www.googleapis.com/auth/calendar"
+]  , prompt: 'select_account'}))
+
 authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: `${env.CLIENT_ORIGIN}/login` }), authController.googleAuthRedirect.bind(authController))
 export default authRouter 

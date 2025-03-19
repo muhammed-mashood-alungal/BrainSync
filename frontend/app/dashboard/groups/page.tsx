@@ -32,8 +32,8 @@ const GroupsPage: React.FC = () => {
     
     useEffect(() => {
         async function fetchGroups() {
-            const res = await GroupServices.getMyGroups(user?.id as string)
-            setGroups(res.groups as [])
+            const groups = await GroupServices.getMyGroups(user?.id as string)
+            setGroups(groups as [])
         }
         fetchGroups()
     }, [user ])

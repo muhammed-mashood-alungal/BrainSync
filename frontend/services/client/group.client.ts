@@ -17,10 +17,10 @@ export const GroupServices = {
             throw new Error(errorMessage)
         }
     },
-    getMyGroups : async (userId : string) : Promise<{groups : IUserType[]}> => {
+    getMyGroups : async (userId : string) : Promise<IGroupType[]> => {
         try {
             const response = await groupInstance.get(`/my-groups/${userId}`,)
-            return response.data
+            return response.data?.groups
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Your Groups Loading Failed. Please try again."

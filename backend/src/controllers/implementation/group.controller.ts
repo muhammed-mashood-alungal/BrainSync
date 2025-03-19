@@ -56,7 +56,7 @@ export class GroupController implements IGroupController {
                throw createHttpsError(HttpStatus.NOT_FOUND,HttpResponse.USER_NOT_FOUND)
             }
            const groups =  await this._groupServices.myGroups(userId)
-           console.log(groups)
+          
            res.status(HttpStatus.OK).json({groups:groups})
         } catch (error) {
            next(error)

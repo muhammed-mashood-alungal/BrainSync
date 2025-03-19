@@ -20,7 +20,7 @@ export class GroupRepository extends BaseRepository<IGroupModel> implements IGro
     }
 
     async getGroupData(groupId: Types.ObjectId): Promise<IGroupModel | null> {
-        return await this.findById(groupId)
+        return await this.model.findById(groupId).populate('members')
     }
 
     async getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]> {

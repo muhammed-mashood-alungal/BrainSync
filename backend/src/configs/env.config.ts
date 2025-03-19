@@ -45,5 +45,8 @@ export const env = {
    },
    get SESSION_SECRET(){
       return process.env.SESSION_SECRET
-   } 
+   } ,
+   get SHARED_CALENDAR_ID(){
+      return  process.env.SHARED_CALENDAR_ID
+   }
 }

@@ -41,11 +41,13 @@ import authRouter from './routers/auth.router'
 import userRouter from './routers/user.router'
 import adminRouter from './routers/admin.routes'
 import groupRouter from './routers/group.router'
+import sessionRouter from './routers/session.router'
 
 app.use('/api/auth/',authRouter) 
 app.use('/api/users/',userRouter) 
 app.use('/api/admin/',adminRouter) 
 app.use('/api/groups/',groupRouter) 
+app.use('/api/sessions/',sessionRouter) 
 app.use(pageNotFound)
 app.use(errorHandler)
 
