@@ -8,7 +8,6 @@ import { redisClient } from "../../configs/redis.config";
 import { createHttpsError } from "../../utils/httpError.utils";
 import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
-import { createGroupSessionServiceAccount } from "../../utils/calendar.util";
 import { v4 as uuidv4 } from "uuid";
 import { env } from "../../configs/env.config";
 import { sendSessionLinktoAttendees } from "../../utils/sendEmail.utils";
