@@ -119,7 +119,6 @@ export default function SessionInterface() {
                 return null;
         }
     };
-
     return (
         <div className="min-h-screen bg-[#1E1E1E] text-white ">
             {/* Top bar */}
