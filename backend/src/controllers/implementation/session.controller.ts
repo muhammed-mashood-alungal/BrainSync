@@ -11,11 +11,26 @@ export class SessionController implements ISessionController {
         try {
             const data = req.body
             const userId = req.user
-
-            
-            
             await this._sessionServices.createSession(data, userId as string)
             res.status(HttpStatus.OK).json({ message: HttpResponse.CREATED })
+        } catch (err) {
+            next(err)
+        }
+    }
+    async allSessions(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const sessions = await this._sessionServices.getAllSessions()
+            console.log(sessions)
+            res.status(HttpStatus.OK).json({sessions : sessions})
+        } catch (err) {
+            next(err)
+        }
+    }
+    async mySessions(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = req.user
+            const sessions = await this._sessionServices.getMySessions(userId)
+            res.status(HttpStatus.OK).json({ sessions : sessions })
         } catch (err) {
             next(err)
         }

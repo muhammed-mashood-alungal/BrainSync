@@ -53,8 +53,15 @@ export class SessionServices implements ISessionServices {
     async getMySessions(userId : unknown) : Promise<ISessionModal[]>{
         const myGroups =await this._groupRepository.getMyGroups(userId as Types.ObjectId)
         const groups  = myGroups.map(grp=>grp._id)
-        
-        return await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[])
+        console.log(groups)
+        const result =  await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[])
+        console.log(result)
+        return result
+    }
+    async getAllSessions() : Promise<ISessionModal[]>{
+        const result =  await this._sesionRepository.getAllSessions()
+        console.log('result : '+result)
+        return result
     }
 
 }

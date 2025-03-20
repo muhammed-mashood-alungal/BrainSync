@@ -1,11 +1,11 @@
 import React from 'react'
-import SessionsListing from './sessionList'
 import { getAllSessions, getMySessions } from '@/services/server/session.server'
+import SessionsListing from './SessionsListing'
 
 async function page() {
     
    
-    const sessions = await getMySessions()
+    const sessions = await getAllSessions()
     
     return (
         <div className="p-6 bg-[#1E1E1E] text-white w-full">

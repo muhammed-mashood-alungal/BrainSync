@@ -1,9 +1,9 @@
 'use client'
 import React, { useState } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
-import CreateSession from './CreateSession'
 import { ISessionTypes } from '@/types/sessionTypes';
 import { IUserType } from '@/types/userTypes';
+import CreateSession from '@/app/dashboard/sessions/CreateSession';
 
 
 
@@ -61,7 +61,7 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     <input
                         type="text"
                         placeholder="Search sessions"
-                        className="w-full bg-gray-900 text-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500"
+                        className="w-full bg-gray-900 text-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#8979FF]"
                     />
                     <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
                 </div>
@@ -80,14 +80,14 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     </button>
                 </div>
 
-                <div className="relative w-full sm:w-auto">
+                {/* <div className="relative w-full sm:w-auto">
                     <button
                     onClick={()=>setCreateOpen(true)}
                         className="bg-[#00D2D9] hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 w-full sm:w-auto"
                     >
                         Schedule a Session
                     </button>
-                </div>
+                </div> */}
             </div>
 
 
@@ -96,7 +96,7 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     <div
                         key={session._id}
                         className="rounded-lg overflow-hidden bg-zinc-900 border-l-4"
-                        style={{ borderLeftColor: '#00D2D9' }}
+                        style={{ borderLeftColor: '#8979FF' }}
                     >
                         <div className="p-4">
                             <h3 className="font-semibold mb-1">{session.sessionName}</h3>
@@ -133,7 +133,7 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                             </div>
 
                             <div className="mt-4">
-                                <button className="text-cyan-400 hover:text-cyan-300 text-sm">Details</button>
+                                <button className="text-[#8979FF] hover:text-[#5a50a7]  hover:cursor-pointer text-sm">Details</button>
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                             key={index}
                             onClick={() => paginate(index + 1)}
                             className={`w-8 h-8 flex items-center justify-center rounded-md ${currentPage === index + 1
-                                ? 'bg-cyan-500 text-white'
+                                ? 'bg-[#8979FF] text-white'
                                 : 'bg-gray-800 text-gray-400'
                                 }`}
                         >

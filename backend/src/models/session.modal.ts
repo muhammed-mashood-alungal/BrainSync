@@ -30,7 +30,8 @@ const sessionSchema = new Schema<ISessionModal>({
     },
     createdBy : {
         type : Schema.Types.ObjectId,
-        required : true
+        required : true,
+        ref : "User"
     },
     groupId: {
         type: Schema.Types.ObjectId,

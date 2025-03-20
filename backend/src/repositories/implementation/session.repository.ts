@@ -17,5 +17,8 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
     async getGroupsSessions(groups: Types.ObjectId[]): Promise<ISessionModal[]> {
         return await this.model.find({ groupId: { $in: groups } }).populate("createdBy").populate('groupId')
     }
+    async getAllSessions(): Promise<ISessionModal[]> {
+        return await this.model.find({}).populate("createdBy").populate('groupId')
+    }
 
 }

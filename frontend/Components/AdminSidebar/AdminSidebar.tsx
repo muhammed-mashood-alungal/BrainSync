@@ -10,7 +10,7 @@ export default function AdminSidebar() {
   const navItems = [
     { icon: 'home', label: 'Dashboard', path: '/admin' },
     { icon: 'file-text', label: 'Students', path: '/admin/students' },
-    { icon: 'folder', label: 'Resources', path: '/admin/resources' },
+    { icon: 'folder', label: 'Sessions', path: '/admin/sessions' },
     { icon: 'users', label: 'Groups', path: '/admin/groups' },
     { icon: 'user', label: 'Reports', path: '/admin/reports' }
   ]
