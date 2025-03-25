@@ -7,9 +7,10 @@ import { HttpResponse } from '../constants/responseMessage.constants';
 export const authMiddleware: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
-    
+    console.log(accessToken , refreshToken)
     if (!accessToken && !refreshToken) {
-        res.status(HttpStatus.NOT_FOUND).json(HttpResponse.NO_TOKEN)
+        console.log(HttpResponse.NO_TOKEN)
+        res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.UNAUTHORIZED)
         return
     }
     try {      

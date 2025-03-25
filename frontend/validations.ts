@@ -136,15 +136,19 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>) : {status 
 
     // Validate time (should not be empty)
     if (!formData.startTime) {
-        errors.startTime = "Time is required.";
+        errors.startTime = "Start Time is required.";
         status = false
     }
 
     if (!formData.endTime) {
-        errors.endTime = "Duration is required.";
+        errors.endTime = "End Time is required.";
         status = false
     } 
-
+    if(formData?.endTime &&   formData.startTime  && formData?.endTime <formData.startTime ){
+        errors.endTime = "End Time Should Not Before Starting Time.";
+        status = false
+    }
+    
     // Check if group is selected
     if (!formData.groupId) {
         errors.groupId = "Group selection is required.";

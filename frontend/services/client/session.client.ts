@@ -13,5 +13,15 @@ export const SessionServices = {
             const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
             throw new Error(errorMessage)
         }
+    },
+    async validateSession(sessionCode: string): Promise<{status : boolean , message : string}> {
+        try {
+            const response = await sessionInstances.get(`/validate/${sessionCode}`)
+            return response.data
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
+            throw new Error(errorMessage)
+        }
     }
 }

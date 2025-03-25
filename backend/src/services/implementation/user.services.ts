@@ -42,7 +42,6 @@ export class UserServices implements IUserService {
         return true
     }
     async getAllStudents(): Promise<IUser[]> {
-        console.log('service hit')
         return this._userRepository.find({role : 'student'})
     }
     async blockOrUnblock(id: unknown): Promise<boolean> {
