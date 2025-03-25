@@ -99,7 +99,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
         const peer = new Peer({ initiator: false, trickle: false, stream });
         peer.on('signal', (signal) => {
             socketRef.current?.emit('signal', { to: incomingUserId, from: callerId, signal });
-        });
+        })
         peer.on('error', (err) => console.error(`Peer error with ${incomingUserId}:`, err));
         return peer;
     };
@@ -115,10 +115,30 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
     };
 
     const leaveRoom = () => {
-        myStreamRef.current?.getTracks().forEach((track) => track.stop());
-        peersRef.current.forEach(({ peer }) => peer.destroy());
-        socketRef.current?.disconnect();
-    };
+        try {
+            if (myStreamRef.current) {
+                myStreamRef.current.getTracks().forEach((track) => {
+                    track.stop()
+                    myStreamRef.current?.removeTrack(track)
+                })
+                myStreamRef.current = null
+            } 
+    
+            if (peersRef.current && peersRef.current.length > 0) {
+                peersRef.current.forEach(({ peer }) => {
+                    peer.destroy()
+                })
+    
+                peersRef.current = []
+            } 
+    
+            if (socketRef.current) {
+                socketRef.current.disconnect()
+            } 
+        } catch (error) {
+            console.error(" Error leaving room:", error)
+        }
+    }
 
     const value: VideoCallState = {
         peers,

@@ -9,5 +9,7 @@ export interface ISessionRepository {
      getSessionByCode(code: string): Promise<ISessionModal | null>
      getGroupsSessions(groups:Types.ObjectId[]): Promise<ISessionModal[]>
      getAllSessions() : Promise<ISessionModal[]>
+     update(newData :ISessionModal , sessionId  :Types.ObjectId) : Promise<ISessionModal |null>
+     findById(id:Types.ObjectId) : Promise<ISessionModal |null>
 
 }

@@ -45,4 +45,16 @@ export class SessionController implements ISessionController {
             next(err)
         }
     }
+    async updateSession(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const {sessionId} = req.params
+            const data = req.body
+            const userId = req.user
+
+            const result = await this._sessionServices.updateSession(data,sessionId ,userId)
+            res.status(HttpStatus.OK).json(result)
+        }catch(err){
+            next(err)
+        }
+    }
 } 
