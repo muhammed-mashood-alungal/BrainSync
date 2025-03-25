@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import morgan from 'morgan'
 import session from "express-session";
+import { Server } from "socket.io";
+import http from 'http'
+import setupSocket from './utils/socket.util'
 dotenv.config()
 
 const app = express()
@@ -36,6 +39,16 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Authorization"],
 }))
+const server = http.createServer(app)
+const io = new Server(server, {
+    cors: {
+      origin: "http://localhost:3000", 
+      methods: ["GET", "POST"],
+    },
+  })
+
+setupSocket(io)
+
 
 import authRouter from './routers/auth.router'
 import userRouter from './routers/user.router'
@@ -43,14 +56,17 @@ import adminRouter from './routers/admin.routes'
 import groupRouter from './routers/group.router'
 import sessionRouter from './routers/session.router'
 
+
 app.use('/api/auth/',authRouter) 
 app.use('/api/users/',userRouter) 
 app.use('/api/admin/',adminRouter) 
 app.use('/api/groups/',groupRouter) 
 app.use('/api/sessions/',sessionRouter) 
+
+
 app.use(pageNotFound)
 app.use(errorHandler)
 
-app.listen(env.PORT, () => {
+server.listen(env.PORT, () => {
     console.log(`Server Started on Port ${env.PORT}`) 
 }) 

@@ -54,6 +54,7 @@ function CreateSession({ onClose }: { onClose: () => void }) {
     if (result.status) {
       console.log(formData)
       await SessionServices.createSession(formData)
+      onClose()
     } else {
       setErr(prev => {
         return {
@@ -81,7 +82,7 @@ function CreateSession({ onClose }: { onClose: () => void }) {
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-              {/* Session Name */}
+              {/* Session Name */} 
               <div>
                 <Input
                   type="text"

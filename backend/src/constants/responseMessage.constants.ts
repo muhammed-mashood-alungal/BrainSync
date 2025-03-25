@@ -20,5 +20,6 @@ export const HttpResponse = {
     ADDED_TO_GROUP :"Added To Group",
     LEFT_GROUP : 'Left From group',
     RESOURCE_NOT_FOUND  :'Resource not found',
-    ENTRY_RESTRICTED : 'Entry Restricted'
+    ENTRY_RESTRICTED : 'Entry Restricted',
+    UNAUTHORIZED : 'Unauthorized Access, Please Login First'
 }

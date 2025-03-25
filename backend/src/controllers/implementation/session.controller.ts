@@ -35,4 +35,14 @@ export class SessionController implements ISessionController {
             next(err)
         }
     }
+    async validateSession(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try{
+            const {sessionCode} = req.params
+            const userId = req.user
+            const result = await this._sessionServices.validateSession(sessionCode ,userId)
+            res.status(HttpStatus.OK).json(result)
+        }catch(err){
+            next(err)
+        }
+    }
 } 

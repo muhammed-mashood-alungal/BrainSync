@@ -17,5 +17,7 @@ const sessionController = new SessionController(sessionServices)
 sessionRouter.post('/create' , authMiddleware,sessionController.create.bind(sessionController))
 sessionRouter.get('/' , adminAuth , sessionController.allSessions.bind(sessionController))
 sessionRouter.get('/my-sessions' , authMiddleware , sessionController.mySessions.bind(sessionController))
+sessionRouter.get('/validate/:sessionCode', authMiddleware , sessionController.validateSession.bind(sessionController) )
+
 
 export default sessionRouter

@@ -12,7 +12,7 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
         return await this.create(data)
     }
     async getSessionByCode(code: string): Promise<ISessionModal | null> {
-        return await this.findOne({ code: code })
+        return await this.model.findOne({ code: code }).populate('createdBy').populate('groupId')
     }
     async getGroupsSessions(groups: Types.ObjectId[]): Promise<ISessionModal[]> {
         return await this.model.find({ groupId: { $in: groups } }).populate("createdBy").populate('groupId')
@@ -20,5 +20,4 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
     async getAllSessions(): Promise<ISessionModal[]> {
         return await this.model.find({}).populate("createdBy").populate('groupId')
     }
-
 }

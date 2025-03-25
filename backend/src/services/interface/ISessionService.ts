@@ -5,4 +5,6 @@ export interface ISessionServices {
     createSessionCode(date : Date): string
     getMySessions(userId : unknown) : Promise<ISessionModal[]>
     getAllSessions() : Promise<ISessionModal[]>
+    validateSession(sessionCode : string  , userId:unknown) : Promise<{status : boolean , message : string}>
+    
 }

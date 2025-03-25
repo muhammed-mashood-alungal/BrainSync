@@ -1,0 +1,97 @@
+/* Same as your Room.css but with module syntax */
+.roomContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #1a1a1a;
+    color: white;
+  }
+  
+  .roomHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2c2c2c;
+  }
+  
+  .roomHeader h2 {
+    margin: 0;
+  }
+  
+  .roomInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .copyButton {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .videoGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: 225px;
+    gap: 1rem;
+    padding: 1rem;
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .videoContainer {
+    position: relative;
+    background-color: #303030;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .videoElement {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .videoLabel {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+  
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #2c2c2c;
+  }
+  
+  .controlButton {
+    background-color: #424242;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .controlButton.active {
+    background-color: #f44336;
+  }
+  
+  .leaveButton {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
