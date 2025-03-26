@@ -5,14 +5,16 @@ import { useAuth } from '@/Context/auth.context';
 import { GroupServices } from '@/services/client/group.client';
 import { SessionServices } from '@/services/client/session.client';
 import { IGroupType } from '@/types/groupTypes';
-import { ISessionTypes } from '@/types/sessionTypes';
+import { ISessionTypes, Session } from '@/types/sessionTypes';
 import { validateSessionForm } from '@/validations';
 import { AxiosError } from 'axios';
 import { ChevronDown } from 'lucide-react';
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
 
-function CreateSession({ onClose, type, data }: { onClose: () => void, type: string, data: ISessionTypes | null }) {
+
+
+function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Session) => void, type: string, data: ISessionTypes | null }) {
   const [myGroups, setMyGroups] = useState<IGroupType[]>([])
   const { user } = useAuth()
 
@@ -58,18 +60,18 @@ function CreateSession({ onClose, type, data }: { onClose: () => void, type: str
     if (result.status) {
       try {
         if (type == 'create') {
-          await SessionServices.createSession(formData)
+          const response : Session = await SessionServices.createSession(formData)
+          onClose(response)
         } else {
           console.log(formData)
-          await SessionServices.updateSession(formData, data?._id as string)
+          const response : Session = await SessionServices.updateSession(formData, data?._id as string)
+          onClose(response)
         }
       } catch (err: unknown) {
         const error = err as AxiosError<string>
         console.log(error)
         toast.error(error.message || "An UnExpected Error Occured")
       }
-
-      onClose()
     } else {
       setErr(prev => {
         return {
@@ -195,7 +197,7 @@ function CreateSession({ onClose, type, data }: { onClose: () => void, type: str
 
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={()=>onClose()}
                   className="mt-4 text-cyan-400 hover:text-cyan-300 focus:outline-none"
                   style={{ color: '#00D2D9' }}
                 >

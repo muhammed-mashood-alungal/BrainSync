@@ -19,7 +19,7 @@ export class SessionServices implements ISessionServices {
         private _groupRepository: IGroupRepository
     ) { }
 
-    async createSession(data: Partial<ISessionModal>, userId: unknown): Promise<ISessionModal> {
+    async createSession(data: Partial<ISessionModal>, userId: unknown): Promise<ISessionModal | null> {
 
         const code = this.createSessionCode(data.date as Date)
         const sessionLink = `${env.CLIENT_ORIGIN}/sessions/${code}`
@@ -46,20 +46,57 @@ export class SessionServices implements ISessionServices {
         await sendSessionLinktoAttendees(attendeeEmails, data.sessionName as string, sessionLink, startTime, endTime)
 
 
-        return await this._sesionRepository.createSession(sessionData)
+        const inserted =  await this._sesionRepository.createSession(sessionData)
+        return await this._sesionRepository.findById(inserted._id as Types.ObjectId)
     }
     createSessionCode(date: Date): string {
         const hash = uuidv4()
         return hash.substring(0, 8).toUpperCase()
     }
 
-    async getMySessions(userId: unknown): Promise<ISessionModal[]> {
+    async getMySessions(userId: unknown , subject : string , date: string): Promise<ISessionModal[]> {
         const myGroups = await this._groupRepository.getMyGroups(userId as Types.ObjectId)
         const groups = myGroups.map(grp => grp._id)
-        const result = await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[])
+
+        interface IFilter {
+            subject? : string;
+            date? : {}
+        }
+
+        let filter : IFilter ={}
+        if (subject && subject !== "Subject") {
+            filter.subject = subject;
+        }
+        
+        if (date && date !== "Date") {
+            const now = new Date();
+            let startDate, endDate;
+        
+            if (date === "Today") {
+                startDate = new Date(); // Create a new Date object for today
+                startDate.setHours(0, 0, 0, 0); // Set to the start of the day
+                endDate = new Date(); // Create a new Date object for today
+                endDate.setHours(23, 59, 59, 999); // Set to the end of the day
+            } else if (date === "This Week") {
+                startDate = new Date(now); // Clone current date
+                startDate.setDate(now.getDate() - now.getDay()); // Get start of the week
+                startDate.setHours(0, 0, 0, 0);
+        
+                endDate = new Date(startDate); // Clone startDate
+                endDate.setDate(startDate.getDate() + 6); // Get end of the week
+                endDate.setHours(23, 59, 59, 999);
+            } else if (date === "This Month") {
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the month
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of the month
+            }
+        
+            filter.date = { $gte: startDate, $lte: endDate };
+        }
+        const result = await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[] ,filter)
         return result
     }
     async getAllSessions(): Promise<ISessionModal[]> {
+        
         const result = await this._sesionRepository.getAllSessions()
         console.log('result : ' + result)
         return result

@@ -1,42 +1,41 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, ChevronDown } from 'lucide-react';
 import CreateSession from './CreateSession'
-import { ISessionTypes } from '@/types/sessionTypes';
-import { IUserType } from '@/types/userTypes';
+import { ISessionTypes ,Session} from '@/types/sessionTypes';
 import { useAuth } from '@/Context/auth.context';
 import { IGroupType } from '@/types/groupTypes';
 import { useRouter } from 'next/navigation';
 import BaseModal from '@/Components/Modal/Modal';
 import SessionDetailsModal from './SessionDetails';
+import { SessionServices } from '@/services/client/session.client';
 
 
-
-interface Session extends ISessionTypes {
-    _id: string,
-    createdBy: IUserType
-}
-const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
+const SessionsListing: React.FC<{ initialSessions: Session[] }> = ({ initialSessions }) => {
+    const [sessions, setSessions] = useState<Session[]>(initialSessions)
     const [currentPage, setCurrentPage] = useState(1)
     const [iscreatOpen, setCreateOpen] = useState(false)
     const [isUpdateOpen, setUpdateOpen] = useState(false)
     const [isDetailsOpen, setIsDetailsOpen] = useState(false)
     const [sessionData, setSessionData] = useState<ISessionTypes | null>(null)
+    const [filterSubject , setFilterSubject] = useState('')
+    const [filterDate , setFilterDate] = useState('')
+    const [searchQuery,setSearchQuery]  = useState('')
     const { user } = useAuth()
     const router = useRouter()
 
 
 
-    const sessionsPerPage = 9;
-    const totalPages = Math.ceil(sessions?.length / sessionsPerPage);
+    const sessionsPerPage = 9
+    const totalPages = Math.ceil(sessions?.length / sessionsPerPage)
 
 
     const indexOfLastSession = currentPage * sessionsPerPage;
     const indexOfFirstSession = indexOfLastSession - sessionsPerPage;
-    const currentSessions = sessions?.slice(indexOfFirstSession, indexOfLastSession);
+    const currentSessions = sessions?.slice(indexOfFirstSession, indexOfLastSession)
 
-    // Change page
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+   
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
     // Get status color
     const getStatusColor = (status: string) => {
@@ -51,14 +50,15 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                 return 'text-gray-400';
         }
     }
+
     const goToRoom = (sessionCode: string) => {
         router.push(`/sessions/${sessionCode}`)
     }
+
     const getStatus = (start: Date | string, end: Date | string) => {
         const startDate = new Date(start)
         const endDate = new Date(end)
         const currentDate = new Date()
-
 
         if (startDate > currentDate) {
             return 'Scheduled'
@@ -69,38 +69,77 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
         if (endDate < currentDate) {
             return 'Ended'
         }
-
-
     }
+
+    const filteredSessions = async(subject : string , date : string)=>{
+      const sessions = await SessionServices.getFilteredSessions(subject , date)
+      setSessions(sessions)
+    }
+
+    useEffect(()=>{
+     if(searchQuery.trim()){
+        setSessions((prev)=>{
+            return prev.filter((s)=>{
+              return  s.sessionName.includes(searchQuery)
+            })
+        })
+     }else{
+        filteredSessions('','')
+     }
+    },[searchQuery])
 
     return (
         <>
 
             <div className="flex flex-wrap gap-2 mb-6">
-            
-
                 <div className="relative flex-grow min-w-[200px]">
                     <input
                         type="text"
+                        value={searchQuery}
+                        onChange={(e)=>setSearchQuery(e.target.value)}
                         placeholder="Search sessions"
                         className="w-full bg-gray-900 text-gray-300 rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                     />
                     <Search className="absolute left-3 top-2.5 text-gray-500" size={16} />
                 </div>
 
-                <div className="relative w-full sm:w-auto">
-                    <button className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 flex items-center w-full sm:w-auto">
-                        <span className="mr-2">Subject</span>
-                        <ChevronDown size={16} />
-                    </button>
-                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
+            {/* Subject Dropdown */}
+            <div className="relative w-full sm:w-auto">
+                <select
+                    className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 w-full sm:w-auto appearance-none pr-8"
+                    onChange={(e) => {
+                        setFilterSubject(e.target.value)
+                        filteredSessions(e.target.value as string , filterDate)
+                    }}
+                    value={filterSubject}
+                >
+                    <option value="Subject" >Subject</option>
+                    <option value="Mathematics">Math</option>
+                    <option value="Physics">Physics</option>
+                    <option value="History">History</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            </div>
 
-                <div className="relative w-full sm:w-auto">
-                    <button className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 flex items-center w-full sm:w-auto">
-                        <span className="mr-2">Date</span>
-                        <ChevronDown size={16} />
-                    </button>
-                </div>
+            {/* Date Dropdown */}
+            <div className="relative w-full sm:w-auto">
+                <select
+                    className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 w-full sm:w-auto appearance-none pr-8"
+                    onChange={(e) => {
+                        setFilterDate(e.target.value)
+                        filteredSessions(filterSubject , e.target.value)
+                    }}
+                    value={filterDate}
+                >
+                    <option value="Date" >Date</option>
+                    <option value="Today">Today</option>
+                    <option value="This Week">This Week</option>
+                    <option value="This Month">This Month</option>
+                </select>
+                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+            </div>
+        </div>
 
                 <div className="relative w-full sm:w-auto">
                     <button
@@ -186,7 +225,6 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                                   onClick={()=>{
                                     setIsDetailsOpen(true)
                                     setSessionData(session)
-                                    console.log('EHLllooooo')
                                   }}
                                 >Details</button>
 
@@ -228,8 +266,23 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                <SessionDetailsModal session={sessionData}/>       
             </BaseModal>
 
-            {iscreatOpen && <CreateSession onClose={() => setCreateOpen(false)} type={'create'} data={null} />}
-            {isUpdateOpen && <CreateSession onClose={() => {
+            {iscreatOpen && <CreateSession onClose={(newSession? : Session) => {
+                setCreateOpen(false)
+                if(newSession){
+                    console.log('Logger')
+                    setSessions((prev)=>{
+                        return [...prev ,newSession]
+                    })
+                }
+            }} type={'create'} data={null} />}
+            {isUpdateOpen && <CreateSession onClose={(newSession? : Session) => {
+                if(newSession){
+                    setSessions((prev)=>{
+                        return prev.map((s)=>{
+                            return s._id == sessionData?._id ? newSession : s
+                        })
+                    })
+                }
                 setUpdateOpen(false)
                 setSessionData(null)
             }} type={'update'} data={sessionData} />

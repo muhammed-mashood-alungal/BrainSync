@@ -14,3 +14,8 @@ export interface ISessionTypes {
     code : string
     createdBy : string | IUserType
 }
+
+export interface Session extends ISessionTypes {
+    _id: string,
+    createdBy: IUserType
+}

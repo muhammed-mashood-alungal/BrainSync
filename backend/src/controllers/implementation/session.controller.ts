@@ -11,8 +11,8 @@ export class SessionController implements ISessionController {
         try {
             const data = req.body
             const userId = req.user
-            await this._sessionServices.createSession(data, userId as string)
-            res.status(HttpStatus.OK).json({ message: HttpResponse.CREATED })
+            const newData = await this._sessionServices.createSession(data, userId as string)
+            res.status(HttpStatus.OK).json({newSession : newData})
         } catch (err) {
             next(err)
         }
@@ -29,7 +29,8 @@ export class SessionController implements ISessionController {
     async mySessions(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.user
-            const sessions = await this._sessionServices.getMySessions(userId)
+            const {subject , date} = req.query
+            const sessions = await this._sessionServices.getMySessions(userId ,subject as string , date as string)
             res.status(HttpStatus.OK).json({ sessions : sessions })
         } catch (err) {
             next(err)
@@ -51,8 +52,8 @@ export class SessionController implements ISessionController {
             const data = req.body
             const userId = req.user
 
-            const result = await this._sessionServices.updateSession(data,sessionId ,userId)
-            res.status(HttpStatus.OK).json(result)
+            const updatedSession = await this._sessionServices.updateSession(data,sessionId ,userId)
+            res.status(HttpStatus.OK).json({updatedSession : updatedSession})
         }catch(err){
             next(err)
         }

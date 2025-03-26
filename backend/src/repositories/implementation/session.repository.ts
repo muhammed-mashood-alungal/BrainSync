@@ -4,6 +4,12 @@ import { ISessionRepository } from "../interface/ISessionRepository";
 import Session, { ISessionModal } from "../../models/session.modal";
 import { ObjectId, Types } from "mongoose";
 
+
+interface IFilter {
+    subject? : string;
+    date? : {}
+}
+
 export class SessionRepository extends BaseRepository<ISessionModal> implements ISessionRepository {
     constructor() {
         super(Session)
@@ -17,15 +23,15 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
     async getSessionByCode(code: string): Promise<ISessionModal | null> {
         return await this.model.findOne({ code: code }).populate('createdBy').populate('groupId')
     }
-    async getGroupsSessions(groups: Types.ObjectId[]): Promise<ISessionModal[]> {
-        return await this.model.find({ groupId: { $in: groups } }).populate("createdBy").populate('groupId')
+    async getGroupsSessions(groups: Types.ObjectId[], filter : IFilter): Promise<ISessionModal[]> {
+        return await this.model.find({...filter, groupId: { $in: groups } }).sort({createdAt : -1}).populate("createdBy").populate('groupId')
     }
     async getAllSessions(): Promise<ISessionModal[]> {
         return await this.model.find({}).populate("createdBy").populate('groupId')
     }
     async update(newData: ISessionModal , sessionId : Types.ObjectId): Promise<ISessionModal | null> {
-        return await this.findByIdAndUpdate(sessionId,{
+        return await this.model.findByIdAndUpdate(sessionId,{
             $set : newData
-        })
+        },{new :true}).populate(['createdBy' , 'groupId'])
     }
 }

@@ -6,10 +6,10 @@ import VideoConference from '../Components/VideoConference';
 import { useVideoCall, VideoCallProvider } from '@/Context/videoConference.context';
 import { SessionServices } from '@/services/client/session.client';
 import { toast } from 'react-toastify';
-import { validateSession } from '@/services/server/session.server';
-import { Session } from 'inspector/promises';
+import { Session } from '@/types/sessionTypes';
+import { IGroupType } from '@/types/groupTypes';
 
-const SessionContent: React.FC = () => {
+const SessionContent: React.FC<{session : Session}> = ({session}) => {
     const router = useRouter()
     const [activeTab, setActiveTab] = useState('video');
     const [chatOpen, setChatOpen] = useState(true);
@@ -20,7 +20,7 @@ const SessionContent: React.FC = () => {
     const [videoEnabled, setVideoEnabled] = useState(true)
     const { leaveRoom } = useVideoCall()
 
-    
+
 
     // Sample participants and chat messages (unchanged)
     const participants = [
@@ -70,15 +70,15 @@ const SessionContent: React.FC = () => {
             <div className="p-5 flex flex-col sm:flex-row justify-between items-center">
                 <div className="text-2xl font-bold text-cyan-400 mb-1 sm:mb-0">Brain Sync</div>
                 <div className="text-center">
-                    <div className="text-xl">DSA Revision</div>
-                    <div className="text-sm text-gray-400">(DSA)</div>
+                    <div className="text-xl">{session.sessionName || "Session Name"} </div>
+                    <div className="text-sm text-gray-400">{session.subject  || "Session Subject"}</div>
                 </div>
                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
                     <div className="bg-gray-800 rounded-full px-4 py-1 flex items-center border border-cyan-400">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
-                        <span>8 Members</span>
+                        <span>{(session.groupId as IGroupType)?.members?.length  || "5 Members"}</span>
                     </div>
                 </div>
             </div>
@@ -142,80 +142,6 @@ const SessionContent: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Chat Sidebar */}
-                {/* Right: Chat sidebar */}
-                <div className={`w-full  md:w-80 bg-gray-800 rounded-lg transition-all duration-300  max-h-12/12 ${chatOpen ? 'block' : 'hidden'}`}>
-                    <div className="p-2">
-                        <div className="flex border-b border-gray-700">
-                            <button
-                                className={`flex-1 p-2 text-center ${activeChatTab === 'chat' ? 'bg-gray-700 rounded-t-lg' : ''}`}
-                                onClick={() => setActiveChatTab('chat')}
-                            >
-                                Chat
-                            </button>
-                            <button
-                                className={`flex-1 p-2 text-center ${activeChatTab === 'participants' ? 'bg-gray-700 rounded-t-lg' : ''}`}
-                                onClick={() => setActiveChatTab('participants')}
-                            >
-                                Participants
-                            </button>
-                            <button
-                                className={`flex-1 p-2 text-center ${activeChatTab === 'options' ? 'bg-gray-700 rounded-t-lg' : ''}`}
-                                onClick={() => setActiveChatTab('options')}
-                            >
-                                Options
-                            </button>
-                        </div>
-
-                        <div className="h-[calc(100vh-290px)] overflow-y-auto">
-                            {activeChatTab === 'chat' && (
-                                <div className="p-2">
-                                    {chatMessages.map(msg => (
-                                        <div key={msg.id} className="mb-4 bg-gray-700 rounded-lg p-2">
-                                            <div className="flex justify-between text-sm">
-                                                <span className="font-bold">{msg.sender}</span>
-                                                <span className="text-gray-400 text-xs">{msg.time}</span>
-                                            </div>
-                                            <p className="text-sm mt-1">{msg.message}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {activeChatTab === 'participants' && (
-                                <div className="p-2">
-                                    {participants.map(p => (
-                                        <div key={p.id} className="flex items-center p-2 hover:bg-gray-700 rounded">
-                                            <div className="w-6 h-6 rounded-full bg-gray-600 mr-2"></div>
-                                            <span>{p.name}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {activeChatTab === 'options' && (
-                                <div className="p-4">
-                                    <p className="text-sm">Session options go here</p>
-                                </div>
-                            )}
-                        </div>
-
-                        {activeChatTab === 'chat' && (
-                            <div className="p-2 mt-2 flex">
-                                <input
-                                    type="text"
-                                    placeholder="Type a message...."
-                                    className="flex-grow bg-gray-700 rounded-full px-4 py-2 text-white focus:outline-none"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                />
-                                <button className="ml-2 bg-cyan-500 rounded-full p-2 flex items-center justify-center">
-                                    <Send className="h-5 w-5" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
             </div>
 
             {/* Bottom Controls */}
@@ -277,7 +203,7 @@ const SessionContent: React.FC = () => {
             </div>
 
             {/* Mobile Chat Toggle */}
-            <div className="fixed bottom-4 right-4 md:hidden">
+            {/* <div className="fixed bottom-4 right-4 md:hidden">
                 <button
                     onClick={() => setChatOpen(!chatOpen)}
                     className="p-2 rounded-full bg-cyan-500"
@@ -286,27 +212,32 @@ const SessionContent: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                     </svg>
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };
 interface PageProps {
     sessionCode: string;
-    validationRes:{status : true , message : string}
-  }
+    validationRes: { status: true, message: string };
+    session : Session
+}
 
-const Page: React.FC<PageProps> = ({sessionCode ,validationRes } : {sessionCode : string ,validationRes :{status : true , message : string}}) => {
+const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
+    {
+        sessionCode: string,
+        validationRes: { status: true, message: string },
+        session : Session
+    }) => {
     const router = useRouter()
-    useEffect(()=>{
-      if(!validationRes.status ){
-        console.log(validationRes.message)
-        toast.error(validationRes.message)
-        router.push('/dashboard/sessions')
-      }
-    },[validationRes])
+    useEffect(() => {
+        if (!validationRes.status) {
+            toast.error(validationRes.message)
+            router.push('/dashboard/sessions')
+        }
+    }, [validationRes])
     return (
         <VideoCallProvider roomId={sessionCode as string}>
-            <SessionContent />
+            <SessionContent  session={session}/>
         </VideoCallProvider>
     );
 };
