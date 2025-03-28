@@ -66,6 +66,7 @@ export const sendSessionLinktoAttendees = async (emails: string[], sessionName: 
 
 
     } catch (error) {
+        console.log(error)
         throw new Error("Error Sending otp email")
     }
 } 

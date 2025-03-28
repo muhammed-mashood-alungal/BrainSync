@@ -1,5 +1,5 @@
 import React from 'react'
-import SessionsListing from './sessionList'
+import SessionsListing from './SessionList'
 import { getAllSessions, getMySessions } from '@/services/server/session.server'
 
 async function page() {
@@ -13,7 +13,7 @@ async function page() {
                 <h1 className="text-2xl font-semibold">My Sessions</h1>
               
             </div>
-            <SessionsListing sessions={sessions}/>
+            <SessionsListing initialSessions={sessions}/>
         </div>
     )
 }

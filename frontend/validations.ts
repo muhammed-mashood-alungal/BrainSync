@@ -15,7 +15,7 @@ export const validateSignUpForm = (formData: IuserSignUp) => {
         status = false
     }
     const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    if (formData.password.trim() == '' ||  !passReg.test(formData.password)) {
+    if (formData.password.trim() == '' || !passReg.test(formData.password)) {
         err.password = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
         status = false
     }
@@ -37,10 +37,10 @@ export const validateLoginForm = (formData: IuserLogin) => {
         err.email = 'Please Provide a Email'
         status = false
     }
-    
+
     const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    
-    if (formData.password.trim() == '' ||  !passReg.test(formData.password)) {
+
+    if (formData.password.trim() == '' || !passReg.test(formData.password)) {
         err.password = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).'
         status = false
     }
@@ -70,7 +70,7 @@ export const validateEmail = (email: string) => {
 export const validateResetPasswords = (password: string, confirmPassword: string) => {
     const err: { password: string, confirmPassword: string } = { password: '', confirmPassword: '' }
     let status = true
-       const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    const passReg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     if (password.trim() == '' || !passReg.test(password)) {
         err.password = 'Please Provide a Password'
         status = false
@@ -97,12 +97,12 @@ export const validateCreateGroup = (groupName: string, members: IUserType[]) => 
         err.members = 'Please Atleast add one member to the group.'
         status = false
     }
-    return {status : status , err }
+    return { status: status, err }
 
 }
 
-export const validateSessionForm = (formData: Partial<ISessionTypes>) : {status : Boolean , errors : Partial<ISessionTypes> } => {
-    const errors : Partial<ISessionTypes> = {
+export const validateSessionForm = (formData: Partial<ISessionTypes>): { status: Boolean, errors: Partial<ISessionTypes> } => {
+    const errors: Partial<ISessionTypes> = {
         sessionName: '',
         subject: '',
         date: '',
@@ -110,21 +110,21 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>) : {status 
         endTime: '',
         groupId: ''
     }
-  
+
     let status = true
-    // Check if session name is provided
+
     if (!formData?.sessionName?.trim()) {
         errors.sessionName = "Session name is required."
         status = false
     }
 
-    // Check if subject is provided
+
     if (!formData?.subject?.trim()) {
         errors.subject = "Subject is required.";
         status = false
     }
-    
-    // Validate date (should be in the future)
+
+   
     const currentDate = new Date().toISOString().split("T")[0]; // Get today's date (YYYY-MM-DD)
     if (!formData.date) {
         errors.date = "Date is required.";
@@ -139,22 +139,38 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>) : {status 
         errors.startTime = "Start Time is required.";
         status = false
     }
+    
+    if (formData?.startTime) {
+        const currentDate = new Date()
+        const [hours, minutes] = (formData.startTime as string).split(":").map(Number)
+
+        const selectedStartTime = new Date(formData.date as Date)
+        selectedStartTime.setHours(hours, minutes, 0, 0)
+
+        console.log(selectedStartTime.getTime() , currentDate.getTime())
+        if (selectedStartTime.getTime() < currentDate.getTime() && currentDate.toISOString().split("T")[0] == formData.date) {
+            errors.startTime = "Start Time Cannot be in the Past."
+            status = false;
+        }
+    }
 
     if (!formData.endTime) {
-        errors.endTime = "End Time is required.";
-        status = false
-    } 
-    if(formData?.endTime &&   formData.startTime  && formData?.endTime <formData.startTime ){
-        errors.endTime = "End Time Should Not Before Starting Time.";
+        errors.endTime = "End Time is required."
         status = false
     }
-    
-    // Check if group is selected
-    if (!formData.groupId) {
-        errors.groupId = "Group selection is required.";
+    if (formData?.startTime && formData.endTime && formData?.startTime > formData.endTime) {
+        errors.endTime = "Start Time Should be before end Time."
+        status = false
+    }
+    if (formData?.endTime && formData.startTime && formData?.endTime < formData.startTime) {
+        errors.endTime = "End Time Should Not Before Starting Time."
         status = false
     }
 
-    // Return errors (if any)
-    return {status ,errors};
+    if (!formData.groupId) {
+        errors.groupId = "Group selection is required."
+        status = false
+    }
+
+    return { status, errors }
 };

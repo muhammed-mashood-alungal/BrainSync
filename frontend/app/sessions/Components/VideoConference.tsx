@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Peer from 'simple-peer'
 import styles from '../../styles/Room.module.css'
@@ -7,10 +7,11 @@ import { useVideoCall } from '@/Context/videoConference.context'
 
 interface VideoFProps {
     peer: Peer.Instance
-    userId: string
+    userId: string,
+    email : string
 }
 
-const VideoF: React.FC<VideoFProps> = ({ peer, userId }) => {
+const VideoF: React.FC<VideoFProps> = ({ peer, userId , email }) => {
 
     const videoRef = useRef<HTMLVideoElement>(null)
     const [connected, setConnected] = useState(false)
@@ -32,10 +33,10 @@ const VideoF: React.FC<VideoFProps> = ({ peer, userId }) => {
     }, [peer])
 
     return (
-        <div className={styles.videoContainer}>
-            <video ref={videoRef} autoPlay playsInline className={`${styles.videoElement} scale-x-[-1]`} />
+        <div className={`${styles.videoContainer}  h-80`}>
+            <video ref={videoRef} autoPlay playsInline className={` scale-x-[-1] `} />
             <div className={styles.videoLabel}>
-                {userId.slice(0, 8)}
+                {email}
                 {!connected && ' (Connecting...)'}
                 {connected && !hasStream && ' (No Stream)'}
             </div>
@@ -67,35 +68,56 @@ export default function Room({  isVideoEnabled, isAudioEnabled  }: {
     useEffect(() => {
         toggleVideo(isVideoEnabled)
     }, [isVideoEnabled])
-
+    const getGridStyles = (peerCount: number): React.CSSProperties => {
+        let minSize: number;
+        if (peerCount <= 2) minSize = 400;
+        else if (peerCount <= 4) minSize = 350;
+        else if (peerCount < 5) minSize = 300;
+        else minSize = 150;
+    
+        return {
+          display: "grid",
+          gridTemplateColumns: `repeat(3, minmax(${minSize}px, 1fr))`,
+          gridAutoRows: `minmax(${minSize}px, 1fr)`,
+          maxHeight: "83vh",
+          overflow: "hidden",
+          gap: "10px"
+        }
+      }
 
     return (
-        <div className="flex flex-col h-full">
-            <div className="flex-grow relative">
-                <div className="absolute inset-0 bg-[#1E1E1E] rounded-lg border border-cyan-500">
-
-                    <div className="w-full h-full flex items-center justify-center">
-                        <video
-                            ref={myVideoRef}
-                            autoPlay
-                            muted
-                            className="w-full h-full object-cover scale-x-[-1]"
-                        />
-                    </div>
-                </div>
+        <div 
+          className="h-[90vh] grid gap-2 p-2"
+          style={getGridStyles(peers.length+1)}
+        >
+          <div 
+            className="rounded-md flex items-center  w-full justify-center scale-x-[-1]"
+            style={{ aspectRatio: "16/9" }}
+          >
+            <video
+              ref={myVideoRef}
+              autoPlay
+              muted
+              className="w-full h-80 object-cover rounded-md"
+            />
+          </div>
+    
+          {peers.map((peerData: PeerData) => (
+            <div 
+              key={peerData.peerId}
+              className="rounded-md flex items-center justify-center"
+              style={{ aspectRatio: "16/9" }}
+            >
+              <VideoF peer={peerData.peer} userId={peerData.peerId} email={peerData?.email as string} />
             </div>
-            <div className="grid grid-cols sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2 mt-2">
-                {/* Participant video tiles */}
-                {peers.map(peerData => (
-                    <div key={peerData.peerId} className="bg-gray-800 rounded-md h-20 flex items-center justify-center">
-                        <VideoF
-                            key={peerData.peerId}
-                            peer={peerData.peer}
-                            userId={peerData.peerId}
-                        />
-                    </div>
-                ))}
-            </div>
+          ))}
         </div>
-    )
+      );
 }
+
+interface PeerData {
+    peer: any; // Replace with actual peer type from your video/streaming library
+    peerId: string;
+    email? :string
+  }
+

@@ -1,10 +1,12 @@
 import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
+import { useAuth } from './auth.context';
 
 interface PeerData {
     peerId: string;
     peer: Peer.Instance;
+    stream?: MediaStream
 }
 
 interface VideoCallState {
@@ -12,8 +14,8 @@ interface VideoCallState {
     myStream: MediaStream | null;
     isMuted: boolean;
     isVideoOff: boolean;
-    toggleMute: (state : boolean) => void;
-    toggleVideo: (state : boolean) => void;
+    toggleMute: (state: boolean) => void;
+    toggleVideo: (state: boolean) => void;
     leaveRoom: () => void;
 }
 
@@ -23,6 +25,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
     const [peers, setPeers] = useState<PeerData[]>([])
     const [isMuted, setIsMuted] = useState(false)
     const [isVideoOff, setIsVideoOff] = useState(false)
+    const { user } = useAuth()
 
     const socketRef = useRef<Socket | null>(null)
     const myStreamRef = useRef<MediaStream | null>(null)
@@ -34,91 +37,111 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
         navigator.mediaDevices
             .getUserMedia({ audio: true, video: true })
             .then((stream) => {
-                myStreamRef.current = stream;
+                myStreamRef.current = stream
                 socketRef.current?.emit('join-room', roomId, socketRef.current?.id);
 
                 socketRef.current?.on('all-users', (users: string[]) => {
                     const newPeers = users
                         .filter((userId) => !peersRef.current.some((p) => p.peerId === userId))
                         .map((userId) => {
-                            const peer = createPeer(userId, socketRef.current!.id as string, stream);
-                            return { peerId: userId, peer };
+                            const peer = createPeer(userId, socketRef.current!.id as string, stream)
+                            return { peerId: userId, peer }
                         });
-                    peersRef.current = [...peersRef.current, ...newPeers];
-                    setPeers(peersRef.current);
+                    peersRef.current = [...peersRef.current, ...newPeers]
+                    setPeers(peersRef.current)
                 });
 
                 socketRef.current?.on('user-joined', (userId: string) => {
-                    if (peersRef.current.some((p) => p.peerId === userId)) return;
-                    const peer = addPeer(userId, socketRef.current!.id as string, stream);
-                    const newPeer = { peerId: userId, peer };
-                    peersRef.current = [...peersRef.current, newPeer];
-                    setPeers((prev) => (prev.some((p) => p.peerId === userId) ? prev : [...prev, newPeer]));
+                    if (peersRef.current.some((p) => p.peerId === userId)) return
+                    const peer = addPeer(userId, socketRef.current!.id as string, stream)
+                    const newPeer = { peerId: userId, peer}
+                    peersRef.current = [...peersRef.current, newPeer]
+                    setPeers((prev) => (prev.some((p) => p.peerId === userId) ? prev : [...prev, newPeer]))
                 });
 
                 socketRef.current?.on('signal', (data: { from: string; signal: Peer.SignalData }) => {
-                    const item = peersRef.current.find((p) => p.peerId === data.from);
+                    const item = peersRef.current.find((p) => p.peerId === data.from)
                     if (item && item.peer) {
                         try {
-                            item.peer.signal(data.signal);
+                            item.peer.signal(data.signal)
                         } catch (err) {
-                            console.error(`Error signaling peer ${data.from}:`, err);
+                            console.error(`Error signaling peer ${data.from}:`, err)
                         }
                     } else {
-                        console.warn(`Peer not found or undefined for user ${data.from}`);
+                        console.warn(`Peer not found or undefined for user ${data.from}`)
                     }
                 });
 
                 socketRef.current?.on('user-disconnected', (userId: string) => {
-                    const newPeers = peersRef.current.filter((p) => p.peerId !== userId);
+                    const newPeers = peersRef.current.filter((p) => p.peerId !== userId)
                     peersRef.current = newPeers;
                     setPeers(newPeers);
                 });
             })
             .catch((err) => {
-                console.error('Failed to get media devices:', err);
-            });
+                console.error('Failed to get media devices:', err)
+            })
 
         return () => {
-            myStreamRef.current?.getTracks().forEach((track) => track.stop());
-            peersRef.current.forEach(({ peer }) => peer.destroy());
-            socketRef.current?.disconnect();
-        };
+            myStreamRef.current?.getTracks().forEach((track) => track.stop())
+            peersRef.current.forEach(({ peer }) => peer.destroy())
+            socketRef.current?.disconnect()
+        }
     }, [roomId]);
 
     const createPeer = (userToSignal: string, callerId: string, stream: MediaStream) => {
         const peer = new Peer({ initiator: true, trickle: false, stream });
         peer.on('signal', (signal) => {
-            socketRef.current?.emit('signal', { to: userToSignal, from: callerId, signal });
+            socketRef.current?.emit('signal', { to: userToSignal, from: callerId, signal })
         });
-        peer.on('error', (err) => console.error(`Peer error with ${userToSignal}:`, err));
+        peer.on('error', (err) => console.error(`Peer error with ${userToSignal}:`, err))
         return peer;
     };
 
     const addPeer = (incomingUserId: string, callerId: string, stream: MediaStream) => {
         const peer = new Peer({ initiator: false, trickle: false, stream });
         peer.on('signal', (signal) => {
-            socketRef.current?.emit('signal', { to: incomingUserId, from: callerId, signal });
-        });
-        peer.on('error', (err) => console.error(`Peer error with ${incomingUserId}:`, err));
+            socketRef.current?.emit('signal', { to: incomingUserId, from: callerId, signal })
+        })
+        peer.on('error', (err) => console.error(`Peer error with ${incomingUserId}:`, err))
         return peer;
     };
 
-    const toggleMute = (state : boolean) => {
-        myStreamRef.current?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled));
+    const toggleMute = (state: boolean) => {
+        myStreamRef.current?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled))
         setIsMuted(state);
     };
 
-    const toggleVideo = (state :boolean) => {
-        myStreamRef.current?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled));
+    const toggleVideo = (state: boolean) => {
+        myStreamRef.current?.getVideoTracks().forEach((track) => (track.enabled = !track.enabled))
         setIsVideoOff(state);
     };
 
     const leaveRoom = () => {
-        myStreamRef.current?.getTracks().forEach((track) => track.stop());
-        peersRef.current.forEach(({ peer }) => peer.destroy());
-        socketRef.current?.disconnect();
-    };
+        try {
+            if (myStreamRef.current) {
+                myStreamRef.current.getTracks().forEach((track) => {
+                    track.stop()
+                    myStreamRef.current?.removeTrack(track)
+                })
+                myStreamRef.current = null
+            }
+
+            if (peersRef.current && peersRef.current.length > 0) {
+                peersRef.current.forEach(({ peer }) => {
+                    peer.destroy()
+                })
+
+                peersRef.current = []
+            }
+
+            if (socketRef.current) {
+                socketRef.current.disconnect()
+            }
+        } catch (error) {
+            console.error(" Error leaving room:", error)
+        }
+    }
 
     const value: VideoCallState = {
         peers,

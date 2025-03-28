@@ -5,20 +5,26 @@ import { useAuth } from '@/Context/auth.context';
 import { GroupServices } from '@/services/client/group.client';
 import { SessionServices } from '@/services/client/session.client';
 import { IGroupType } from '@/types/groupTypes';
+import { ISessionTypes, Session } from '@/types/sessionTypes';
 import { validateSessionForm } from '@/validations';
+import { AxiosError } from 'axios';
 import { ChevronDown } from 'lucide-react';
-import React, { ChangeEvent, SyntheticEvent, useState } from 'react'
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
-function CreateSession({ onClose }: { onClose: () => void }) {
+
+
+function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Session) => void, type: string, data: ISessionTypes | null }) {
   const [myGroups, setMyGroups] = useState<IGroupType[]>([])
   const { user } = useAuth()
+
   const [formData, setFormData] = useState({
-    sessionName: '',
-    subject: '',
-    date: '',
-    startTime: '',
-    endTime: '',
-    groupId: ''
+    sessionName: data?.sessionName || '',
+    subject: data?.subject || '',
+    date: data?.date ? new Date(data?.date).toLocaleDateString().split('T')[0] : "",
+    startTime: data?.startTime ? new Date(data.startTime).toTimeString().slice(0, 5) : '',
+    endTime: data?.endTime ? new Date(data.endTime).toTimeString().slice(0, 5) : '',
+    groupId: (data?.groupId as IGroupType)?._id || ''
   });
   const [err, setErr] = useState({
     sessionName: '',
@@ -50,11 +56,22 @@ function CreateSession({ onClose }: { onClose: () => void }) {
       }
     })
     const result = validateSessionForm(formData)
-    console.log(result)
+
     if (result.status) {
-      console.log(formData)
-      await SessionServices.createSession(formData)
-      onClose()
+      try {
+        if (type == 'create') {
+          const response : Session = await SessionServices.createSession(formData)
+          onClose(response)
+        } else {
+          console.log(formData)
+          const response : Session = await SessionServices.updateSession(formData, data?._id as string)
+          onClose(response)
+        }
+      } catch (err: unknown) {
+        const error = err as AxiosError<string>
+        console.log(error)
+        toast.error(error.message || "An UnExpected Error Occured")
+      }
     } else {
       setErr(prev => {
         return {
@@ -68,11 +85,15 @@ function CreateSession({ onClose }: { onClose: () => void }) {
       })
     }
   }
+  useEffect(()=>{
+    const fetchMyGroups = async () => {
+      const groups = await GroupServices.getMyGroups(user?.id as string)
+      setMyGroups(groups)
+    }
+    fetchMyGroups()
+  },[])
 
-  const fetchMyGroups = async () => {
-    const groups = await GroupServices.getMyGroups(user?.id as string)
-    setMyGroups(groups)
-  }
+  
   return (
     <>
 
@@ -82,7 +103,7 @@ function CreateSession({ onClose }: { onClose: () => void }) {
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-              {/* Session Name */} 
+              {/* Session Name */}
               <div>
                 <Input
                   type="text"
@@ -136,8 +157,6 @@ function CreateSession({ onClose }: { onClose: () => void }) {
                     placeholder="End Time"
                     value={formData.endTime}
                     onChange={handleChange}
-                  //onFocus={(e) => e.target.type = 'time'}
-                  //onBlur={(e) => e.target.type = 'text'}
                   />
                   <span className='text-red-600 ml-1'  > {err?.endTime}</span>
                 </div>
@@ -149,14 +168,13 @@ function CreateSession({ onClose }: { onClose: () => void }) {
               <div className="relative">
                 <select
                   name="groupId"
-                  onClick={(e) => fetchMyGroups()}
                   value={formData.groupId}
                   onChange={handleChange}
                   className="w-full py-3 px-4 rounded-md border-gray-700 border   text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 appearance-none"
                 >
-                  <option value="" disabled>Select Your Group</option>
+                  <option value="" disabled  >Select Your Group</option>
                   {myGroups?.map((group) => (
-                    <option key={group._id} value={group._id} className='text-black '>
+                    <option key={group._id} value={group._id} className='text-black' selected={data?._id == group._id}>
                       {group.name}
                     </option>
                   ))}
@@ -174,12 +192,12 @@ function CreateSession({ onClose }: { onClose: () => void }) {
                   className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-150"
                   style={{ backgroundColor: '#00D2D9' }}
                 >
-                  Create Session
+                  {type == 'create' ? "Create Session" : "Update Session"}
                 </button>
 
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={()=>onClose()}
                   className="mt-4 text-cyan-400 hover:text-cyan-300 focus:outline-none"
                   style={{ color: '#00D2D9' }}
                 >
