@@ -55,43 +55,44 @@ export class UserController implements IUserController {
     }
     async getAllStudents(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const students = await this._userServices.getAllStudents()
-            res.status(200).json({ students: students })
+            const { skip, limit ,searchQuery } = req.query
+            const { students, count } = await this._userServices.getAllStudents(skip, limit ,searchQuery as string)
+            res.status(200).json({ students: students, count: count })
         } catch (error) {
             next(error)
         }
     }
-    async blockOrUnblock(req:Request , res: Response , next : NextFunction ) : Promise<void> {
+    async blockOrUnblock(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const {studentId} = req.params
+            const { studentId } = req.params
             await this._userServices.blockOrUnblock(studentId)
-            res.status(200).json({ message : HttpResponse.UPDATED })
+            res.status(200).json({ message: HttpResponse.UPDATED })
         } catch (error) {
             next(error)
         }
     }
-    async searchUserbyEmail(req:Request , res: Response , next : NextFunction ) : Promise<void> {
+    async searchUserbyEmail(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const {query} = req.query
-            if(!query){
-                res.status(HttpStatus.OK).json({users : []})
+            const { query } = req.query
+            if (!query) {
+                res.status(HttpStatus.OK).json({ users: [] })
                 return
             }
-            
+
             const users = await this._userServices.searchUserByEmail(query as string)
-            res.status(HttpStatus.OK).json({ message : HttpResponse.UPDATED  , users:users})
+            res.status(HttpStatus.OK).json({ message: HttpResponse.UPDATED, users: users })
         } catch (error) {
             next(error)
         }
     }
-    async deleteAvatar(req : Request , res : Response , next  : NextFunction) : Promise<void> {
-        try{
+    async deleteAvatar(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
             console.log('HIT API')
-            
-            const {userId} = req.params
+
+            const { userId } = req.params
             await this._userServices.deleteProfilePic(userId)
             res.status(HttpStatus.OK).json(HttpResponse.UPDATED)
-        }catch(error){
+        } catch (error) {
             next(error)
         }
     }

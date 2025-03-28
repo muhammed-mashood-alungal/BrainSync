@@ -2,56 +2,49 @@
 import React, { useState, useEffect } from 'react'
 import BaseModal from '@/Components/Modal/Modal'
 import { toast } from 'react-hot-toast'
-//import { AdminServices } from '@/services/admin.services'
 import Confirm from '@/Components/ConfirmModal/ConfirmModal'
 import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
-
-export interface User {
-    _id: string;
-    username: string;
-    email: string;
-    role: 'student' | 'admin';
-    isAcitve: boolean;
-    profilePicture?: {
-        url: string,
-        publicId: string
-    };
-    createdAt: string;
-}
+import AdminTable from '@/Components/AdminTable/AdminTable'
 
 
-function StudentList({initialStudents} : {initialStudents : User[]}) {
-     
-    const [students, setStudents] = useState<User[]>(initialStudents)
-    const [selectedStudent, setSelectedStudent] = useState<User | null>(null)
+function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
+
+    const [students, setStudents] = useState<IUserType[]>(initialStudents)
+    const [selectedStudent, setSelectedStudent] = useState<IUserType | null>(null)
     const [isViewModalOpen, setIsViewModalOpen] = useState(false)
-   
+    const [loading , setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [blockingStudent, setblockingStudents] = useState('')
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const totalPages =  Math.ceil(totalCount / 10)
+    const limit = 10
+
+    useEffect(() => {
+        const fetchStudents = async () => {
+            setIsLoading(true)
+            try {
+                const students = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
+                console.log(students)
+                setStudents(students)
+            } catch (error) {
+                if (error instanceof Error) {
+                    toast.error(error.message)
+                } else {
+                    toast.error("An unexpected error occurred.")
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchStudents()
+        console.log(searchQuery)
+        setIsLoading(false)
+    }, [currentPage , searchQuery])
+
     
-
-    // useEffect(() => {
-    //     const fetchStudents = async () => {
-    //         setIsLoading(true)
-    //         try {
-    //              const students = await AdminServices.getAllStudents()
-    //             setStudents(students)
-    //         } catch (error) {
-    //             if (error instanceof Error) {
-    //                 toast.error(error.message)
-    //             } else {
-    //                 toast.error("An unexpected error occurred.")
-    //             }
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     }; 
-
-    //     fetchStudents()
-    //     setIsLoading(false)
-    // }, []);
 
     const blockOrUnblock = async () => {
         try {
@@ -65,15 +58,15 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
                 )
             )
             setblockingStudents('')
-     
-           // toast.success(`User ${currentStatus ? 'blocked' : 'unblocked'} successfully`);
+
+            // toast.success(`User ${currentStatus ? 'blocked' : 'unblocked'} successfully`);
         } catch (error) {
             console.error('Failed to update user status:', error);
             toast.error('Failed to update user status');
         }
     };
 
-    const handleViewStudent = (student: User) => {
+    const handleViewStudent = (student: IUserType) => {
         setSelectedStudent(student)
         setIsViewModalOpen(true)
     };
@@ -81,7 +74,10 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
     const filteredStudents = students.filter(student =>
         student.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.email.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    )
+
+
+    
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -92,10 +88,10 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
         });
     };
 
-  return (
-    <>
+    return (
+        <>
 
-       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-0">Students Management</h1>
                 <div className="w-full md:w-auto">
                     <div className="relative">
@@ -123,93 +119,82 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
                 </div>
             </div>
 
-             
-                <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">
-                    <table className="min-w-full divide-y divide-gray-700">
-                        <thead className="bg-gray-900">
-                            <tr>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                    User
-                                </th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                    Email
-                                </th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                    Joined Date
-                                </th>
-                                <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                    Status
-                                </th>
-                                <th scope="col" className="px-6 py-4 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-gray-800 divide-y divide-gray-700">
-                            {filteredStudents.length > 0 ? (
-                                filteredStudents.map((student) => (
-                                    <tr key={student._id} className="hover:bg-gray-750">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex items-center">
-                                                <div className="h-10 w-10 flex-shrink-0">
-                                                    <img
-                                                        className="h-10 w-10 rounded-full object-cover"
-                                                        src={student.profilePicture?.url || '/profilePic.png'}
-                                                        alt={student.username}
-                                                    />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-white">{student.username}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-300">{student.email}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                                            {formatDate(student.createdAt)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isAcitve
-                                                ? 'bg-green-900 text-green-300'
-                                                : 'bg-red-900 text-red-300'
-                                                }`}>
-                                                {student.isAcitve ? 'Active' : 'Blocked'}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button
-                                                onClick={() => handleViewStudent(student)}
-                                                className="text-[#8979FF] hover:text-[#A59BFF] mr-4 transition-colors"
-                                            >
-                                                View
-                                            </button>
-                                            <button
-                                                onClick={() => {
-                                                  //  handleToggleActiveStatus(student._id)
-                                                    setblockingStudents(student._id)
-                                                }}
-                                                className={`${student.isAcitve
-                                                    ? 'text-red-400 hover:text-red-300'
-                                                    : 'text-green-400 hover:text-green-300'
-                                                    } transition-colors`}
-                                            >
-                                                {student.isAcitve ? 'Block' : 'Unblock'}
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="px-6 py-10 text-center text-sm text-gray-400">
-                                        No students found matching your search.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+
+            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">
+                <AdminTable
+                    columns={[
+                        {
+                            key: "username",
+                            label: "User",
+                            render: (student: IUserType) => (
+                                <div className="flex items-center">
+                                    <img
+                                        className="h-10 w-10 rounded-full object-cover"
+                                        src={student.profilePicture?.url || "/profilePic.png"}
+                                        alt={student.username}
+                                    />
+                                    <div className="ml-4 text-sm font-medium text-white">{student.username}</div>
+                                </div>
+                            ),
+                        },
+                        { key: "email", label: "Email" },
+                        {
+                            key: "createdAt",
+                            label: "Joined Date",
+                            render: (student: IUserType) => new Date(student.createdAt).toLocaleDateString(),
+                        },
+                        {
+                            key: "isAcitve",
+                            label: "Status",
+                            render: (student: IUserType) => (
+                                <span
+
+                                    className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isAcitve ? "bg-green-900 text-green-300" : "bg-red-900 text-red-300"
+                                        }`}
+                                >
+                                    {student.isAcitve ? "Active" : "Blocked"}
+                                </span>
+                            ),
+                        },
+                    ]}
+                    data={students}
+                    actions={(student: IUserType) => (
+                        <>
+                            <button className="text-[#8979FF] hover:text-[#A59BFF] mr-4 transition-colors"
+                                onClick={() => handleViewStudent(student)}
+                            >View</button>
+                            <button
+                                onClick={() => {
+                                    setblockingStudents(student._id)
+                                }}
+                                className={`transition-colors ${student.isAcitve ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"
+                                    }`}
+                            >
+                                {student.isAcitve ? "Block" : "Unblock"}
+                            </button>
+                        </>
+
+                    )}
+                />
+                <div className="flex justify-center items-center my-3">
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-300 mx-5">Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+                    >
+                        Next
+                    </button>
                 </div>
-            
+            </div>
+
 
             <BaseModal
                 isOpen={isViewModalOpen}
@@ -244,7 +229,7 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
 
                             <div className="bg-gray-800 p-4 rounded-lg">
                                 <p className="text-gray-400 text-sm mb-1">Member Since</p>
-                                <p className="text-base font-medium">{formatDate(selectedStudent.createdAt)}</p>
+                                <p className="text-base font-medium">{formatDate(selectedStudent?.createdAt as string)}</p>
                             </div>
 
                             <div className="bg-gray-800 p-4 rounded-lg">
@@ -265,7 +250,6 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
                             </button>
                             <button
                                 onClick={() => {
-                                   // handleToggleActiveStatus(selectedStudent._id);
                                     setIsViewModalOpen(false)
                                     setblockingStudents(selectedStudent._id)
                                 }}
@@ -281,12 +265,12 @@ function StudentList({initialStudents} : {initialStudents : User[]}) {
                 )}
             </BaseModal>
             <Confirm isOpen={Boolean(blockingStudent)} onClose={() => setblockingStudents('')}
-                onConfirm={()=>blockOrUnblock() }
+                onConfirm={() => blockOrUnblock()}
             >
             </Confirm>
-            
-    </>
-  )
+
+        </>
+    )
 }
 
 export default StudentList

@@ -11,6 +11,6 @@ export interface IUserType {
         url :string , 
         publicId : string
     };
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: Date | string;
+    updatedAt: Date | string;
 } 

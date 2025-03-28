@@ -10,10 +10,10 @@ import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
 export class UserServices implements IUserService {
 
-    constructor(private _userRepository: UserRepository) {}
+    constructor(private _userRepository: UserRepository) { }
 
     async changeProfilePic(userId: unknown, file: Express.Multer.File): Promise<Boolean> {
-        
+
         const response = await handleUpload(file)
 
         await this._userRepository.findByIdAndUpdate(userId as Types.ObjectId, { $set: { profilePicture: response } })
@@ -41,11 +41,14 @@ export class UserServices implements IUserService {
         await this._userRepository.updatePassword(user?.email as string, hashedPassword)
         return true
     }
-    async getAllStudents(): Promise<IUser[]> {
-        return this._userRepository.find({role : 'student'})
+    async getAllStudents(skip: unknown, limit: unknown ,searchQuery : string): Promise<{students : IUser[] , count : number}> {
+        const sk = skip as number ?? 0
+        const lim = limit as number ?? 100
+
+        const [count , students ] =await Promise.all([ this._userRepository.countStudents(), this._userRepository.findAllStudents(sk, lim , searchQuery)] )
+        return {students , count}
     }
     async blockOrUnblock(id: unknown): Promise<boolean> {
-
         const stud = await this._userRepository.findById(id as Types.ObjectId)
         if (!stud) throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND)
         stud.isAcitve = !stud?.isAcitve
@@ -56,18 +59,19 @@ export class UserServices implements IUserService {
         const stud = await this._userRepository.findById(id as Types.ObjectId)
         return stud?.isAcitve == false
     }
-    async searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]> {
+    async searchUserByEmail(query: string): Promise<{ email: string, _id: Types.ObjectId }[]> {
         return await this._userRepository.searchByEmail(query)
     }
-    async deleteProfilePic(userId : unknown ) : Promise<Boolean> {
+    async deleteProfilePic(userId: unknown): Promise<Boolean> {
 
-        const publicId  = await this._userRepository.deleteAvatar(userId as Types.ObjectId)
-        if(publicId){
+        const publicId = await this._userRepository.deleteAvatar(userId as Types.ObjectId)
+        if (publicId) {
             await deleteImage(publicId)
-        }else{
-            throw createHttpsError(HttpStatus.INTERNAL_SERVER_ERROR,HttpResponse.SERVER_ERROR)
+        } else {
+            throw createHttpsError(HttpStatus.INTERNAL_SERVER_ERROR, HttpResponse.SERVER_ERROR)
         }
 
         return true
     }
+    
 } 
