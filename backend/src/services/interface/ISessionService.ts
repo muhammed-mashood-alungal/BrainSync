@@ -1,5 +1,9 @@
 import { ISessionModal } from "../../models/session.modal";
 
+
+interface IInstructors {
+    username : string
+}
 export interface ISessionServices {
     createSession(data: Partial<ISessionModal>, userId: string): Promise<ISessionModal | null>
     createSessionCode(date: Date): string

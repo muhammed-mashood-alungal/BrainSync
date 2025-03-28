@@ -39,7 +39,5 @@ export abstract class BaseRepository <T extends Document>{
    async findOneAndDelete(filter : FilterQuery<T> ) : Promise<T | null> {
     return this.model.findOneAndDelete(filter)
    }
-
-
 }
 

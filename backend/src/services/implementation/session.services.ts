@@ -13,6 +13,9 @@ import { env } from "../../configs/env.config";
 import { sendSessionLinktoAttendees } from "../../utils/sendEmail.utils";
 import { IGroupModel } from "../../models/group.model";
 import { IGroupTypes } from "../../types/group.types";
+interface IInstructors {
+    username : string
+}
 
 export class SessionServices implements ISessionServices {
     constructor(private _sesionRepository: ISessionRepository,

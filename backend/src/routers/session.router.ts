@@ -20,5 +20,4 @@ sessionRouter.get('/my-sessions' , authMiddleware , sessionController.mySessions
 sessionRouter.get('/validate/:sessionCode', authMiddleware , sessionController.validateSession.bind(sessionController) )
 sessionRouter.post('/update/:sessionId',authMiddleware , sessionController.updateSession.bind(sessionController))
 
-
 export default sessionRouter
