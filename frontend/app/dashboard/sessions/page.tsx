@@ -1,6 +1,6 @@
 import React from 'react'
-import SessionsListing from './SessionList'
-import { getAllSessions, getMySessions } from '@/services/server/session.server'
+import SessionsListing from './sessionList'
+import {  getMySessions } from '@/services/server/session.server'
 
 async function page() {
     
