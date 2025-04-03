@@ -169,7 +169,7 @@ export class AuthService implements IAuthService {
 
     return { accessToken, refreshToken }
   }
-  async forgotPassword(email: string): Promise<{ status: number, message: string }> {
+  async forgotPassword(email: string): Promise<void> {
     const isExist = await this._userRepository.findByEmail(email);
 
     if (!isExist) {
@@ -183,11 +183,6 @@ export class AuthService implements IAuthService {
     }
 
     await sendResetLink(email, resetToken)
-
-    return {
-      status: HttpStatus.OK,
-      message: HttpResponse.RESET_LINK_SEND
-    }
   }
   async resetPassword(token: string, password: string): Promise<Boolean> {
     const email = await redisClient.get(token)

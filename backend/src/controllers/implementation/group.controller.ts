@@ -4,6 +4,7 @@ import { IGroupController } from "../interface/IGroupController";
 import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
 import { createHttpsError } from "../../utils/httpError.utils";
+import { successResponse } from "../../utils/response";
 
 export class GroupController implements IGroupController {
      constructor(private  _groupServices : IGroupService) {}
@@ -13,7 +14,7 @@ export class GroupController implements IGroupController {
             const data = req.body
             await this._groupServices.createGroup(data)
             console.log('hell')
-            res.status(HttpStatus.OK).json(HttpResponse.CREATED)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED))
         }catch(err){
             next(err)
         }
@@ -24,7 +25,7 @@ export class GroupController implements IGroupController {
             const {userId} = req.body
             console.log(userId)
             await this._groupServices.leftFromGroup(groupId , userId)
-            res.status(HttpStatus.OK).json(HttpResponse.UPDATED)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED))
          } catch (error) {
             next(error)
          }
@@ -34,16 +35,15 @@ export class GroupController implements IGroupController {
             const {groupId} = req.params
             const {members} = req.body
             await this._groupServices.addToGroup(groupId , members)
-            res.status(HttpStatus.OK).json(HttpResponse.CREATED)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED))
          } catch (error) {
             next(error)
          }
      }
      async getAllGroups(req: Request, res: Response, next: NextFunction): Promise<void> {
          try{
-            console.log('hello')
             const groups =  await this._groupServices.allGroups()
-            res.status(HttpStatus.OK).json({groups : groups})
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {groups : groups}))
          } catch (error) {
             next(error)
          }
@@ -57,7 +57,7 @@ export class GroupController implements IGroupController {
             }
            const groups =  await this._groupServices.myGroups(userId)
           
-           res.status(HttpStatus.OK).json({groups:groups})
+           res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {groups : groups}))
         } catch (error) {
            next(error)
         }
@@ -67,7 +67,7 @@ export class GroupController implements IGroupController {
         try{
             const {groupId} = req.params
             const group =  await this._groupServices.groupData(groupId)
-            res.status(HttpStatus.OK).json({group : group})
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {group : group}))
          } catch (error) {
             next(error)
          }
@@ -76,7 +76,7 @@ export class GroupController implements IGroupController {
         try{
             const {groupId} = req.params
             const group =  await this._groupServices.handleGroupActivation(groupId)
-            res.status(HttpStatus.OK).json({group : group})
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {group : group}))
          } catch (error) {
             next(error)
          }

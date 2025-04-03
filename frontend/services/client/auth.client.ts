@@ -17,7 +17,7 @@ export const AuthServices = {
     loginService: async (data: IuserLogin): Promise<{ status: number, message: string }> => {
         try {
             const response = await authInstance.post('/signin', data)
-            return response.data
+            return response.data?.tokens
         } catch (error: unknown) {
             console.log(error)
             const err = error as AxiosError<{ error: string }>
@@ -28,7 +28,7 @@ export const AuthServices = {
     verifyOtp: async (email: string, otp: string): Promise<{ status: number, message: string }> => {
         try {
             const response = await authInstance.post('/verify-otp', { email, otp })
-            return response.data
+            return response.data?.tokens
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Verification failed. Please try again.";
@@ -48,7 +48,7 @@ export const AuthServices = {
     authMe: async (): Promise<{ id: string, email: string, role: string }> => {
         try {
             const response = await authInstance.post('/me')
-            return response.data
+            return response.data?.user
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Failed. Please try again.";

@@ -1,6 +1,7 @@
+import ResetForm from "./ResetForm";
 
 
-export default function resetPassword() {
+export default function page() {
    
 
     return (
@@ -8,7 +9,7 @@ export default function resetPassword() {
             <div className="container mx-auto px-4">
                 <div className="max-w-4xl mx-auto my-12 bg-gray-900 rounded-lg p-12">
                     <div className="grid md:grid-cols-2 gap-8">
-                     
+                        <ResetForm/>
                         <hr className='md:hidden lg:hidden' />
 
                         <div className="flex flex-col justify-center ">

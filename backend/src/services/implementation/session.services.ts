@@ -11,11 +11,7 @@ import { HttpResponse } from "../../constants/responseMessage.constants";
 import { v4 as uuidv4 } from "uuid";
 import { env } from "../../configs/env.config";
 import { sendSessionLinktoAttendees } from "../../utils/sendEmail.utils";
-import { IGroupModel } from "../../models/group.model";
 import { IGroupTypes } from "../../types/group.types";
-interface IInstructors {
-    username : string
-}
 
 export class SessionServices implements ISessionServices {
     constructor(private _sesionRepository: ISessionRepository,
@@ -76,24 +72,24 @@ export class SessionServices implements ISessionServices {
             let startDate, endDate;
         
             if (date === "Today") {
-                startDate = new Date(); // Create a new Date object for today
-                startDate.setHours(0, 0, 0, 0); // Set to the start of the day
-                endDate = new Date(); // Create a new Date object for today
-                endDate.setHours(23, 59, 59, 999); // Set to the end of the day
+                startDate = new Date()
+                startDate.setHours(0, 0, 0, 0)
+                endDate = new Date()
+                endDate.setHours(23, 59, 59, 999)
             } else if (date === "This Week") {
-                startDate = new Date(now); // Clone current date
-                startDate.setDate(now.getDate() - now.getDay()); // Get start of the week
-                startDate.setHours(0, 0, 0, 0);
+                startDate = new Date(now)
+                startDate.setDate(now.getDate() - now.getDay())
+                startDate.setHours(0, 0, 0, 0)
         
-                endDate = new Date(startDate); // Clone startDate
-                endDate.setDate(startDate.getDate() + 6); // Get end of the week
-                endDate.setHours(23, 59, 59, 999);
+                endDate = new Date(startDate)
+                endDate.setDate(startDate.getDate() + 6)
+                endDate.setHours(23, 59, 59, 999)
             } else if (date === "This Month") {
-                startDate = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the month
-                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Last day of the month
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1)
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
             }
         
-            filter.date = { $gte: startDate, $lte: endDate };
+            filter.date = { $gte: startDate, $lte: endDate }
         }
         const result = await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[] ,filter)
         return result
@@ -181,7 +177,7 @@ export class SessionServices implements ISessionServices {
             throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.ENDED_SESSION)
         }
         
-        await sendSessionLinktoAttendees(attendeeEmails, sessionData.sessionName as string, sessionData.sessionLink, startTime, endTime)
+        await sendSessionLinktoAttendees(attendeeEmails, sessionData.sessionName as string, session?.sessionLink as string, startTime, endTime)
 
         sessionData.startTime = startTime
         sessionData.endTime = endTime

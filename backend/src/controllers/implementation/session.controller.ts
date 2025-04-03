@@ -3,6 +3,7 @@ import { ISessionServices } from "../../services/interface/ISessionService";
 import { ISessionController } from "../interface/ISessionControllers";
 import { HttpStatus } from "../../constants/status.constants";
 import { HttpResponse } from "../../constants/responseMessage.constants";
+import { successResponse } from "../../utils/response";
 
 export class SessionController implements ISessionController {
     constructor(private _sessionServices: ISessionServices) { }
@@ -12,7 +13,7 @@ export class SessionController implements ISessionController {
             const data = req.body
             const userId = req.user
             const newData = await this._sessionServices.createSession(data, userId as string)
-            res.status(HttpStatus.OK).json({newSession : newData})
+            res.status(HttpStatus.OK).json(successResponse( HttpResponse.OK,{newSession : newData}))
         } catch (err) {
             next(err)
         }
@@ -21,7 +22,7 @@ export class SessionController implements ISessionController {
         try {
             const sessions = await this._sessionServices.getAllSessions()
             console.log(sessions)
-            res.status(HttpStatus.OK).json({sessions : sessions})
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {sessions : sessions}))
         } catch (err) {
             next(err)
         }
@@ -31,7 +32,7 @@ export class SessionController implements ISessionController {
             const userId = req.user
             const {subject , date} = req.query
             const sessions = await this._sessionServices.getMySessions(userId ,subject as string , date as string)
-            res.status(HttpStatus.OK).json({ sessions : sessions })
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {sessions : sessions}))
         } catch (err) {
             next(err)
         }
@@ -41,7 +42,7 @@ export class SessionController implements ISessionController {
             const {sessionCode} = req.params
             const userId = req.user
             const result = await this._sessionServices.validateSession(sessionCode ,userId)
-            res.status(HttpStatus.OK).json(result)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {result : result}))
         }catch(err){
             next(err)
         }
@@ -53,7 +54,7 @@ export class SessionController implements ISessionController {
             const userId = req.user
 
             const updatedSession = await this._sessionServices.updateSession(data,sessionId ,userId)
-            res.status(HttpStatus.OK).json({updatedSession : updatedSession})
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED , {updatedSession : updatedSession}))
         }catch(err){
             next(err)
         }

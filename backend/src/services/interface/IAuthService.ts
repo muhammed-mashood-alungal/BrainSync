@@ -11,6 +11,6 @@ export interface IAuthService {
     refreshAccessToken(token: string): Promise<{newAccessToken : string, payload : JwtPayload}>
     authMe(token: string): JwtPayload  | string 
     generateTokens(user : IUserModel) : {accessToken:string , refreshToken :string}
-    forgotPassword(email :string) :Promise<{status : number , message : string}>
+    forgotPassword(email :string) :Promise<void>
     resetPassword(token: string , password : string) : Promise<Boolean>
 } 

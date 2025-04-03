@@ -1,4 +1,5 @@
 'use client'
+import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 import Input from '@/Components/Input/Input';
 import BaseModal from '@/Components/Modal/Modal'
 import { useAuth } from '@/Context/auth.context';
@@ -14,7 +15,7 @@ import { toast } from 'react-toastify';
 
 
 
-function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Session) => void, type: string, data: ISessionTypes | null }) {
+function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Session) => void, type: string, data: ISessionTypes | null }) {
   const [myGroups, setMyGroups] = useState<IGroupType[]>([])
   const { user } = useAuth()
 
@@ -34,6 +35,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
     endTime: '',
     groupId: ''
   })
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -44,7 +46,8 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
   };
 
   const handleSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
+    e.preventDefault()
+    setLoading(true)
     setErr(() => {
       return {
         sessionName: '',
@@ -60,11 +63,13 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
     if (result.status) {
       try {
         if (type == 'create') {
-          const response : Session = await SessionServices.createSession(formData)
+          const response: Session = await SessionServices.createSession(formData)
+          toast.success("Session Created Successfully")
           onClose(response)
         } else {
           console.log(formData)
-          const response : Session = await SessionServices.updateSession(formData, data?._id as string)
+          const response: Session = await SessionServices.updateSession(formData, data?._id as string)
+          toast.success("Session Updated Successfully")
           onClose(response)
         }
       } catch (err: unknown) {
@@ -84,16 +89,18 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
         }
       })
     }
+    setLoading(false)
   }
-  useEffect(()=>{
+
+  useEffect(() => {
     const fetchMyGroups = async () => {
       const groups = await GroupServices.getMyGroups(user?.id as string)
       setMyGroups(groups)
     }
     fetchMyGroups()
-  },[])
+  }, [])
 
-  
+
   return (
     <>
 
@@ -174,7 +181,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
                 >
                   <option value="" disabled  >Select Your Group</option>
                   {myGroups?.map((group) => (
-                    <option key={group._id} value={group._id} className='text-black' selected={data?._id == group._id}>
+                    <option key={group._id} value={group._id} className='text-black' >
                       {group.name}
                     </option>
                   ))}
@@ -187,17 +194,21 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate? : Sessi
 
               {/* Actions */}
               <div className="pt-6 flex flex-col items-center">
-                <button
-                  type="submit"
-                  className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-150"
-                  style={{ backgroundColor: '#00D2D9' }}
-                >
-                  {type == 'create' ? "Create Session" : "Update Session"}
-                </button>
+                {
+                  loading ? <InPageLoading /> :
+                    <button
+                      type="submit"
+                      className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-150"
+                      style={{ backgroundColor: '#00D2D9' }}
+                    >
+                      {type == 'create' ? "Create Session" : "Update Session"}
+                    </button>
+                }
+
 
                 <button
                   type="button"
-                  onClick={()=>onClose()}
+                  onClick={() => onClose()}
                   className="mt-4 text-cyan-400 hover:text-cyan-300 focus:outline-none"
                   style={{ color: '#00D2D9' }}
                 >

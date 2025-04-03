@@ -73,7 +73,7 @@ export const validateSession = async (sessionId: string) => {
                 "Cookie": cookieString
             }
         })
-        return response.data
+        return response.data.result
 
     } catch (err:unknown) {
         console.log(err)
