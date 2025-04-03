@@ -13,21 +13,7 @@ interface Session extends ISessionTypes {
 }
 const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [iscreatOpen,setCreateOpen] = useState(false)
-
    
-    // Sample data for sessions
-    // const sessions = [
-    //     { id: 1, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Done' },
-    //     { id: 2, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Live' },
-    //     { id: 3, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Upcoming' },
-    //     { id: 4, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Done' },
-    //     { id: 5, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Live' },
-    //     { id: 6, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Upcoming' },
-    //     { id: 7, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Done' },
-    //     { id: 8, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Live' },
-    //     { id: 9, title: 'Binary Search Tree', category: 'DS & algorithm', startTime: '8:00 PM', duration: '2 hr', host: 'john@gmail.com', status: 'Upcoming' },
-    // ];
 
     const sessionsPerPage = 9;
     const totalPages = Math.ceil(sessions?.length / sessionsPerPage);
@@ -156,8 +142,6 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     ))}
                 </div>
             </div>
-       
-            { iscreatOpen && <CreateSession onClose={()=>setCreateOpen(false)}/>}
            
         </>
     );

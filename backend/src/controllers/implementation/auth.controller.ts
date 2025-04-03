@@ -9,6 +9,8 @@ import { env } from "../../configs/env.config";
 import { IUserModel } from "../../models/user.model";
 import { IUserService } from "../../services/interface/IUserService";
 import { IUser } from "../../types/user.types";
+import { successResponse } from "../../utils/response";
+import { token } from "morgan";
 
 export class AuthController implements IAuthController {
     constructor(private _authService: IAuthService, private _userService: IUserService) { }
@@ -17,9 +19,9 @@ export class AuthController implements IAuthController {
         try {
             const email = await this._authService.signup(req.body)
 
-            res.status(HttpStatus.OK).json({
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, {
                 email: email
-            })
+            }))
         } catch (error) {
             next(error)
         }
@@ -44,7 +46,7 @@ export class AuthController implements IAuthController {
                 maxAge: 7 * 24 * 60 * 60 * 1000,
                 sameSite: "strict",
             })
-            res.status(HttpStatus.OK).json(tokens)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY , {tokens : tokens}))
         } catch (err) {
             next(err)
         }
@@ -69,7 +71,7 @@ export class AuthController implements IAuthController {
                 sameSite: "strict",
             })
 
-            res.status(HttpStatus.CREATED).json(tokens)
+            res.status(HttpStatus.CREATED).json(successResponse(HttpResponse.OTP_VERIFIED , {tokens : tokens}))
         } catch (err) {
             next(err)
         }
@@ -79,7 +81,7 @@ export class AuthController implements IAuthController {
         try {
             const { email } = req.body
             await this._authService.resendOtp(email)
-            res.status(HttpStatus.CREATED).json()
+            res.status(HttpStatus.CREATED).json(successResponse(HttpResponse.OTP_RESEND_SUCCESS))
         } catch (err) {
             console.log(err)
             next(err)
@@ -90,7 +92,7 @@ export class AuthController implements IAuthController {
         try {
             const authHeader = req.headers.authorization
             if (!authHeader || !authHeader.startsWith("Bearer ")) {
-                res.status(401).json({ message: "Unauthorized" })
+                res.status(401).json(HttpResponse.UNAUTHORIZED)
                 return
             }
 
@@ -100,14 +102,14 @@ export class AuthController implements IAuthController {
                 throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
             }
 
-            const {newAccessToken,payload} = await this._authService.refreshAccessToken(accessToken);
+            const { newAccessToken, payload } = await this._authService.refreshAccessToken(accessToken);
             res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: false,
                 maxAge: 1 * 24 * 60 * 60 * 1000,
                 sameSite: "strict",
             })
-            res.status(HttpStatus.OK).json({newAccessToken,user : payload})
+            res.status(HttpStatus.OK).json(successResponse( HttpResponse.OK, { newAccessToken, user: payload }))
         } catch (error) {
             next(error)
         }
@@ -121,7 +123,7 @@ export class AuthController implements IAuthController {
             }
             const user = await this._authService.authMe(accessToken)
 
-            res.status(HttpStatus.OK).json(user)
+            res.status(HttpStatus.OK).json(successResponse( HttpResponse.OK, { user : user}))
         } catch (error) {
             console.log(error)
             next(error)
@@ -131,7 +133,7 @@ export class AuthController implements IAuthController {
         try {
             const authHeader = req.headers.authorization
             if (!authHeader || !authHeader.startsWith("Bearer ")) {
-                res.status(401).json({ message: "Unauthorized" })
+                res.status(401).json(HttpResponse.UNAUTHORIZED)
                 return
             }
 
@@ -142,7 +144,7 @@ export class AuthController implements IAuthController {
             }
             const user = await this._authService.authMe(accessToken)
 
-            res.status(HttpStatus.OK).json(user)
+            res.status(HttpStatus.OK).json(successResponse( HttpResponse.OK, { user : user}))
         } catch (error) {
             console.log(error)
             next(error)
@@ -152,7 +154,7 @@ export class AuthController implements IAuthController {
         try {
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
-            res.status(HttpStatus.OK).json()
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT))
         } catch (err) {
             next(err)
         }
@@ -198,8 +200,8 @@ export class AuthController implements IAuthController {
     async forgotPassword(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { email } = req.body
-            const response = await this._authService.forgotPassword(email)
-            res.status(HttpStatus.OK).json(response)
+            await this._authService.forgotPassword(email)
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.RESET_LINK_SEND))
         } catch (err) {
             next(err)
         }
@@ -209,7 +211,7 @@ export class AuthController implements IAuthController {
             const { token, password } = req.body
             await this._authService.resetPassword(token, password)
 
-            res.status(HttpStatus.OK).json({ message: HttpResponse.RESET_PASS_SUCCESS })
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.RESET_PASS_SUCCESS))
         } catch (err) {
             next(err)
         }

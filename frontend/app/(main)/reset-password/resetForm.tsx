@@ -10,15 +10,16 @@ import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
 
 
-function resetForm() {
+function ResetForm() {
 
-    const { user, loading, checkAuth } = useAuth()
+    const { user } = useAuth()
     useEffect(() => {
         if (user) {
             console.log(user)
             router.push('/')
         }
-    }, [user, loading])
+    }, [user])
+
     const [password, setPassword] = useState('')
     const [passwordErr, setPasswordErr] = useState('')
     const [confirmPass , setConfirmPass] = useState('')
@@ -36,7 +37,7 @@ function resetForm() {
             let result = validateResetPasswords(password,confirmPass)
             if (result.status) {
                 const response = await AuthServices.resetPassword(token  as string, password)
-               router.push('/login')
+                router.push('/login')
             } else {
                 if(result.err?.password) setPasswordErr(result.err.password)
                 if(result.err?.confirmPassword) setConfirmPassErr(result.err.confirmPassword)
@@ -54,8 +55,8 @@ function resetForm() {
     return (
         <>
             <div className=' text-center'>
-                <h1 className="text-4xl font-bold mb-4">Forgot Password</h1>
-                <p className="text-gray-400 mb-6 ">Enter Your Email to reset the Password</p>
+                <h1 className="text-4xl font-bold mb-4">Reset Password</h1>
+                <p className="text-gray-400 mb-6 ">Enter Your New Password Here</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -105,4 +106,4 @@ function resetForm() {
     )
 }
 
-export default resetForm
+export default ResetForm

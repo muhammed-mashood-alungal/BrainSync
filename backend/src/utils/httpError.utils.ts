@@ -9,5 +9,7 @@ export class HttpError extends Error {
 }
 
 export const createHttpsError = (statusCode : number , message  : string)=>{
-    return new HttpError(statusCode , message)
+    const errResponse  = new HttpError(statusCode , message)
+    console.log(errResponse)
+    return errResponse
 }

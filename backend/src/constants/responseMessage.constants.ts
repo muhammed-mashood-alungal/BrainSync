@@ -1,4 +1,5 @@
 export const HttpResponse = {
+    OK:'OK',
     SERVER_ERROR : 'Inter server Error',
     USER_EXIST : 'User already exist',
     PAGE_NOT_FOUND : 'Page Not Found',
@@ -6,8 +7,12 @@ export const HttpResponse = {
     INVALID_CREDENTIALS : 'Invalid Credentials',
     NO_TOKEN : "Token Not Provided",
     OTP_INCORRECT : 'Incorrect OTP , try again',
+    OTP_RESEND_SUCCESS :"OTP Resend Successfully",
     OTP_EXPIRED : "OTP Expired , Please Resend OTP",
+    OTP_VERIFIED : "OTP Verification Success",
     CREATED : 'Created Successfully',
+    LOGGED_IN_SUCCESSFULLY : 'User Logged In Successfully',
+    LOGGED_OUT : "User Logged Out",
     USER_CREATION_FAILED : 'User Creation Failed',
     TOKEN_EXPIRED :'Token Expired',
     RESET_LINK_SEND :'Reset Password Sended To your Email , Check Your Mail',

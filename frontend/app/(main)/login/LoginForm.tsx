@@ -9,15 +9,18 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
+import SimpleStudyLoading from '@/Components/Loading/Loading';
+import InPageLoading from '@/Components/InPageLoading/InPageLoading';
+
 
  function LoginForm() {
-    const { user, loading, checkAuth } = useAuth()
+    const { user, checkAuth } = useAuth()
     useEffect(() => {
         if (user) {
             console.log(user)
             router.push('/')
         }
-    }, [user, loading])
+    }, [user])
 
     const [formData, setFormData] = useState({
         email: '',
@@ -28,6 +31,8 @@ import { useAuth } from '@/Context/auth.context';
         email: '',
         password: ''
     })
+
+    const [loading , setLoading] = useState(false)
 
     const router = useRouter()
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +45,7 @@ import { useAuth } from '@/Context/auth.context';
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
+        setLoading(true)
         setFormDataErr({ email: '', password: '' })
         try {
             let result = validateLoginForm(formData)
@@ -56,11 +62,14 @@ import { useAuth } from '@/Context/auth.context';
             } else {
                 toast.error("An unexpected error occurred.")
             }
+        }finally{
+            setLoading(false)
         }
 
     };
     return (
         <>
+       
             <form onSubmit={handleSubmit} className="space-y-4">
 
                 <div className='text-start'>
@@ -89,13 +98,17 @@ import { useAuth } from '@/Context/auth.context';
                         Forgotten Password?
                     </Link>
                 </div>
+               
 
-                <Button
+               {loading ? <InPageLoading/> : <Button
                     type="submit"
                     className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
                 >
                     Login
                 </Button>
+               }
+             
+                
 
                 <div className="flex items-center justify-between mt-6">
                     <button
@@ -110,6 +123,7 @@ import { useAuth } from '@/Context/auth.context';
                     </Link>
                 </div>
             </form>
+             
         </>
     )
 }

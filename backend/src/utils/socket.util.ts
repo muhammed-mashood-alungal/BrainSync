@@ -1,13 +1,12 @@
 import { Server, Socket } from "socket.io";
 
-// Extend Socket interface to include custom properties
 interface CustomSocket extends Socket {
   roomId?: string;
   userId?: string;
   email? : string
 }
 
-// Define Rooms collection interface
+
 interface Rooms {
   [roomId: string]: Set<string>;
 }
@@ -20,8 +19,8 @@ export default function setupSocket(io: Server) {
     socket.on("join-room", (roomId: string, userId: string ) => {
       if (!roomId || !userId) {
         console.error("Invalid roomId or userId:", roomId, userId)
-        return;
-      }
+        return
+      } 
 
 
       socket.roomId = roomId
@@ -57,7 +56,25 @@ export default function setupSocket(io: Server) {
       signal: any 
     }) => {
       io.to(to).emit("signal", { from, signal })
-    });
+    })
+
+    socket.on('user-speaking', ({ peerId, roomId }) => {
+      socket.to(roomId).emit('user-speaking', peerId);
+    })
+    
+    socket.on('user-stopped-speaking', ({ peerId, roomId }) => {
+      socket.to(roomId).emit('user-stopped-speaking', peerId);
+    })
+
+    socket.on('toggle-mute', ({ peerId, roomId  , isMuted}) => {
+      console.log('helllllllllllo muting')
+      socket.to(roomId).emit('user-toggled-audio', peerId , isMuted)
+    })
+ 
+    socket.on('toggle-video', ({ peerId, roomId  , videoOff}) => {
+      socket.to(roomId).emit('user-toggled-video', peerId , videoOff)
+    })
+
 
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id)

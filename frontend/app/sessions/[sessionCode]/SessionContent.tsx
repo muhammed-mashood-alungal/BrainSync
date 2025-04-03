@@ -70,15 +70,15 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
             <div className="p-5 flex flex-col sm:flex-row justify-between items-center">
                 <div className="text-2xl font-bold text-cyan-400 mb-1 sm:mb-0">Brain Sync</div>
                 <div className="text-center">
-                    <div className="text-xl">{session.sessionName || "Session Name"} </div>
-                    <div className="text-sm text-gray-400">{session.subject  || "Session Subject"}</div>
+                    {/* <div className="text-xl">{session.sessionName || "Session Name"} </div>
+                    <div className="text-sm text-gray-400">{session.subject  || "Session Subject"}</div> */}
                 </div>
                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
                     <div className="bg-gray-800 rounded-full px-4 py-1 flex items-center border border-cyan-400">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
-                        <span>{(session.groupId as IGroupType)?.members?.length  || "5 Members"}</span>
+                        <span>{(session?.groupId as IGroupType)?.members?.length  || "5 Members"}</span>
                     </div>
                 </div>
             </div>

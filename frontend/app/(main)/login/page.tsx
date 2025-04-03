@@ -11,7 +11,7 @@ export default function LoginPage() {
         <div className="max-w-4xl mx-auto my-12 bg-gray-900 rounded-lg p-12">
           <div className="grid md:grid-cols-2 gap-8">
             <div className=' text-center'>
-              <h1 className="text-4xl font-bold mb-4">Create An Account</h1>
+              <h1 className="text-4xl font-bold mb-4">Welcome Back!</h1>
               <p className="text-gray-400 mb-6 ">Fill in Your Details to get started</p>
               <LoginForm/>
             </div>

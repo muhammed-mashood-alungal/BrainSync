@@ -9,17 +9,21 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
+import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 
 
 function ForgotForm() {
-    const { user, loading } = useAuth()
+    const { user } = useAuth()
 
     useEffect(() => {
         if (user) {
             console.log(user)
             router.push('/')
         }
-    }, [user, loading])
+    }, [user])
+
+    const [loading, setLoading] = useState(false)
+
 
     const [email, setEmail] = useState('')
     const [emailErr, setEmailErr] = useState('')
@@ -29,6 +33,7 @@ function ForgotForm() {
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         setEmailErr('')
+        setLoading(true)
         try {
             let result = validateEmail(email)
             if (result.status) {
@@ -43,6 +48,8 @@ function ForgotForm() {
             } else {
                 toast.error("An unexpected error occurred.")
             }
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -62,12 +69,16 @@ function ForgotForm() {
                     />
                     <span className='text-red-600 ml-1'  > {emailErr}</span>
                 </div>
-                <Button
-                    type="submit"
-                    className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
-                >
-                    Reset Password
-                </Button>
+                {
+                    loading ? <InPageLoading /> : <Button
+                        type="submit"
+                        className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
+                    >
+                        Reset Password
+                    </Button>
+
+                }
+
                 <div className="flex items-center justify-between mt-6">
                     <div className='text-start'>
                         <Link href="" onClick={() => router.back()} className="text-cyan-400 hover:text-cyan-300   mb-4">

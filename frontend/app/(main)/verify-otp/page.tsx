@@ -1,8 +1,10 @@
 'use client'
 import Button from '@/Components/Button/Button';
+import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 import Input from '@/Components/Input/Input';
 import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
+import { tree } from 'next/dist/build/templates/app-page';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -12,13 +14,14 @@ export default function VerifyOtp() {
   const [otp, setOtp] = useState('')
   const [timer, setTimer] = useState(60)
   const email = sessionStorage.getItem("email")
-  const { user, loading , checkAuth } = useAuth()
+  const { user, checkAuth } = useAuth()
+  const [loading , setLoading] = useState(false)
   useEffect(() => {
     if (user) {
       console.log(user)
       router.push('/')
     }
-  }, [user, loading])
+  }, [user])
 
   useEffect(() => {
     if (!email) {
@@ -45,6 +48,7 @@ export default function VerifyOtp() {
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault()
+    setLoading(true)
     try {
       console.log(email,otp)
       await AuthServices.verifyOtp(otp, email as string)
@@ -56,11 +60,14 @@ export default function VerifyOtp() {
       } else {
         toast.error("An unexpected error occurred.");
       }
+    }finally{
+      setLoading(false)
     }
   };
 
   const resendOtp = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
+    e.preventDefault()
+    setLoading(true)
     try {
       await AuthServices.resendOtp(email as string)
       setTimer(60)
@@ -70,6 +77,8 @@ export default function VerifyOtp() {
       } else {
         toast.error("An unexpected error occurred.");
       }
+    }finally{
+      setLoading(false)
     }
   }
 
@@ -100,7 +109,9 @@ export default function VerifyOtp() {
                 <div className='text-start'>
                 </div>
                 {
-                  timer > 0 ? <Button
+                  loading ? <InPageLoading/> : 
+                  (
+                    timer > 0 ? <Button
                     type="submit"
                     className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
                   >
@@ -112,6 +123,7 @@ export default function VerifyOtp() {
                   >
                     Resend
                   </Button>
+                  )
                 }
 
 

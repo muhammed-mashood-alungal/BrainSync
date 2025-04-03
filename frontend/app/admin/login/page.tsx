@@ -1,7 +1,7 @@
 'use client'
 import { AuthServices } from '@/services/client/auth.client';
 import { validateLoginForm } from '@/validations';
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { SyntheticEvent, use, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/Context/auth.context';
@@ -16,7 +16,8 @@ const AdminPortal = () => {
     })
     const router = useRouter()
     const { user, checkAuth } = useAuth()
-
+    const [loading , setLoading] = useState(false)
+ 
     useEffect(()=>{
        if(user && user.role == 'admin'){
         router.push('/admin/students')
@@ -27,8 +28,10 @@ const AdminPortal = () => {
 
 
     const handleSubmit = async (e: SyntheticEvent) => {
+        setLoading(true)
         try {
             e.preventDefault()
+            
             const res = validateLoginForm({ email, password })
             if (res.status) {
                 await AuthServices.loginService({ email, password })
@@ -52,6 +55,8 @@ const AdminPortal = () => {
             } else {
                 toast.error("An unexpected error occurred.")
             }
+        }finally{
+            setLoading(false)
         }
     }
 
