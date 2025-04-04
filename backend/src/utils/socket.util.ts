@@ -67,12 +67,18 @@ export default function setupSocket(io: Server) {
     })
 
     socket.on('toggle-mute', ({ peerId, roomId  , isMuted}) => {
-      console.log('helllllllllllo muting')
       socket.to(roomId).emit('user-toggled-audio', peerId , isMuted)
     })
  
     socket.on('toggle-video', ({ peerId, roomId  , videoOff}) => {
       socket.to(roomId).emit('user-toggled-video', peerId , videoOff)
+    })
+
+
+    ///// Whiteboard Logic
+
+    socket.on('join-whiteboard',()=>{
+
     })
 
 

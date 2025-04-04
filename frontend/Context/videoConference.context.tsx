@@ -185,7 +185,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       socketRef.current?.emit('signal', { to: incomingUserId, from: callerId, signal })
     })
     peer.on('error', (err) => console.error(`Peer error with ${incomingUserId}:`, err))
-    return peer;
+    return peer
   };
 
   const toggleMute = (state: boolean) => {
