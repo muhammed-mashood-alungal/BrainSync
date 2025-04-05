@@ -4,7 +4,7 @@ import { useWhiteBoard } from "@/Context/whiteBoardContex";
 import { Slide } from "@/types/whiteBoard.types";
 
 const WhiteboardWithSlides: React.FC = () => {
-  const { toggleDrawingMode, addShape, currentMode, handleColorChange, clearCurrentSlide, deleteSelected,
+  const { toggleDrawingMode , currentMode, handleColorChange, clearCurrentSlide, deleteSelected,
     currentColor, handleBrushSizeChange, brushSize, canvas, canvasRef, createNewSlide,
     currentSlideIndex, nextSlide, prevSlide, slides, navigateToSlide
   } = useWhiteBoard()
@@ -105,7 +105,7 @@ const WhiteboardWithSlides: React.FC = () => {
           <button
             onClick={nextSlide}
             disabled={currentSlideIndex === slides.length - 1}
-            className={`px-4 py-2 border border-gray-300 border-gray-700 text-gray-700  rounded-md ${currentSlideIndex === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer bg-white'}`}
+            className={`px-4 py-2 border border-gray-700 text-gray-700  rounded-md ${currentSlideIndex === slides.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer bg-white'}`}
           >
             Next Slide
           </button>

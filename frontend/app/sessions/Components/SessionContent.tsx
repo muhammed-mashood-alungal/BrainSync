@@ -10,6 +10,7 @@ import { Session } from '@/types/sessionTypes';
 import { IGroupType } from '@/types/groupTypes';
 import WhiteBoard from './WhiteBoard';
 import { WhiteBoardProvider } from '@/Context/whiteBoardContex';
+import { SocketProvider } from '@/Context/socketContext';
 
 const SessionContent: React.FC<{session : Session}> = ({session}) => {
     const router = useRouter()
@@ -239,12 +240,13 @@ const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
         }
     }, [validationRes])
     return (
-
+         <SocketProvider>
         <VideoCallProvider roomId={sessionCode as string}>
-            <WhiteBoardProvider>
+            <WhiteBoardProvider roomId={sessionCode as string}>
             <SessionContent  session={session}/>
             </WhiteBoardProvider>
         </VideoCallProvider>
+        </SocketProvider>
     );
 };
 export default Page;
