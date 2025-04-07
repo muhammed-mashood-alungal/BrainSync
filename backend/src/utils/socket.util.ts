@@ -9,7 +9,11 @@ interface CustomSocket extends Socket {
 
 
 interface Rooms {
-  [roomId: string]: Set<string>;
+  [roomId: string]:  {userId : string , email : string}[]
+}
+
+interface Users {
+  [userId : string] : string
 }
 
 const whiteBoardRepo = new WhiteboardRepository()
@@ -17,40 +21,44 @@ const whiteBoardRepo = new WhiteboardRepository()
 
 export default function setupSocket(io: Server) {
   const rooms: Rooms = {};
+  const users  : Users = {}
 
   io.on('connection', (socket: CustomSocket) => {
 
-    socket.on("join-room", (roomId: string, userId: string) => {
+    socket.on("join-room", (roomId: string, userId: string , email : string) => {
       if (!roomId || !userId) {
-        console.error("Invalid roomId or userId:", roomId, userId)
+        console.error("Invalid roomId or userId:", roomId, userId )
         return
       }
 
 
       socket.roomId = roomId
       socket.userId = userId
+      //socket.email = email
+      users[userId] = email
+      
 
       // Initialize room if needed
       if (!rooms[roomId]) {
-        rooms[roomId] = new Set<string>()
+        rooms[roomId] = []
       }
 
      
-      rooms[roomId].add(socket.id);
+      rooms[roomId].push({userId :socket.id , email : email})
+      
 
       console.log(`User with socket ${socket.id} joining room ${roomId}`)
-      console.log(`Room ${roomId} now has ${rooms[roomId].size} users`)
+      console.log(`Room ${roomId} now has ${rooms[roomId].length} users`)
 
-      socket.join(roomId);
-
-      // Get all other users in the room
-      const otherUsers: string[] = [...rooms[roomId]].filter(id => id !== socket.id)
-
+      socket.join(roomId)
+      
+       
+       const otherUsers = rooms[roomId].filter(usr => usr.userId !== socket.id)
       
       socket.emit("all-users", otherUsers)
 
       
-      socket.to(roomId).emit("user-joined", socket.id)
+      socket.to(roomId).emit("user-joined", socket.id , email)
     });
 
     // Handle signaling for WebRTC with simple-peer
@@ -131,20 +139,32 @@ export default function setupSocket(io: Server) {
     // })
 
 
+    socket.on('send-message',(message)=>{
+      console.log('iam in server' , socket.roomId)
+      socket.to(socket.roomId as string).emit('message' , message)
+    })
+
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id)
-
+   
       // Remove from room tracking
       if (socket.roomId && rooms[socket.roomId]) {
-        rooms[socket.roomId].delete(socket.id)
+        console.log('before delting')
+        console.log(rooms[socket.roomId])
+        rooms[socket.roomId] = rooms[socket.roomId].filter((usr)=>{
+         return usr.userId != socket.id
+        })
+        console.log('After deleting')
+        console.log(rooms[socket.roomId])
         console.log(`User with socket ${socket.id} left room ${socket.roomId}`)
 
 
         socket.to(socket.roomId).emit('user-disconnected', socket.id)
 
-        console.log(`Room ${socket.roomId} now has ${rooms[socket.roomId].size} users`)
+        console.log(`Room ${socket.roomId} now has ${rooms[socket.roomId]?.length} users`)
 
-        if (rooms[socket.roomId].size === 0) {
+        if (rooms[socket.roomId]?.length === 0) {
           delete rooms[socket.roomId]
           console.log(`Room ${socket.roomId} was deleted (empty)`)
         }

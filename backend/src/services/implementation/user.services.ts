@@ -45,7 +45,7 @@ export class UserServices implements IUserService {
         const sk = skip as number ?? 0
         const lim = limit as number ?? 100
 
-        const [count , students ] =await Promise.all([ this._userRepository.countStudents(), this._userRepository.findAllStudents(sk, lim , searchQuery)] )
+        const [count , students ] =await Promise.all([ this._userRepository.countStudents(searchQuery), this._userRepository.findAllStudents(sk, lim , searchQuery)] )
         return {students , count}
     }
     async blockOrUnblock(id: unknown): Promise<boolean> {
@@ -58,7 +58,7 @@ export class UserServices implements IUserService {
     async isStudentsBlocked(id: unknown): Promise<boolean> {
         const stud = await this._userRepository.findById(id as Types.ObjectId)
         return stud?.isAcitve == false
-    }
+    }  
     async searchUserByEmail(query: string): Promise<{ email: string, _id: Types.ObjectId }[]> {
         return await this._userRepository.searchByEmail(query)
     }

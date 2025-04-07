@@ -12,7 +12,7 @@ interface VideoFProps {
   email: string
 }
 
-const VideoF: React.FC<VideoFProps> = ({ peer, userId }) => {
+const VideoF: React.FC<VideoFProps> = ({ peer, userId , email }) => {
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const [connected, setConnected] = useState(false)
@@ -43,6 +43,11 @@ const VideoF: React.FC<VideoFProps> = ({ peer, userId }) => {
 
   return (
     <div className={`${styles.videoContainer}  h-80 w-full`}>
+      <div className='absolute bg-gray-800 opacity-80 rounded-xl px-3 py-1 right-2 bottom-2 z-20'>
+        <span>{email}</span>
+      
+      </div>
+      
       {videoOffUsers.has(userId) && (
         <div className="flex items-center justify-center w-full h-80 object-cover rounded-md scale-x-[1] bg-gray-800">
           <VideoOff size={64} />
@@ -51,6 +56,7 @@ const VideoF: React.FC<VideoFProps> = ({ peer, userId }) => {
       <video ref={videoRef} autoPlay playsInline className={` scale-x-[-1] `} hidden={videoOffUsers.has(userId)} />
 
       <div className={styles.videoLabel}>
+        
         {connected && audioMutedUsers.has(userId) ? <MicOff /> : (connected && !audioMutedUsers.has(userId)) && <Mic/>}
         {!connected && ' (Connecting...)'}
         {connected && !hasStream && ' (No Stream)'}
@@ -133,9 +139,9 @@ export default function Room({ isVideoEnabled, isAudioEnabled }: {
             </div>
       </div>
 
-      {peers.map((peerData: PeerData) => (
+      {peers.map((peerData: PeerData , idx) => (
         <div
-          key={peerData.peerId}
+          key={idx}
           className={`
             rounded-md flex items-center justify-center aspect-video
             transition-colors duration-1500 ease-out

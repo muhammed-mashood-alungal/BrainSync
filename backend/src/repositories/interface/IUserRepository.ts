@@ -13,5 +13,5 @@ export interface IUserRepository {
     searchByEmail(query : string ) :Promise<{email :string , _id : Types.ObjectId}[]>
     deleteAvatar(userId : Types.ObjectId ) :Promise<string  | undefined>
     findAllStudents(skip : number , limit : number , searchQuery: string)  : Promise<IUserModel[]>
-    countStudents() : Promise<number>
+    countStudents(searchQuery: string) : Promise<number>
 }

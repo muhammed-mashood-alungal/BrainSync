@@ -7,8 +7,6 @@ import { HttpResponse } from '../constants/responseMessage.constants';
 export const adminAuth: RequestHandler = async (req, res, next) => {
     const accessToken = req.cookies.accessToken
     const refreshToken = req.cookies.refreshToken
-    console.log('inside amdin ----auth')
-    console.log(accessToken,refreshToken)
     if (!accessToken && !refreshToken) {
         res.status(HttpStatus.UNAUTHORIZED).json(HttpResponse.NO_TOKEN)
         return

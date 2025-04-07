@@ -76,8 +76,12 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
         }
         return this.model.find(find).skip(skip).limit(limit)
     }
-    async countStudents(): Promise<number> {
-        return this.model.countDocuments({ role: 'student' })
+    async countStudents(searchQuery: string): Promise<number> {
+        const find: any = { role: 'student' }
+        if (searchQuery) {
+            find.username = { $regex: searchQuery, $options: 'i' }
+        }
+        return this.model.countDocuments(find)
     }
 
 }

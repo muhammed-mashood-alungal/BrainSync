@@ -14,3 +14,9 @@ export interface IUserType {
     createdAt: Date | string;
     updatedAt: Date | string;
 } 
+
+export interface IDecodedUserType{
+    id : string,
+    email : string,
+    role : string
+}

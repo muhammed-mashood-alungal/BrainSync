@@ -10,9 +10,11 @@ import { Session } from '@/types/sessionTypes';
 import { IGroupType } from '@/types/groupTypes';
 import WhiteBoard from './WhiteBoard';
 import { WhiteBoardProvider } from '@/Context/whiteBoardContex';
-import { SocketProvider } from '@/Context/socketContext';
+import { SocketProvider } from '@/Context/socket.context';
+import ChatComponent from './Chat';
+import { ChatProvider } from '@/Context/chat.context';
 
-const SessionContent: React.FC<{session : Session}> = ({session}) => {
+const SessionContent: React.FC<{ session: Session }> = ({ session }) => {
     const router = useRouter()
     const [activeTab, setActiveTab] = useState('video');
     const [chatOpen, setChatOpen] = useState(true);
@@ -81,7 +83,7 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
-                        <span>{(session?.groupId as IGroupType)?.members?.length  || "5 Members"}</span>
+                        <span>{(session?.groupId as IGroupType)?.members?.length || "5 Members"}</span>
                     </div>
                 </div>
             </div>
@@ -132,12 +134,13 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
                     {/* Always render VideoConference, hide it with CSS when not active */}
                     <div className={`${activeTab === 'video' ? 'block' : 'hidden'} h-full`}>
                         <VideoConference isAudioEnabled={micEnabled} isVideoEnabled={videoEnabled} />
+                        <ChatComponent />
                     </div>
                     <div className={`${activeTab === 'whiteboard' ? 'block' : 'hidden'} h-full`}>
                         <WhiteBoard />
                     </div>
                     {/* Other tabs */}
-                  
+
                     <div className={`${activeTab === 'code' ? 'block' : 'hidden'} h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}>
                         <p className="text-gray-400">Code editor will appear here</p>
                     </div>
@@ -159,6 +162,7 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
                         className={`p-4 rounded-full ${activeTab === 'video' ? 'bg-cyan-500' : 'bg-gray-700'}`}
                     >
                         <Video className="h-6 w-6" />
+
                     </button>
                     <button
                         onClick={() => setActiveTab('whiteboard')}
@@ -206,31 +210,21 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
                 </div>
             </div>
 
-            {/* Mobile Chat Toggle */}
-            {/* <div className="fixed bottom-4 right-4 md:hidden">
-                <button
-                    onClick={() => setChatOpen(!chatOpen)}
-                    className="p-2 rounded-full bg-cyan-500"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                </button>
-            </div> */}
+
         </div>
     );
 };
 interface PageProps {
     sessionCode: string;
     validationRes: { status: true, message: string };
-    session : Session
+    session: Session
 }
 
 const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
     {
         sessionCode: string,
         validationRes: { status: true, message: string },
-        session : Session
+        session: Session
     }) => {
     const router = useRouter()
     useEffect(() => {
@@ -240,12 +234,14 @@ const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
         }
     }, [validationRes])
     return (
-         <SocketProvider>
-        <VideoCallProvider roomId={sessionCode as string}>
-            <WhiteBoardProvider roomId={sessionCode as string}>
-            <SessionContent  session={session}/>
-            </WhiteBoardProvider>
-        </VideoCallProvider>
+        <SocketProvider>
+            <VideoCallProvider roomId={sessionCode as string}>
+                <ChatProvider>
+                    <WhiteBoardProvider roomId={sessionCode as string}>
+                        <SessionContent session={session} />
+                    </WhiteBoardProvider>
+                </ChatProvider>
+            </VideoCallProvider>
         </SocketProvider>
     );
 };

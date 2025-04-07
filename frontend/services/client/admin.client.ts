@@ -16,7 +16,7 @@ export const AdminServices = {
     async getAllStudents(skip :number, limit : number ,searchQuery : string){
         try {
             const response = await adminInstance.get(`/all-students?skip=${skip}&limit=${limit}&searchQuery=${searchQuery}`)
-            return response.data.students
+            return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Change Profile Picture failed. Please try again."

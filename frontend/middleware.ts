@@ -20,12 +20,14 @@ export async function middleware(req: NextRequest) {
         if (!token && isProtectedRoute) {
             return NextResponse.redirect(new URL("/login", req.url))
         }
-        let user = await AuthServices.verifyToken(token as string) as JwtPayload
+        let {user} = await AuthServices.verifyToken(token as string) as JwtPayload
         if(!user){
             user = await AuthServices.refreshToken(refreshToken as string) as JwtPayload
         }
-
+         
         if (isAdminRoute && (!user || user.role !== "admin")) {
+            console.log('Redirecting')
+            console.log(user)
             return NextResponse.redirect(new URL("/", req.url))
         }  
 
@@ -33,7 +35,7 @@ export async function middleware(req: NextRequest) {
         if (isProtectedRoute && !user) {
             return NextResponse.redirect(new URL("/login", req.url))
         } 
-
+         console.log('ALll Setttttttttttttttt')
         return NextResponse.next()
     } catch (err : unknown) {
         console.log(err)

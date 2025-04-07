@@ -16,17 +16,17 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
     const [loading , setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [blockingStudent, setblockingStudents] = useState('')
-
     const [currentPage, setCurrentPage] = useState(1)
-    const totalPages =  Math.ceil(totalCount / 10)
-    const limit = 10
+    const limit = 8
+    const [totalPages , setTotalPage] = useState(totalCount / limit)
+    
 
     useEffect(() => {
         const fetchStudents = async () => {
             setIsLoading(true)
             try {
-                const students = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
-                console.log(students)
+                const {students , count} = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
+                setTotalPage( Math.ceil(count / limit))
                 setStudents(students)
             } catch (error) {
                 if (error instanceof Error) {
@@ -40,7 +40,6 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
         };
 
         fetchStudents()
-        console.log(searchQuery)
         setIsLoading(false)
     }, [currentPage , searchQuery])
 

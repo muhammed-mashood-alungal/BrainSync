@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, createContext, ReactNode, useContex
 import * as fabric from 'fabric'; // Changed import syntax
 import { Socket, io } from 'socket.io-client';
 import { CanvasData, NewSlideData, Slide, SlideChangeData, WhiteBoardContextProps } from '@/types/whiteBoard.types';
-import { useSocket } from './socketContext';
+import { useSocket } from './socket.context';
 
 
 const WhiteBoardContext = createContext<undefined | WhiteBoardContextProps>(undefined)

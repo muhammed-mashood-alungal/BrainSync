@@ -1,13 +1,14 @@
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, use, useContext, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { useAuth } from './auth.context';
-import { useSocket } from './socketContext';
+import { useSocket } from './socket.context';
 
 interface PeerData {
   peerId: string;
   peer: Peer.Instance;
-  stream?: MediaStream
+  stream?: MediaStream;
+  email : string
 }
 
 interface VideoCallState {
@@ -39,7 +40,9 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
   const socketRef = useRef<Socket | null>(null)
   const myStreamRef = useRef<MediaStream | null>(null)
   const peersRef = useRef<PeerData[]>([])
+  const { user } = useAuth()
   const { socket } = useSocket()
+
 
   useEffect(() => {
     if (!myStreamRef.current) return
@@ -63,32 +66,43 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
   }, [myStreamRef.current])
 
   useEffect(() => {
-    if(!socket) return
+    if (!socket ) return
     socketRef.current = socket
     socketRef.current?.on('connect', () => {
       navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
         .then((stream) => {
           myStreamRef.current = stream
-          socketRef.current?.emit('join-room', roomId, socketRef.current?.id)
+          socketRef.current?.emit('join-room', roomId, socketRef.current?.id , user?.email)
 
-          socketRef.current?.on('all-users', (users: string[]) => {
+          socketRef.current?.on('all-users', (users: {userId : string , email : string}[]) => {
             const newPeers = users
-              .filter((userId) => !peersRef.current.some((p) => p.peerId === userId))
-              .map((userId) => {
-                const peer = createPeer(userId, socketRef.current!.id as string, stream)
-                return { peerId: userId, peer }
+              .filter((usr) => !peersRef.current.some((p) => p.peerId === usr.userId))
+              .map((usr) => {
+                const peer = createPeer(usr.userId, socketRef.current!.id as string, stream)
+                return { peerId: usr.userId, peer  , email : usr.email}
               });
-            peersRef.current = [...peersRef.current, ...newPeers]
+            peersRef.current = [...peersRef.current, ...newPeers ]
+            console.log('setting new Peers')
+            console.log(peersRef.current)
             setPeers(peersRef.current)
           });
 
-          socketRef.current?.on('user-joined', (userId: string) => {
+          socketRef.current?.on('user-joined', (userId: string , email) => {
             if (peersRef.current.some((p) => p.peerId === userId)) return
             const peer = addPeer(userId, socketRef.current!.id as string, stream)
-            const newPeer = { peerId: userId, peer }
-            peersRef.current = [...peersRef.current, newPeer]
-            setPeers((prev) => (prev.some((p) => p.peerId === userId) ? prev : [...prev, newPeer]))
+            const newPeer = { peerId: userId, peer , email  }
+            peersRef.current = [...peersRef.current, newPeer ]
+            console.log(peersRef.current)
+            console.log('userConnectes')
+            
+            setPeers((prev) =>{
+              if(prev.some((p) => p.peerId === userId)){
+                  return prev
+              }else{
+                return [...prev, newPeer ]
+              }
+            })
           })
 
           socketRef.current?.on('user-speaking', (peerId: string) => {
@@ -171,7 +185,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       socketRef.current?.off('user-toggled-video')
       socketRef.current?.disconnect()
     }
-  }, [roomId, socket]);
+  }, [roomId, socket , ])
 
   const createPeer = (userToSignal: string, callerId: string, stream: MediaStream) => {
     const peer = new Peer({ initiator: true, trickle: false, stream })
@@ -199,7 +213,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
     } else {
       setTimeout(() => {
         setIsMuted(state)
-      }, 2500)
+      }, 1000)
     }
 
   }
