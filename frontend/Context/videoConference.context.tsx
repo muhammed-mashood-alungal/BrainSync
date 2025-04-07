@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useRef, useState } fro
 import { io, Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { useAuth } from './auth.context';
+import { useSocket } from './socketContext';
 
 interface PeerData {
   peerId: string;
@@ -18,10 +19,10 @@ interface VideoCallState {
   toggleVideo: (state: boolean) => void;
   speakingUsers: Set<string>;
   leaveRoom: () => void;
-  audioMutedUsers:Set<string>
-  videoOffUsers : Set<string>
+  audioMutedUsers: Set<string>
+  videoOffUsers: Set<string>
   amSpeaking: boolean
-  
+
 }
 
 export const VideoCallContext = createContext<VideoCallState | undefined>(undefined);
@@ -32,12 +33,13 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
   const [isVideoOff, setIsVideoOff] = useState(false)
   const [speakingUsers, setSpeakingUsers] = useState<Set<string>>(new Set())
   const speakingTimeoutsRef = useRef<Map<string, NodeJS.Timeout>>(new Map())
-  const [audioMutedUsers , setAudioMutedUsers] = useState<Set<string>>(new Set())
+  const [audioMutedUsers, setAudioMutedUsers] = useState<Set<string>>(new Set())
   const [videoOffUsers, setVideoOffUsers] = useState<Set<string>>(new Set())
-  const [amSpeaking , setAmSpeaking] = useState(true)
+  const [amSpeaking, setAmSpeaking] = useState(true)
   const socketRef = useRef<Socket | null>(null)
   const myStreamRef = useRef<MediaStream | null>(null)
   const peersRef = useRef<PeerData[]>([])
+  const { socket } = useSocket()
 
   useEffect(() => {
     if (!myStreamRef.current) return
@@ -61,7 +63,8 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
   }, [myStreamRef.current])
 
   useEffect(() => {
-    socketRef.current = io(process.env.NEXT_PUBLIC_BACKEND_ROOT_URL)
+    if(!socket) return
+    socketRef.current = socket
     socketRef.current?.on('connect', () => {
       navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
@@ -111,16 +114,16 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
             speakingTimeoutsRef.current.set(peerId, timeout)
           })
 
-          socketRef.current?.on('user-toggled-audio' , (userId : string, isMuted :boolean)=>{
-          setAudioMutedUsers((prev)=>{
-            const users = new Set(prev)
-            if(isMuted){
-              users.add(userId)
-            }else{
-              users.delete(userId)
-            }
-            return users
-          })
+          socketRef.current?.on('user-toggled-audio', (userId: string, isMuted: boolean) => {
+            setAudioMutedUsers((prev) => {
+              const users = new Set(prev)
+              if (isMuted) {
+                users.add(userId)
+              } else {
+                users.delete(userId)
+              }
+              return users
+            })
           })
 
           socketRef.current?.on('user-toggled-video', (peerId, videoOff) => {
@@ -168,7 +171,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       socketRef.current?.off('user-toggled-video')
       socketRef.current?.disconnect()
     }
-  }, [roomId]);
+  }, [roomId, socket]);
 
   const createPeer = (userToSignal: string, callerId: string, stream: MediaStream) => {
     const peer = new Peer({ initiator: true, trickle: false, stream })
@@ -185,24 +188,24 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       socketRef.current?.emit('signal', { to: incomingUserId, from: callerId, signal })
     })
     peer.on('error', (err) => console.error(`Peer error with ${incomingUserId}:`, err))
-    return peer;
+    return peer
   };
 
   const toggleMute = (state: boolean) => {
     myStreamRef.current?.getAudioTracks().forEach((track) => (track.enabled = !track.enabled))
-    socketRef.current?.emit('toggle-mute' , {isMuted : state , roomId , peerId : socketRef.current?.id as string} )
-    if(state){
+    socketRef.current?.emit('toggle-mute', { isMuted: state, roomId, peerId: socketRef.current?.id as string })
+    if (state) {
       setIsMuted(state)
-    }else{
-      setTimeout(()=>{
+    } else {
+      setTimeout(() => {
         setIsMuted(state)
-      },2500)
+      }, 2500)
     }
-    
+
   }
 
   const toggleVideo = (state: boolean) => {
-    socketRef.current?.emit('toggle-video' , {videoOff : state , roomId ,  peerId : socketRef.current?.id as string} )
+    socketRef.current?.emit('toggle-video', { videoOff: state, roomId, peerId: socketRef.current?.id as string })
     setIsVideoOff(state)
   }
 

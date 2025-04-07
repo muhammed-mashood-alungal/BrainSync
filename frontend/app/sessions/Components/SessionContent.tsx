@@ -2,12 +2,15 @@
 import { useEffect, useState } from 'react';
 import { Mic, MicOff, Video, VideoOff, LogOut, Send } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
-import VideoConference from '../Components/VideoConference';
+import VideoConference from './VideoConference';
 import { useVideoCall, VideoCallProvider } from '@/Context/videoConference.context';
 import { SessionServices } from '@/services/client/session.client';
 import { toast } from 'react-toastify';
 import { Session } from '@/types/sessionTypes';
 import { IGroupType } from '@/types/groupTypes';
+import WhiteBoard from './WhiteBoard';
+import { WhiteBoardProvider } from '@/Context/whiteBoardContex';
+import { SocketProvider } from '@/Context/socketContext';
 
 const SessionContent: React.FC<{session : Session}> = ({session}) => {
     const router = useRouter()
@@ -130,10 +133,11 @@ const SessionContent: React.FC<{session : Session}> = ({session}) => {
                     <div className={`${activeTab === 'video' ? 'block' : 'hidden'} h-full`}>
                         <VideoConference isAudioEnabled={micEnabled} isVideoEnabled={videoEnabled} />
                     </div>
-                    {/* Other tabs */}
-                    <div className={`${activeTab === 'whiteboard' ? 'block' : 'hidden'} h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}>
-                        <p className="text-gray-400">Whiteboard content will appear here</p>
+                    <div className={`${activeTab === 'whiteboard' ? 'block' : 'hidden'} h-full`}>
+                        <WhiteBoard />
                     </div>
+                    {/* Other tabs */}
+                  
                     <div className={`${activeTab === 'code' ? 'block' : 'hidden'} h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}>
                         <p className="text-gray-400">Code editor will appear here</p>
                     </div>
@@ -236,9 +240,13 @@ const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
         }
     }, [validationRes])
     return (
+         <SocketProvider>
         <VideoCallProvider roomId={sessionCode as string}>
+            <WhiteBoardProvider roomId={sessionCode as string}>
             <SessionContent  session={session}/>
+            </WhiteBoardProvider>
         </VideoCallProvider>
+        </SocketProvider>
     );
 };
 export default Page;
