@@ -11,16 +11,17 @@ dotenv.config()
 
 const app = express()
 import { env } from './configs/env.config'
-import { connectDB } from './configs/mongo.config'
+//import { connectDB } from './configs/mongo.config'
+import mongoDBConfig from './configs/mongo.config'
 import { errorHandler } from './middlewares/error.middleware'
 import { pageNotFound } from './middlewares/notFound.middleware'
 import { connectRedis } from './configs/redis.config'
 
-
+mongoDBConfig.connectDB()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser())
-connectDB()
+app.use(cookieParser()) 
+
 connectRedis() 
  
 app.use(morgan("dev"))
@@ -55,6 +56,7 @@ import userRouter from './routers/user.router'
 import adminRouter from './routers/admin.routes'
 import groupRouter from './routers/group.router'
 import sessionRouter from './routers/session.router'
+import noteRouter from './routers/note.router'
 
 
 app.use('/api/auth/',authRouter) 
@@ -62,7 +64,7 @@ app.use('/api/users/',userRouter)
 app.use('/api/admin/',adminRouter) 
 app.use('/api/groups/',groupRouter) 
 app.use('/api/sessions/',sessionRouter) 
-
+app.use('/api/notes/',noteRouter) 
 
 app.use(pageNotFound)
 app.use(errorHandler)

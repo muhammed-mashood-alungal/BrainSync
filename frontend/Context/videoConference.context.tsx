@@ -3,6 +3,8 @@ import { io, Socket } from 'socket.io-client';
 import Peer from 'simple-peer';
 import { useAuth } from './auth.context';
 import { useSocket } from './socket.context';
+import { noteServices } from '@/services/client/note.client';
+import { toast } from 'react-toastify';
 
 interface PeerData {
   peerId: string;
@@ -151,8 +153,6 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
               return newSet
             })
           })
-
-
 
           socketRef.current?.on('signal', (data: { from: string; signal: Peer.SignalData }) => {
             const item = peersRef.current.find((p) => p.peerId === data.from)
@@ -310,7 +310,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
     };
   };
 
-  const leaveRoom = () => {
+  const leaveRoom = async () => {
     try {
       if (myStreamRef.current) {
         myStreamRef.current.getTracks().forEach((track) => {
@@ -330,6 +330,13 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       if (socketRef.current) {
         socketRef.current.disconnect()
       }
+      const response = await noteServices.saveNote(roomId)
+      if(response.success){
+         toast.success("Note Saved in you Resources")
+      }else{
+        toast.error(response.message)
+      }
+      
     } catch (error) {
       console.error(" Error leaving room:", error)
     }

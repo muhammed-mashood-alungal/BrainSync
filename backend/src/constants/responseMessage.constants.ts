@@ -29,5 +29,7 @@ export const HttpResponse = {
     UNAUTHORIZED : 'Unauthorized Access, Please Login First',
     CANNOT_UPDATE_LIVE_SESSION : ' You Cannot the datas of session which is live!',
     NOT_CREATER_OF_SESSION : 'Only Creater Can update the Session Data',
-    ENDED_SESSION : 'This Session Already Ended And its Data is Recorded !'
+    ENDED_SESSION : 'This Session Already Ended And its Data is Recorded !',
+    SESSION_ID_NOT_PROVIDED : 'Invalid Session ID',
+    NO_CONTENT_FOR_PDF : "No Content in Your Pdf"
 }

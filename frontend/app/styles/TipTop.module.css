@@ -1,0 +1,69 @@
+/* styles/TipTop.module.css */
+
+/* Editor specific styles */
+.proseMirror ul,
+.proseMirror ol {
+  padding-left: 1.5rem;
+  list-style-position: outside;
+}
+
+.proseMirror ul li {
+  list-style-type: disc;
+}
+
+.proseMirror ol li {
+  list-style-type: decimal;
+}
+
+/* Headings */
+.proseMirror h1 {
+  font-size: 2em;
+  margin-top: 0.67em;
+  margin-bottom: 0.67em;
+}
+
+.proseMirror h2 {
+  font-size: 1.5em;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+}
+
+.proseMirror h3 {
+  font-size: 1.17em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.proseMirror h4 {
+  margin-top: 1.33em;
+  margin-bottom: 1.33em;
+}
+
+.proseMirror h5 {
+  font-size: 0.83em;
+  margin-top: 1.67em;
+  margin-bottom: 1.67em;
+}
+
+.proseMirror h6 {
+  font-size: 0.67em;
+  margin-top: 2.33em;
+  margin-bottom: 2.33em;
+}
+
+/* Alignment classes (match TipTap's expected class names) */
+.proseMirror .text-left {
+  text-align: left;
+}
+
+.proseMirror .text-center {
+  text-align: center;
+}
+
+.proseMirror .text-right {
+  text-align: right;
+}
+
+.proseMirror .text-justify {
+  text-align: justify;
+}

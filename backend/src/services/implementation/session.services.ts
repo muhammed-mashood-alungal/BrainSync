@@ -56,6 +56,7 @@ export class SessionServices implements ISessionServices {
     async getMySessions(userId: unknown , subject : string , date: string): Promise<ISessionModal[]> {
         const myGroups = await this._groupRepository.getMyGroups(userId as Types.ObjectId)
         const groups = myGroups.map(grp => grp._id)
+    
 
         interface IFilter {
             subject? : string;

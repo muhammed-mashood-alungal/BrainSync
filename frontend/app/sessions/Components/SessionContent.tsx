@@ -13,8 +13,9 @@ import { WhiteBoardProvider } from '@/Context/whiteBoardContex';
 import { SocketProvider } from '@/Context/socket.context';
 import ChatComponent from './Chat';
 import { ChatProvider } from '@/Context/chat.context';
+import NoteEditor from './NoteEditor';
 
-const SessionContent: React.FC<{ session: Session }> = ({ session }) => {
+const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
     const router = useRouter()
     const [activeTab, setActiveTab] = useState('video');
     const [chatOpen, setChatOpen] = useState(true);
@@ -37,7 +38,7 @@ const SessionContent: React.FC<{ session: Session }> = ({ session }) => {
         { id: 6, name: "User 6" },
         { id: 7, name: "User 7" },
         { id: 8, name: "User 8" },
-    ];
+    ]
 
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
@@ -83,7 +84,7 @@ const SessionContent: React.FC<{ session: Session }> = ({ session }) => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
-                        <span>{(session?.groupId as IGroupType)?.members?.length || "5 Members"}</span>
+                        {/* <span>{(session?.groupId as IGroupType)?.members?.length || "5 Members"}</span> */}
                     </div>
                 </div>
             </div>
@@ -145,7 +146,8 @@ const SessionContent: React.FC<{ session: Session }> = ({ session }) => {
                         <p className="text-gray-400">Code editor will appear here</p>
                     </div>
                     <div className={`${activeTab === 'notes' ? 'block' : 'hidden'} h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}>
-                        <p className="text-gray-400">Notes will appear here</p>
+                        {/* <p className="text-gray-400">Notes will appear here</p> */}
+                        <NoteEditor roomId={roomId}/>
                     </div>
                 </div>
 
@@ -238,7 +240,7 @@ const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
             <VideoCallProvider roomId={sessionCode as string}>
                 <ChatProvider>
                     <WhiteBoardProvider roomId={sessionCode as string}>
-                        <SessionContent session={session} />
+                        <SessionContent roomId={sessionCode} />
                     </WhiteBoardProvider>
                 </ChatProvider>
             </VideoCallProvider>
