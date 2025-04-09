@@ -52,10 +52,19 @@ export class NoteController implements INoteController {
             const { sessionCode } = req.params
             const userId = req.user
             const content = await this._noteServices.getInitialContent(sessionCode, userId as string)
-            console.log('THis is content +++++++++++++++++')
-            console.log(content)
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { content }))
         } catch (error) {
+            next(error)
+        }
+    }
+    async myNotes(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const {searchQuery} = req.query
+            const userId = req.user
+            const notes =await this._noteServices.myNotes(userId ,searchQuery as string)
+            
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { notes : notes }))
+        } catch (error) {                                                                                                                                                                                                                                                                                                                                                                                  
             next(error)
         }
     }

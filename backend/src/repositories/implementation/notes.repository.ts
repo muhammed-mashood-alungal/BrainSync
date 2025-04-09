@@ -3,12 +3,13 @@ import { INoteRepository } from "../interface/INoteRepository";
 import { set, ref, get, onValue, Unsubscribe } from 'firebase/database'
 import { firebaseDB } from "../../configs/firebase.config";
 import puppeteer from 'puppeteer';
-import { GridFSBucket, ObjectId } from 'mongodb';
+import { GridFSBucket, ObjectId, ReturnDocument } from 'mongodb';
 import mongoDBConfig from "../../configs/mongo.config";
 import { BaseRepository } from "../base.repositry";
 import { INoteModel, Notes } from "../../models/note.model";
 import { INoteTypes } from "../../types/note.types";
 import { GridFSBucketReadStream } from 'mongodb';
+import { ISessionTypes } from "../../types/session.types";
 
 //export class GroupRepository extends BaseRepository<IGroupModel> implements IGroupRepository
 export class NoteRepository extends BaseRepository<INoteModel> implements INoteRepository {
@@ -27,7 +28,6 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
     async getContentFromFirebase(roomId: string, userId: string): Promise<string> {
         const contentRef = ref(firebaseDB, `notes/${roomId}/${userId}`)
         const snapshot = await get(contentRef)
-        console.log(snapshot.val())
         return snapshot.val() || ''
     }
 
@@ -35,14 +35,13 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
         if (!this.gfs) {
             this.gfs = await mongoDBConfig.getGridFSBucket()
         }
-
+        
         const browser = await puppeteer.launch({ headless: true })
         const page = await browser.newPage()
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' })
         const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true })
         await browser.close()
-
         const fileName = `${sessionId}.pdf`
 
         const existingFiles = await this.findFilesByName(fileName);
@@ -69,7 +68,6 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
         if (!this.gfs) {
             this.gfs = await mongoDBConfig.getGridFSBucket()
         }
-        console.log('we have gfg')
         return this.gfs?.openDownloadStream(fileId)
     }
 
@@ -90,5 +88,17 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
        return  await this.gfs!.delete(fileId)
     }
 
-
+    async myNotes(userId: Types.ObjectId, query: string): Promise<INoteTypes[]> {
+        const notes = await  this.model.find({userId : userId}).populate("sessionId")
+        if( query && query?.trim().length > 0){
+            return notes?.filter((note)=>{
+                const session = note.sessionId as ISessionTypes
+                return session?.sessionName?.includes(query)
+            })
+        }else{
+            return notes
+        }
+        
+    }
+   
 }

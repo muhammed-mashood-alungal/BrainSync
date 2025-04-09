@@ -10,7 +10,7 @@ export default function Sidebar() {
   const navItems = [
     { icon: 'home', label: 'Dashboard', path: '/dashboard' },
     { icon: 'file-text', label: 'My Sessions', path: '/dashboard/sessions' },
-    { icon: 'folder', label: 'Resources', path: '/dashboard/resources' },
+    { icon: 'folder', label: 'Notes', path: '/dashboard/notes' },
     { icon: 'users', label: 'My Groups', path: '/dashboard/groups' },
     { icon: 'user', label: 'Profile', path: '/dashboard/profile' }
   ];

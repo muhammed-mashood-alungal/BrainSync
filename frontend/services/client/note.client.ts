@@ -1,4 +1,5 @@
 import { noteInstances } from "@/axios/createInstance"
+import { INoteTypes } from "@/types/note.types"
 import { AxiosError } from "axios"
 
 export const noteServices = {
@@ -10,27 +11,53 @@ export const noteServices = {
             return false
         }
     },
-    saveNote: async (roomId: string): Promise<{success: boolean , message? : string}> => {
+    saveNote: async (roomId: string): Promise<{ success: boolean, message?: string }> => {
         try {
             const response = await noteInstances.post(`/save/${roomId}`)
             console.log(response)
-            return {success: true }
+            return { success: true }
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Note Saving failed. Please try again."
-            return {success: false , message : errorMessage}
+            return { success: false, message: errorMessage }
             //throw new Error(errorMessage)
         }
     },
-    getInitialContent: async (roomId :string ) : Promise<string> =>{
+    getInitialContent: async (roomId: string): Promise<string> => {
         try {
             const response = await noteInstances.get(`/initial-content/${roomId}`)
-            console.log(response)
             return response?.data?.content
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Failed to get initial Note content. Please try again."
+            throw new Error(errorMessage)
+        }
+    },
+    myNotes: async (searchQuery: string): Promise<INoteTypes[]> => {
+        try {
+            const response = await noteInstances.get(`/my-notes?searchQuery=${searchQuery}`)
+            console.log(response)
+            return response?.data?.notes
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Note Saving failed. Please try again."
             throw new Error(errorMessage)
         }
-    }
+    },
+    getNotePdf: async (pdfFileId: string): Promise<void> => {
+        try {
+            const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/notes/pdf/${pdfFileId}`
+        
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', `note-${pdfFileId}.pdf`)
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Note Saving failed. Please try again."
+            throw new Error(errorMessage)
+        }
+    },
 }

@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 import Confirm from '@/Components/ConfirmModal/ConfirmModal'
 import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
-import AdminTable from '@/Components/AdminTable/AdminTable'
+import Table from '@/Components/Table/Table'
 
 
 function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
@@ -120,7 +120,7 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
 
 
             <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">
-                <AdminTable
+                <Table
                     columns={[
                         {
                             key: "username",

@@ -6,6 +6,7 @@ import { createHttpsError } from "../../utils/httpError.utils";
 import { INoteService } from "../interface/INoteService";
 import { GridFSBucketReadStream } from 'mongodb';
 import { ISessionRepository } from "../../repositories/interface/ISessionRepository";
+import { INoteTypes } from "../../types/note.types";
 
 export class NoteService implements INoteService {
     constructor(private _noteRepository: INoteRepository , private _sessionRepository: ISessionRepository) { }
@@ -17,7 +18,6 @@ export class NoteService implements INoteService {
         if (!htmlContent) createHttpsError(HttpStatus.BAD_REQUEST, HttpResponse.NO_CONTENT_FOR_PDF)
 
         const session = await this._sessionRepository.getSessionByCode(sessionCode)  
-        
 
         const pdfFileId = await this._noteRepository.saveNoteAsPdf(htmlContent, session?._id as string)
 
@@ -31,5 +31,8 @@ export class NoteService implements INoteService {
     }
     async getInitialContent(sessionCode: string, userId: string): Promise<string> {
         return  await this._noteRepository.getContentFromFirebase(sessionCode, userId)
+    }
+    async myNotes(userId: unknown, query: string): Promise<INoteTypes[]> {
+        return await this._noteRepository.myNotes(userId as Types.ObjectId , query )
     }
 }

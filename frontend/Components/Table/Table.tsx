@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 
 interface Column<T> {
-    key: keyof T;
+    key: keyof T ;
     label: string;
     render?: (item: T) => React.ReactNode;
 }
@@ -13,7 +13,7 @@ interface TableProps<T> {
     actions?: (item: T) => React.ReactNode;
 }
 
-const AdminTable = <T,>({ columns, data, actions }: TableProps<T>) => {
+const Table = <T,>({ columns, data, actions }: TableProps<T>) => {
 
 
     return (
@@ -60,4 +60,4 @@ const AdminTable = <T,>({ columns, data, actions }: TableProps<T>) => {
     )
 }
 
-export default AdminTable
+export default Table

@@ -19,6 +19,7 @@
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
     "axios": "^1.8.2",
+    "date-fns": "^4.1.0",
     "fabric": "^6.6.2",
     "headlessui": "^0.0.0",
     "jsonwebtoken": "^9.0.2",

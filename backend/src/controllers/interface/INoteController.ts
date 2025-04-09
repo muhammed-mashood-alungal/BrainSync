@@ -5,4 +5,5 @@ export interface INoteController {
     saveNote(req: Request , res: Response , next : NextFunction) : Promise<void>
     getNotePdf(req: Request , res: Response , next : NextFunction) : Promise<void>
     getInitialContent(req : Request , res : Response  , next : NextFunction) : Promise<void>
+    myNotes(req : Request , res : Response  , next : NextFunction) : Promise<void>
 }

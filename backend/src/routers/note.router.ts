@@ -17,5 +17,6 @@ noteRouter.post('/write/:roomId/:userId', authMiddleware, noteController.writeNo
 noteRouter.post('/save/:sessionCode', authMiddleware, noteController.saveNote.bind(noteController))
 noteRouter.get('/pdf/:fileId', authMiddleware, noteController.getNotePdf.bind(noteController))
 noteRouter.get('/initial-content/:sessionCode' , authMiddleware , noteController.getInitialContent.bind(noteController))
+noteRouter.get('/my-notes', authMiddleware  ,noteController.myNotes.bind(noteController))
 
 export default noteRouter
