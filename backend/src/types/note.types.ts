@@ -6,5 +6,6 @@ export interface INoteTypes {
     userId: string | Types.ObjectId
     pdfFileId:Types.ObjectId
     createdAt?: Date
-    updatedAt? :Date
+    updatedAt? :Date,
+    noteName:string
 }

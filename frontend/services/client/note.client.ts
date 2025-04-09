@@ -33,11 +33,11 @@ export const noteServices = {
             throw new Error(errorMessage)
         }
     },
-    myNotes: async (searchQuery: string): Promise<INoteTypes[]> => {
+    myNotes: async (searchQuery: string , skip : number , limit : number) => {
         try {
-            const response = await noteInstances.get(`/my-notes?searchQuery=${searchQuery}`)
+            const response = await noteInstances.get(`/my-notes?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`)
             console.log(response)
-            return response?.data?.notes
+            return response?.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Note Saving failed. Please try again."

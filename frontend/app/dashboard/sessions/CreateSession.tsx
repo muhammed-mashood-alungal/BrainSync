@@ -104,7 +104,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Sessio
   return (
     <>
 
-      <BaseModal title='Create New Group' isOpen={true} onClose={onClose}>
+      <BaseModal title='Create New Session' isOpen={true} onClose={onClose}>
         <div className="px-8 py-6 w-full max-w-lg">
           <h1 className="text-3xl font-bold text-white text-center mb-8">Create Session</h1>
 

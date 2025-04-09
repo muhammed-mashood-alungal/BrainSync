@@ -4,6 +4,7 @@ import { Search, ChevronDown } from 'lucide-react';
 import { ISessionTypes } from '@/types/sessionTypes';
 import { IUserType } from '@/types/userTypes';
 import CreateSession from '@/app/dashboard/sessions/CreateSession';
+import { IGroupType } from '@/types/groupTypes';
 
 
 
@@ -37,7 +38,23 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
             default:
                 return 'text-gray-400';
         }
-    };
+    }
+
+    const getStatus = (start: Date | string, end: Date | string) => {
+        const startDate = new Date(start)
+        const endDate = new Date(end)
+        const currentDate = new Date()
+
+        if (startDate > currentDate) {
+            return 'Scheduled'
+        }
+        if (startDate < currentDate && endDate > currentDate) {
+            return 'Live'
+        }
+        if (endDate < currentDate) {
+            return 'Ended'
+        }
+    }
 
     return (
         <>
@@ -89,33 +106,45 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                             <p className="text-gray-400 text-sm mb-4">{session.subject}</p>
 
                             <div className="grid grid-cols-2  text-sm">
-                                <div>
-                                    <span className="text-gray-400">Start Time:</span>
-                                </div>
-                                <div>
-                                    <span>{session?.startTime?.toLocaleString()}</span>
-                                </div>
-
-                                <div>
-                                    <span className="text-gray-400">End Time:</span>
-                                </div>
-                                <div>
-                                    <span>{session?.endTime?.toLocaleString()}</span>
-                                </div>
-
-                                <div>
-                                    <span className="text-gray-400">Host:</span>
-                                </div>
-                                <div>
-                                    <span>{session.createdBy.username}</span>
-                                </div>
-
-                                <div>
-                                    <span className="text-gray-400">Status:</span>
-                                </div>
-                                <div>
-                                    <span className={getStatusColor(session.status)}>{session.status}</span>
-                                </div>
+                              <div >
+                                                               <span className="text-gray-400">Date :</span>
+                                                           </div>
+                                                           <div>
+                                                               <span>{new Date(session.date).toLocaleDateString()}</span>
+                                                           </div>
+                                                           <div >
+                                                               <span className="text-gray-400">Start Time:</span>
+                                                           </div>
+                                                           <div>
+                                                               <span>{new Date(session.startTime).toLocaleTimeString()}</span>
+                                                           </div>
+                           
+                                                           <div>
+                                                               <span className="text-gray-400">End Time:</span>
+                                                           </div>
+                                                           <div>
+                                                               <span>{new Date(session.endTime).toLocaleTimeString()}</span>
+                                                           </div>
+                           
+                                                           <div>
+                                                               <span className="text-gray-400">Host:</span>
+                                                           </div>
+                                                           <div>
+                                                               <span>{session.createdBy.username}</span>
+                                                           </div>
+                                                           <div>
+                                                               <span className="text-gray-400">Group:</span>
+                                                           </div>
+                                                           <div>
+                                                               <span>{(session.groupId as IGroupType).name}</span>
+                                                           </div>
+                           
+                                                           <div>
+                                                               <span className="text-gray-400">Status:</span>
+                                                           </div>
+                                                           <div>
+                                                               <span className={getStatusColor(getStatus(session.startTime, session.endTime) as string)}>{getStatus(session.startTime, session.endTime)}</span>
+                                                           </div>
                             </div>
 
                             <div className="mt-4">

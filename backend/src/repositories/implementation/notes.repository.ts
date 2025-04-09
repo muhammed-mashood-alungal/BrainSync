@@ -35,7 +35,7 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
         if (!this.gfs) {
             this.gfs = await mongoDBConfig.getGridFSBucket()
         }
-        
+
         const browser = await puppeteer.launch({ headless: true })
         const page = await browser.newPage()
 
@@ -71,8 +71,8 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
         return this.gfs?.openDownloadStream(fileId)
     }
 
-    async createNote(sessionId: Types.ObjectId, userId: string, pdfFileId: Types.ObjectId): Promise<void> {
-        await this.model.updateOne({ sessionId, userId }, { $set: { pdfFileId: pdfFileId } }, { upsert: true })
+    async createNote(sessionId: Types.ObjectId, userId: string, pdfFileId: Types.ObjectId, sessionName: string): Promise<void> {
+        await this.model.updateOne({ sessionId, userId }, { $set: { pdfFileId: pdfFileId, noteName: sessionName+"-note" } }, { upsert: true })
     }
 
     private async findFilesByName(fileName: string): Promise<any[]> {
@@ -85,20 +85,24 @@ export class NoteRepository extends BaseRepository<INoteModel> implements INoteR
     }
 
     private async deleteFile(fileId: Types.ObjectId): Promise<void> {
-       return  await this.gfs!.delete(fileId)
+        return await this.gfs!.delete(fileId)
     }
 
-    async myNotes(userId: Types.ObjectId, query: string): Promise<INoteTypes[]> {
-        const notes = await  this.model.find({userId : userId}).populate("sessionId")
-        if( query && query?.trim().length > 0){
-            return notes?.filter((note)=>{
-                const session = note.sessionId as ISessionTypes
-                return session?.sessionName?.includes(query)
-            })
-        }else{
-            return notes
+    async myNotes(userId: Types.ObjectId, query: string, skip: number, limit: number): Promise<{ notes: INoteModel[], count: number }> {
+        let find : any = {userId}
+        if(query && query.trim().length){
+            find.noteName = {$regex : query , $options : 'i'}
         }
-        
+        const count = await this.model.countDocuments(find)
+
+        const res = await this.model.find(find)
+            .populate("sessionId")
+            .skip(skip)
+            .limit(limit)
+
+            console.log(res , count)
+        return { notes: res, count: count }
     }
-   
+
+
 }

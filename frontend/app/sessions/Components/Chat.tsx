@@ -2,15 +2,12 @@ import { useAuth } from '@/Context/auth.context';
 import { useChat } from '@/Context/chat.context';
 import React, { useState, useRef, useEffect, SyntheticEvent, RefObject } from 'react';
 
+
 const ChatComponent = () => {
     const [isOpen, setIsOpen] = useState(false)
     const { messages, sendMessage } = useChat()
-    //   const [messages, setMessages] = useState([
-    //     { id: 1, sender: 'Joe', text: 'Hi guys', time: '8:23 PM' },
-    //     { id: 2, sender: 'John', text: 'Hello.....guys.Should we start???', time: '8:23 PM' },
-    //   ]);
-    const [newMessage, setNewMessage] = useState('');
-    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const [newMessage, setNewMessage] = useState('')
+    const messagesEndRef = useRef<HTMLDivElement | null>(null)
     const { user } = useAuth()
 
     const toggleChat = () => {
@@ -30,7 +27,7 @@ const ChatComponent = () => {
         setNewMessage('')
     };
 
-    // Auto-scroll to bottom when new messages arrive
+    
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef?.current?.scrollIntoView({ behavior: 'smooth' });
@@ -58,8 +55,8 @@ const ChatComponent = () => {
                     <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
                         <div className="flex space-x-4">
                             <button className="text-gray-300 hover:text-white">Chat</button>
-                            <button className="text-gray-500 hover:text-gray-300">Participants</button>
-                            <button className="text-gray-500 hover:text-gray-300">Options</button>
+                            {/* <button className="text-gray-500 hover:text-gray-300">Report</button>
+                            <button className="text-gray-500 hover:text-gray-300">Options</button> */}
                         </div>
                         <button
                             onClick={closeChat}

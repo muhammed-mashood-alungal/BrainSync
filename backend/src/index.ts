@@ -57,6 +57,7 @@ import adminRouter from './routers/admin.routes'
 import groupRouter from './routers/group.router'
 import sessionRouter from './routers/session.router'
 import noteRouter from './routers/note.router'
+import reportRouter from './routers/report.routes'
 
 
 app.use('/api/auth/',authRouter) 
@@ -65,6 +66,7 @@ app.use('/api/admin/',adminRouter)
 app.use('/api/groups/',groupRouter) 
 app.use('/api/sessions/',sessionRouter) 
 app.use('/api/notes/',noteRouter) 
+app.use('/api/reports/',reportRouter) 
 
 app.use(pageNotFound)
 app.use(errorHandler)

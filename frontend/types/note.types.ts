@@ -7,4 +7,5 @@ export interface INoteTypes {
     pdfFileId:string
     createdAt?: Date
     updatedAt? :Date
+    noteName : string
 }

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Mic, MicOff, Video, VideoOff, LogOut, Send } from 'lucide-react';
+import { Mic, MicOff, Video, VideoOff, LogOut, Send, Flashlight, Flag } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import VideoConference from './VideoConference';
 import { useVideoCall, VideoCallProvider } from '@/Context/videoConference.context';
@@ -14,6 +14,12 @@ import { SocketProvider } from '@/Context/socket.context';
 import ChatComponent from './Chat';
 import { ChatProvider } from '@/Context/chat.context';
 import NoteEditor from './NoteEditor';
+import BaseModal from '@/Components/Modal/Modal';
+import Input from '@/Components/Input/Input';
+import { useAuth } from '@/Context/auth.context';
+import { reportInsances } from '@/axios/createInstance';
+import { reportService } from '@/services/client/report.client';
+import Button from '@/Components/Button/Button';
 
 const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
     const router = useRouter()
@@ -24,7 +30,11 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
     const [isVisible, setIsVisible] = useState(false);
     const [micEnabled, setMicEnabled] = useState(true)
     const [videoEnabled, setVideoEnabled] = useState(true)
+    const [isReporting, setIsReporting] = useState(false)
+    const [reportReason, setReportReason] = useState('')
+    const [confirmationOn , setConfirmationOn] = useState(false)
     const { leaveRoom } = useVideoCall()
+    const { user } = useAuth()
 
 
 
@@ -60,14 +70,38 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
         }
     }, [])
 
-    const chatMessages = [
-        { id: 1, sender: "Joe", time: "8:23 PM", message: "Hai guys" },
-        { id: 2, sender: "John", time: "8:23 PM", message: "Hello.... guys Should we start???" },
-    ]
+    const commonReportReasons = ['Inappropriate Behavior', 'Sharing Inappropriate Content',
+        'Spamming / Disruption', 'Impersonation / Fake Identity', 'Off-Topic or Misuse']
+
+
 
     const handleLeave = () => {
         leaveRoom()
         router.push('/dashboard/sessions')
+    }
+
+    const handleReport = async () => {
+        try {
+            setIsReporting(false)
+            if (!reportReason) {
+                return toast.error("Please Provide a Error Message")
+            }
+
+            const data = {
+                reason: reportReason,
+                sessionCode: roomId,
+                type: "Session",
+                reportedby: user?.id
+            }
+            console.log(data)
+            await reportService.reportSession(data)
+            toast.success("Reported Successfully")
+            setConfirmationOn(true)
+        } catch (error) {
+            toast.error("Something Went Wrong")
+        }
+
+
     }
 
     return (
@@ -85,6 +119,9 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                         </svg>
                         {/* <span>{(session?.groupId as IGroupType)?.members?.length || "5 Members"}</span> */}
+                    </div>
+                    <div className='flex text-gray-300 hover:text-gray-500' onClick={() => setIsReporting(true)}>
+                        <Flag /> Report
                     </div>
                 </div>
             </div>
@@ -147,7 +184,7 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                     </div>
                     <div className={`${activeTab === 'notes' ? 'block' : 'hidden'} h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}>
                         {/* <p className="text-gray-400">Notes will appear here</p> */}
-                        <NoteEditor roomId={roomId}/>
+                        <NoteEditor roomId={roomId} />
                     </div>
                 </div>
 
@@ -211,7 +248,24 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                     </button>
                 </div>
             </div>
+            <BaseModal isOpen={isReporting} onClose={() => setIsReporting(false)} title='Report Session' onSubmit={handleReport} submitText='Report'>
+                <label htmlFor="reason" className='text-md mb-2' >Select Reason for Reporting</label>
+                <select name="" id="reason" onChange={(e) => setReportReason(e.target.value)}
+                    className='w-full py-3 px-4 rounded-md border-gray-700 border mt-3 bg-gray-800  text-white placeholder-gray-400 focus:outline-none  focus:ring-cyan-500 appearance-none'
+                >
+                    <option value="" disabled selected>Select a Reason</option>
+                    {commonReportReasons.map((reason) => {
+                        return <option value={reason}>{reason}</option>
+                    })}
+                </select>
+            </BaseModal>
+            <BaseModal isOpen={confirmationOn} onClose={()=>setConfirmationOn(false)} title='Do You want to leave Session?'  >
+            <div className='w-full flex justify-end'>
 
+                <Button onClick={()=>setConfirmationOn(false)} className='hover:text-cyan-100'> Stay Here</Button>
+                <Button onClick={()=>handleLeave()} className='bg-red-600 hover:bg-red-400'> Leave </Button>
+            </div>
+            </BaseModal>
 
         </div>
     );

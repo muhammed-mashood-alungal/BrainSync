@@ -59,11 +59,11 @@ export class NoteController implements INoteController {
     }
     async myNotes(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const {searchQuery} = req.query
+            const {searchQuery ,skip , limit} = req.query
             const userId = req.user
-            const notes =await this._noteServices.myNotes(userId ,searchQuery as string)
+            const {notes , count} =await this._noteServices.myNotes(userId ,searchQuery as string,skip as string , limit as string)
             
-            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { notes : notes }))
+            res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, { notes : notes  , count}))
         } catch (error) {                                                                                                                                                                                                                                                                                                                                                                                  
             next(error)
         }

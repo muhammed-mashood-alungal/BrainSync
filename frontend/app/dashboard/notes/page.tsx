@@ -8,60 +8,56 @@ import { noteServices } from '@/services/client/note.client';
 
 
 export default function Resources() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOpen, setSortOpen] = useState(false);
-  const [filterOpen, setFilterOpen] = useState(false)
-  const [notes , setNotes ] = useState<INoteTypes[]>([])
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortOpen, setSortOpen] = useState(false);
+    const [filterOpen, setFilterOpen] = useState(false)
+    const [notes, setNotes] = useState<INoteTypes[]>([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const limit = 8
+    const [totalPages, setTotalPage] = useState(1 / limit)
 
-  useEffect(()=>{
-    async function fetchMyNotes(){
-        const notes = await noteServices.myNotes(searchTerm) 
-        console.log(notes)
-        setNotes(notes)
-    }
-    fetchMyNotes()
-  },[searchTerm])
+    useEffect(() => {
+        async function fetchMyNotes() {
+            const { notes, count } = await noteServices.myNotes(searchTerm, (currentPage - 1) * limit, limit)
+            console.log(notes)
+            setTotalPage(Math.ceil(count / limit))
+            setNotes(notes)
+        }
+        fetchMyNotes()
+    }, [searchTerm , currentPage , totalPages])
 
-  // Sample data - replace with your actual data fetching logic
-//   const notes: Resource[] = [
-//     { id: '1', name: 'DSA Board', dateEdited: 'Today 3:03PM', session: 'Data structure Revision', createdBy: 'owner@gmail.com', type: 'board' },
-//     { id: '2', name: 'DSA Note', dateEdited: 'Today 3:03PM', session: 'Data structure Revision', createdBy: 'owner@gmail.com', type: 'note' },
-//     { id: '3', name: 'DSA Code', dateEdited: 'Today 3:03PM', session: 'Data structure Revision', createdBy: 'owner@gmail.com', type: 'code' },
-//     { id: '4', name: 'String Board', dateEdited: 'Today 3:03PM', session: 'Data structure Revision', createdBy: 'owner@gmail.com', type: 'board' },
-//   ];
-
-  return (
-    <div className="flex-1 min-h-screen bg-[#1E1E1E] text-white px-6  ml-1">
-      <div className="max-w-7xl mx-auto">
-        {/* Header with search */}
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold">Resources</h1>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search sessions"
-              className="bg-transparent border border-gray-600 rounded-full py-2 px-4 w-64 focus:outline-none focus:border-teal-500"
-            />
-            {/* <div className="absolute right-3 top-2.5">
+    return (
+        <div className="flex-1 min-h-screen bg-[#1E1E1E] text-white px-6  ml-1">
+            <div className="max-w-7xl mx-auto">
+                {/* Header with search */}
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-2xl font-bold">Resources</h1>
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Search sessions"
+                            className="bg-transparent border border-gray-600 rounded-full py-2 px-4 w-64 focus:outline-none focus:border-teal-500"
+                        />
+                        {/* <div className="absolute right-3 top-2.5">
               <div className="w-6 h-6 rounded-full bg-gray-300 overflow-hidden">
                 <Image src="/placeholder/avatar" alt="User" width={24} height={24} className="object-cover" />
               </div>
             </div> */}
-          </div>
-        </div>
+                    </div>
+                </div>
 
-        {/* Filters row */}
-        <div className="flex gap-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search by Note Name"
-            className="bg-transparent border border-gray-600 rounded-full py-2 px-4 w-64 focus:outline-none focus:border-teal-500"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          
-          {/* Sort dropdown */}
-          {/* <div className="relative">
+                {/* Filters row */}
+                <div className="flex gap-4 mb-6">
+                    <input
+                        type="text"
+                        placeholder="Search by Note Name"
+                        className="bg-transparent border border-gray-600 rounded-full py-2 px-4 w-64 focus:outline-none focus:border-teal-500"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+
+                    {/* Sort dropdown */}
+                    {/* <div className="relative">
             <button 
               className="bg-transparent border border-gray-600 rounded-full py-2 px-4 flex items-center gap-2 focus:outline-none"
               onClick={() => setSortOpen(!sortOpen)}
@@ -81,9 +77,9 @@ export default function Resources() {
               </div>
             )}
           </div> */}
-          
-          {/* Filter dropdown */}
-          {/* <div className="relative">
+
+                    {/* Filter dropdown */}
+                    {/* <div className="relative">
             <button 
               className="bg-transparent border border-gray-600 rounded-full py-2 px-4 flex items-center gap-2 focus:outline-none"
               onClick={() => setFilterOpen(!filterOpen)}
@@ -104,21 +100,39 @@ export default function Resources() {
               </div>
             )}
           </div>*/}
-        </div> 
+                </div>
 
 
-        <NoteListing notes={notes}/>
+                <NoteListing notes={notes} />
+                <div className="flex justify-center items-center my-3">
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+                    >
+                        Previous
+                    </button>
+                    <span className="text-gray-300 mx-5">Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+                    >
+                        Next
+                    </button>
+                </div>
 
-        {/* Table header */}
-        {/* <div className="grid grid-cols-4 gap-4 py-4 text-gray-400 border-b border-gray-800">
+
+                {/* Table header */}
+                {/* <div className="grid grid-cols-4 gap-4 py-4 text-gray-400 border-b border-gray-800">
           <div>Name</div>
           <div>Date Edited</div>
           <div>Session</div>
           <div>Created By</div>
         </div> */}
 
-        {/* Table rows */}
-        {/* {notes.map((resource) => (
+                {/* Table rows */}
+                {/* {notes.map((resource) => (
           <div
             key={resource.id} 
             className="grid grid-cols-4 gap-4 py-4 border-b border-gray-800 hover:bg-gray-900 transition-colors"
@@ -150,7 +164,7 @@ export default function Resources() {
             <div>{resource.createdBy}</div>
           </div>
         ))} */}
-      </div>
-    </div>
-  );
+            </div>
+        </div>
+    );
 }

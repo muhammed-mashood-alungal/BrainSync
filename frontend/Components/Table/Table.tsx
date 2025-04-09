@@ -31,8 +31,8 @@ const Table = <T,>({ columns, data, actions }: TableProps<T>) => {
                         </tr>
                     </thead>
                     <tbody className="bg-gray-800 divide-y divide-gray-700">
-                        {data.length > 0 ? (
-                            data.map((item, index) => (
+                        {data?.length > 0 ? (
+                            data?.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-750">
                                     {
                                         columns.map((col) => (
