@@ -13,5 +13,6 @@ export interface ISessionTypes {
     status : string,
     groupId : Types.ObjectId | IGroupTypes,
     createdBy : Types.ObjectId ,
-    code : string
+    code : string,
+    isStopped : boolean
 }

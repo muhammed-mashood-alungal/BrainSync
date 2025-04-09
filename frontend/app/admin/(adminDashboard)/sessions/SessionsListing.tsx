@@ -1,20 +1,23 @@
 'use client'
 import React, { useState } from 'react';
-import { Search, ChevronDown } from 'lucide-react';
+import { Search, ChevronDown, StopCircle } from 'lucide-react';
 import { ISessionTypes } from '@/types/sessionTypes';
 import { IUserType } from '@/types/userTypes';
 import CreateSession from '@/app/dashboard/sessions/CreateSession';
 import { IGroupType } from '@/types/groupTypes';
+import Confirm from '@/Components/ConfirmModal/ConfirmModal';
+import { SessionServices } from '@/services/client/session.client';
 
 
 
 interface Session extends ISessionTypes {
-    _id : string,
-    createdBy : IUserType
+    _id: string,
+    createdBy: IUserType
 }
 const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
     const [currentPage, setCurrentPage] = useState(1)
-   
+    const [selectedSession, setSelectedSession] = useState('')
+
 
     const sessionsPerPage = 9;
     const totalPages = Math.ceil(sessions?.length / sessionsPerPage);
@@ -53,6 +56,16 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
         }
         if (endDate < currentDate) {
             return 'Ended'
+        }
+    }
+
+    const handleStopSession = async () => {
+        try {
+            await SessionServices.stopSession(selectedSession , )
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setSelectedSession('')
         }
     }
 
@@ -102,49 +115,57 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                         style={{ borderLeftColor: '#8979FF' }}
                     >
                         <div className="p-4">
-                            <h3 className="font-semibold mb-1">{session.sessionName}</h3>
-                            <p className="text-gray-400 text-sm mb-4">{session.subject}</p>
+                            <div className='flex justify-between'>
+                                <div>
+                                    <h3 className="font-semibold mb-1">{session.sessionName}</h3>
+                                    <p className="text-gray-400 text-sm mb-4">{session.subject}</p>
+                                </div>
+                                <p>{getStatus(session.startTime, session.endTime) == 'Live' &&
+                                    <StopCircle color='red' onClick={() => setSelectedSession(session._id)} />}
+                                </p>
+                            </div>
+
 
                             <div className="grid grid-cols-2  text-sm">
-                              <div >
-                                                               <span className="text-gray-400">Date :</span>
-                                                           </div>
-                                                           <div>
-                                                               <span>{new Date(session.date).toLocaleDateString()}</span>
-                                                           </div>
-                                                           <div >
-                                                               <span className="text-gray-400">Start Time:</span>
-                                                           </div>
-                                                           <div>
-                                                               <span>{new Date(session.startTime).toLocaleTimeString()}</span>
-                                                           </div>
-                           
-                                                           <div>
-                                                               <span className="text-gray-400">End Time:</span>
-                                                           </div>
-                                                           <div>
-                                                               <span>{new Date(session.endTime).toLocaleTimeString()}</span>
-                                                           </div>
-                           
-                                                           <div>
-                                                               <span className="text-gray-400">Host:</span>
-                                                           </div>
-                                                           <div>
-                                                               <span>{session.createdBy.username}</span>
-                                                           </div>
-                                                           <div>
-                                                               <span className="text-gray-400">Group:</span>
-                                                           </div>
-                                                           <div>
-                                                               <span>{(session.groupId as IGroupType).name}</span>
-                                                           </div>
-                           
-                                                           <div>
-                                                               <span className="text-gray-400">Status:</span>
-                                                           </div>
-                                                           <div>
-                                                               <span className={getStatusColor(getStatus(session.startTime, session.endTime) as string)}>{getStatus(session.startTime, session.endTime)}</span>
-                                                           </div>
+                                <div >
+                                    <span className="text-gray-400">Date :</span>
+                                </div>
+                                <div>
+                                    <span>{new Date(session.date).toLocaleDateString()}</span>
+                                </div>
+                                <div >
+                                    <span className="text-gray-400">Start Time:</span>
+                                </div>
+                                <div>
+                                    <span>{new Date(session.startTime).toLocaleTimeString()}</span>
+                                </div>
+
+                                <div>
+                                    <span className="text-gray-400">End Time:</span>
+                                </div>
+                                <div>
+                                    <span>{new Date(session.endTime).toLocaleTimeString()}</span>
+                                </div>
+
+                                <div>
+                                    <span className="text-gray-400">Host:</span>
+                                </div>
+                                <div>
+                                    <span>{session.createdBy.username}</span>
+                                </div>
+                                <div>
+                                    <span className="text-gray-400">Group:</span>
+                                </div>
+                                <div>
+                                    <span>{(session.groupId as IGroupType).name}</span>
+                                </div>
+
+                                <div>
+                                    <span className="text-gray-400">Status:</span>
+                                </div>
+                                <div>
+                                    <span className={getStatusColor(getStatus(session.startTime, session.endTime) as string)}>{getStatus(session.startTime, session.endTime)}</span>
+                                </div>
                             </div>
 
                             <div className="mt-4">
@@ -154,6 +175,9 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     </div>
                 ))}
             </div>
+            <Confirm isOpen={Boolean(selectedSession)} onClose={() => setSelectedSession('')} onConfirm={handleStopSession}>
+
+            </Confirm>
 
             <div className="flex justify-center mt-8">
                 <div className="flex space-x-2">
@@ -171,7 +195,7 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                     ))}
                 </div>
             </div>
-           
+
         </>
     );
 };

@@ -8,6 +8,7 @@ interface CustomSocket extends Socket {
 }
 
 
+
 interface Rooms {
   [roomId: string]:  {userId : string , email : string}[]
 }
@@ -16,14 +17,31 @@ interface Users {
   [userId : string] : string
 }
 
+let ioInstance: Server | null = null
+
+export function stopRoomSession(roomId: string) {
+  if (!ioInstance) return
+
+  ioInstance.to(roomId).emit("session-stopped", {
+    reason: "Session was stopped by an admin",
+  })
+
+  ioInstance.in(roomId).socketsLeave(roomId)
+}
+
+
+
 const whiteBoardRepo = new WhiteboardRepository()
 
 
 export default function setupSocket(io: Server) {
+  ioInstance = io; 
+
   const rooms: Rooms = {};
   const users  : Users = {}
 
   io.on('connection', (socket: CustomSocket) => {
+    
 
     socket.on("join-room", (roomId: string, userId: string , email : string) => {
       if (!roomId || !userId) {

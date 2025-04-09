@@ -19,5 +19,6 @@ sessionRouter.get('/' , adminAuth , sessionController.allSessions.bind(sessionCo
 sessionRouter.get('/my-sessions' , authMiddleware , sessionController.mySessions.bind(sessionController))
 sessionRouter.get('/validate/:sessionCode', authMiddleware , sessionController.validateSession.bind(sessionController) )
 sessionRouter.post('/update/:sessionId',authMiddleware , sessionController.updateSession.bind(sessionController))
+sessionRouter.post('/stop-session/:sessionId' , authMiddleware , sessionController.stopSession.bind(sessionController))
 
 export default sessionRouter

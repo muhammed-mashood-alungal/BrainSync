@@ -167,11 +167,14 @@ const SessionsListing: React.FC<{ initialSessions: Session[] }> = ({ initialSess
                                 </div>
                                 <div>
                                     {
-                                        getStatus(session.startTime, session.endTime) == 'Live' &&
+                                        getStatus(session.startTime, session.endTime) == 'Live' && (!session.isStopped) &&
                                         <button className='bg-cyan-500 w-max px-4 py-1 rounded-4xl hover:cursor-pointer
                                         hover:bg-cyan-700 transition duration-300 ease-in-out'
                                             onClick={() => goToRoom(session.code)}
                                         >Join</button>
+                                    }
+                                    {
+                                        session.isStopped && <p className='text-red-500'>Admin Blocked </p>
                                     }
                                 </div>
 

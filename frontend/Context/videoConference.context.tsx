@@ -5,6 +5,7 @@ import { useAuth } from './auth.context';
 import { useSocket } from './socket.context';
 import { noteServices } from '@/services/client/note.client';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 interface PeerData {
   peerId: string;
@@ -44,6 +45,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
   const peersRef = useRef<PeerData[]>([])
   const { user } = useAuth()
   const { socket } = useSocket()
+  const router = useRouter()
 
 
   useEffect(() => {
@@ -165,7 +167,13 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
             } else {
               console.warn(`Peer not found or undefined for user ${data.from}`)
             }
-          });
+          })
+
+          socketRef.current?.on('session-stopped' , (data)=>{
+             toast.error(data.reason || "Session Ended By admin")
+             socketRef.current?.disconnect()
+             router.push('/dashboard/sessions')
+          })
 
           socketRef.current?.on('user-disconnected', (userId: string) => {
             const newPeers = peersRef.current.filter((p) => p.peerId !== userId)
@@ -215,7 +223,6 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
         setIsMuted(state)
       }, 1000)
     }
-
   }
 
   const toggleVideo = (state: boolean) => {

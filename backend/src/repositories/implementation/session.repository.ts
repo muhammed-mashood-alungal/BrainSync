@@ -24,7 +24,7 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
         return await this.model.findOne({ code: code }).populate('createdBy').populate('groupId')
     }
     async getGroupsSessions(groups: Types.ObjectId[], filter : IFilter): Promise<ISessionModal[]> {
-        return await this.model.find({...filter, groupId: { $in: groups } }).sort({createdAt : -1}).populate("createdBy").populate('groupId')
+        return await this.model.find({...filter, groupId: { $in: groups }  }).sort({createdAt : -1}).populate("createdBy").populate('groupId')
     }
     async getAllSessions(): Promise<ISessionModal[]> {
         return await this.model.find({}).populate("createdBy").populate('groupId').sort({createdAt : -1})
@@ -33,5 +33,8 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
         return await this.model.findByIdAndUpdate(sessionId,{
             $set : newData
         },{new :true}).populate(['createdBy' , 'groupId'])
+    }
+    async stopSession(sessionId :Types.ObjectId) : Promise<ISessionModal | null> {
+      return await this.findByIdAndUpdate(sessionId , {$set : {isStopped : true}})
     }
 }

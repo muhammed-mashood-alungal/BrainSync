@@ -11,4 +11,5 @@ export interface ISessionServices {
     getAllSessions(): Promise<ISessionModal[]>
     validateSession(sessionCode: string, userId: unknown): Promise<{ status: boolean, message: string }>
     updateSession(sessionData: ISessionModal, sessionId: unknown, userId: unknown): Promise<ISessionModal | null>
+    stopSession(sessionId :unknown) : Promise<void>
 }

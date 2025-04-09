@@ -14,5 +14,5 @@ export interface ISessionRepository {
      getAllSessions() : Promise<ISessionModal[]>
      update(newData :ISessionModal , sessionId  :Types.ObjectId) : Promise<ISessionModal |null>
      findById(id:Types.ObjectId) : Promise<ISessionModal |null>
-
+     stopSession(sessionId :Types.ObjectId) : Promise<ISessionModal | null> 
 }

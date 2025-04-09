@@ -13,6 +13,7 @@ export interface ISessionTypes {
     groupId : string | IGroupType
     code : string
     createdBy : string | IUserType
+    isStopped : boolean
 }
 
 export interface Session extends ISessionTypes {

@@ -40,6 +40,9 @@ const sessionSchema = new Schema<ISessionModal>({
     code : {
         type : String ,
         unique : true
+    },
+    isStopped : {
+        type : Boolean
     }
 }, {
     timestamps: true

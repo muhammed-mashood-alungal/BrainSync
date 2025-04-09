@@ -46,5 +46,15 @@ export const SessionServices = {
             const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
             throw new Error(errorMessage)
         }
+    },
+    async stopSession(sessionId : string):Promise<Session[]>{
+        try {
+            const response = await sessionInstances.post(`/stop-session/${sessionId}`)
+            return response.data?.sessions
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
+            throw new Error(errorMessage)
+        }
     }
 }

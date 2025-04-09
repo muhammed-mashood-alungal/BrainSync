@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid";
 import { env } from "../../configs/env.config";
 import { sendSessionLinktoAttendees } from "../../utils/sendEmail.utils";
 import { IGroupTypes } from "../../types/group.types";
+import { stopRoomSession } from "../../utils/socket.util";
 
 export class SessionServices implements ISessionServices {
     constructor(private _sesionRepository: ISessionRepository,
@@ -45,7 +46,7 @@ export class SessionServices implements ISessionServices {
         await sendSessionLinktoAttendees(attendeeEmails, data.sessionName as string, sessionLink, startTime, endTime)
 
 
-        const inserted =  await this._sesionRepository.createSession(sessionData)
+        const inserted = await this._sesionRepository.createSession(sessionData)
         return await this._sesionRepository.findById(inserted._id as Types.ObjectId)
     }
     createSessionCode(date: Date): string {
@@ -53,25 +54,25 @@ export class SessionServices implements ISessionServices {
         return hash.substring(0, 8).toUpperCase()
     }
 
-    async getMySessions(userId: unknown , subject : string , date: string): Promise<ISessionModal[]> {
+    async getMySessions(userId: unknown, subject: string, date: string): Promise<ISessionModal[]> {
         const myGroups = await this._groupRepository.getMyGroups(userId as Types.ObjectId)
         const groups = myGroups.map(grp => grp._id)
-    
+
 
         interface IFilter {
-            subject? : string;
-            date? : {}
+            subject?: string;
+            date?: {}
         }
 
-        let filter : IFilter ={}
+        let filter: IFilter = {}
         if (subject && subject !== "Subject") {
             filter.subject = subject;
         }
-        
+
         if (date && date !== "Date") {
             const now = new Date();
             let startDate, endDate;
-        
+
             if (date === "Today") {
                 startDate = new Date()
                 startDate.setHours(0, 0, 0, 0)
@@ -81,7 +82,7 @@ export class SessionServices implements ISessionServices {
                 startDate = new Date(now)
                 startDate.setDate(now.getDate() - now.getDay())
                 startDate.setHours(0, 0, 0, 0)
-        
+
                 endDate = new Date(startDate)
                 endDate.setDate(startDate.getDate() + 6)
                 endDate.setHours(23, 59, 59, 999)
@@ -89,14 +90,14 @@ export class SessionServices implements ISessionServices {
                 startDate = new Date(now.getFullYear(), now.getMonth(), 1)
                 endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0)
             }
-        
+
             filter.date = { $gte: startDate, $lte: endDate }
         }
-        const result = await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[] ,filter)
+        const result = await this._sesionRepository.getGroupsSessions(groups as Types.ObjectId[], filter)
         return result
     }
     async getAllSessions(): Promise<ISessionModal[]> {
-        
+
         const result = await this._sesionRepository.getAllSessions()
         console.log('result : ' + result)
         return result
@@ -160,13 +161,13 @@ export class SessionServices implements ISessionServices {
         const group = await this._groupRepository.getGroupData(sessionData.groupId as Types.ObjectId)
         const attendeeEmails = (group?.members as IUser[]).map(user => user.email)
 
-        let dateParts = (sessionData.date+"").split('/')
+        let dateParts = (sessionData.date + "").split('/')
         let date = sessionData.date
 
-        if(dateParts.length > 1){
-          date = `${dateParts[2]}-${dateParts[0].padStart(2, "0")}-${dateParts[1].padStart(2, "0")}`
+        if (dateParts.length > 1) {
+            date = `${dateParts[2]}-${dateParts[0].padStart(2, "0")}-${dateParts[1].padStart(2, "0")}`
         }
-        
+
         const sessionDate = sessionData.date
             ? new Date(date).toISOString().split("T")[0]
             : new Date().toISOString().split("T")[0];
@@ -177,7 +178,7 @@ export class SessionServices implements ISessionServices {
         if (endTime.getTime() < currentDate.getTime() || endTime.getDate() < currentDate.getDate()) {
             throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.ENDED_SESSION)
         }
-        
+
         await sendSessionLinktoAttendees(attendeeEmails, sessionData.sessionName as string, session?.sessionLink as string, startTime, endTime)
 
         sessionData.startTime = startTime
@@ -187,6 +188,12 @@ export class SessionServices implements ISessionServices {
         console.log(sessionData)
         return await this._sesionRepository.update(sessionData, sessionId as Types.ObjectId)
 
+    }
+
+    async stopSession(sessionId: unknown): Promise<void> {
+        const session = await this._sesionRepository.stopSession(sessionId as Types.ObjectId)
+        console.log(session)
+        stopRoomSession(session?.code as string)
     }
 
 }
