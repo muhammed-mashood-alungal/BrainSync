@@ -3,6 +3,7 @@ import * as fabric from 'fabric'; // Changed import syntax
 import { Socket, io } from 'socket.io-client';
 import { CanvasData, NewSlideData, Slide, SlideChangeData, WhiteBoardContextProps } from '@/types/whiteBoard.types';
 import { useSocket } from './socket.context';
+import { useAuth } from './auth.context';
 
 
 const WhiteBoardContext = createContext<undefined | WhiteBoardContextProps>(undefined)
@@ -13,13 +14,15 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null)
     const [currentMode, setCurrentMode] = useState<string>('pencil')
     const [currentColor, setCurrentColor] = useState<string>('#000000')
+    const [isLocked, setIsLocked] = useState(false)
+    const [lockedBy, setLockedBy] = useState('')
     const [brushSize, setBrushSize] = useState<number>(5)
     const { socket } = useSocket()
 
     const [slides, setSlides] = useState<Slide[]>([])
     const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0)
+    const { user } = useAuth()
 
-  
     useEffect(() => {
         if (!canvasRef.current) return
 
@@ -27,16 +30,16 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         const parent = canvasRef?.current?.parentElement
         const fabricCanvas = new fabric.Canvas(canvasRef.current, {
             isDrawingMode: true,
-            width: parent?.clientWidth || 0, 
+            width: parent?.clientWidth || 0,
             height: parent?.clientHeight || 0,
-           
+
         });
         fabricCanvas.isDrawingMode = true
         fabricCanvas.freeDrawingBrush = new fabric.PencilBrush(fabricCanvas)
         fabricCanvas.freeDrawingBrush.color = currentColor
         fabricCanvas.freeDrawingBrush.width = brushSize
 
-       
+
         if (fabricCanvas.freeDrawingBrush) {
             fabricCanvas.freeDrawingBrush.color = currentColor
             fabricCanvas.freeDrawingBrush.width = brushSize
@@ -44,10 +47,10 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
         setCanvas(fabricCanvas)
 
-        
+
         socket?.emit('whiteboard-joins', { roomId })
 
-       
+
         setSlides([{ id: 0, content: JSON.stringify(fabricCanvas.toJSON()) }]);
 
         const handleResize = () => {
@@ -70,7 +73,7 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
         window.addEventListener('resize', handleResize)
 
-        
+
         return () => {
             fabricCanvas.dispose()
             socket?.disconnect()
@@ -82,40 +85,39 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         };
     }, [roomId]);
 
-    
+
     useEffect(() => {
         if (!socket || !canvas) return
 
         socket.on('canvas-data', (data: CanvasData) => {
-            console.log('Received canvas-data:', data)
             if (!data || typeof data.slideIndex === 'undefined' || !data.canvasData) {
-              console.error('Invalid canvas-data format:', data)
-              return
+                console.error('Invalid canvas-data format:', data)
+                return
             }
-        
-            if (data.slideIndex === currentSlideIndex) {
-              try {
-                canvas.off('path:created')
-                const parsedData = JSON.parse(data.canvasData)
-        
-                canvas.loadFromJSON(parsedData, () => {
-                  canvas.renderAll()
-                  requestAnimationFrame(() => {
-                    canvas.renderAll()
-                  });
-                });
-        
-                setupCanvasEventListeners()
-                updateSlideContent(data.canvasData)
-              } catch (error) {
-                console.error('Error updating canvas:', error)
-              }
-            } else {
-              console.log('Slide index mismatch, skipping:', data.slideIndex, '!=', currentSlideIndex)
-            }
-          });
 
-        
+            if (data.slideIndex === currentSlideIndex) {
+                try {
+                    canvas.off('path:created')
+                    const parsedData = JSON.parse(data.canvasData)
+
+                    canvas.loadFromJSON(parsedData, () => {
+                        canvas.renderAll()
+                        requestAnimationFrame(() => {
+                            canvas.renderAll()
+                        });
+                    });
+
+                    setupCanvasEventListeners()
+                    updateSlideContent(data.canvasData)
+                } catch (error) {
+                    console.error('Error updating canvas:', error)
+                }
+            } else {
+                console.log('Slide index mismatch, skipping:', data.slideIndex, '!=', currentSlideIndex)
+            }
+        });
+
+
         socket.on('new-slide', (data: NewSlideData) => {
             setSlides(prevSlides => {
                 if (!prevSlides.find(slide => slide.id === data.id)) {
@@ -125,20 +127,41 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
             })
         })
 
-        
+
         socket.on('slide-change', (data: SlideChangeData) => {
             if (data.initiator !== socket.id) {
                 navigateToSlide(data.slideIndex)
             }
-        });
+        })
 
-        
+        socket.on("board-locked", (lockedBy) => {
+            canvas.isDrawingMode = false;
+            canvas.selection = false;
+            canvas.forEachObject(obj => obj.selectable = false);
+            canvas.renderAll();
+            console.log('A user logged', lockedBy)
+            setIsLocked(true)
+            setLockedBy(lockedBy)
+        })
+
+        socket.on("board-unlocked", () => {
+            canvas.isDrawingMode = true;
+            canvas.selection = true;
+            canvas.forEachObject(obj => obj.selectable = true);
+            canvas.renderAll();
+            setIsLocked(false)
+            setLockedBy('')
+        })
+
+
         setupCanvasEventListeners()
 
         return () => {
             socket.off('canvas-data')
             socket.off('new-slide')
             socket.off('slide-change')
+            socket.off("board-locked");
+            socket.off("board-unlocked");
         };
     }, [socket, canvas, currentSlideIndex])
 
@@ -146,10 +169,27 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         toggleDrawingMode(currentMode)
     }, [currentColor])
 
+    const lockBoard = () => {
+        console.log('Locking')
+        setIsLocked(true)
+        setLockedBy(user?.email as string)
+        socket?.emit('board-locked', { roomId, lockedBy: user?.email as string })
+    }
+
+    const unlockBoard = () => {
+        console.log('unlocking')
+        let usr = user?.email as string
+        if (usr != lockedBy) {
+            return
+        }
+        setIsLocked(false)
+        setLockedBy('')
+        socket?.emit('board-unlocked', { roomId })
+    }
 
 
     const deleteSelected = (): void => {
-        if (!canvas) return;
+        if (!canvas || isLocked) return;
 
         const activeObjects = canvas.getActiveObjects()
         if (activeObjects.length > 0) {
@@ -167,16 +207,17 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         }
     };
 
-   
-    const setupCanvasEventListeners = (): void => {
-        if (!canvas) return
 
-        
+    const setupCanvasEventListeners = (): void => {
+        if (!canvas || (isLocked && lockedBy != user?.email)) return
+
         canvas.off('path:created')
         canvas.off('object:modified')
 
-      
+
         canvas.on('path:created', () => {
+            console.log(isLocked, (isLocked && lockedBy != user?.email), user?.email, lockedBy)
+            if ((isLocked && lockedBy != user?.email)) return
             const jsonData = JSON.stringify(canvas.toJSON());
             updateSlideContent(jsonData)
             console.log(178)
@@ -187,8 +228,10 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
             });
         });
 
-        
+
         canvas.on('object:modified', () => {
+            console.log('Koi')
+            if ((isLocked && lockedBy != user?.email)) return
             const jsonData = JSON.stringify(canvas.toJSON())
             updateSlideContent(jsonData);
             socket?.emit('canvas-data', {
@@ -199,7 +242,7 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         })
     }
 
-    
+
     const updateSlideContent = (content: string): void => {
         setSlides(prevSlides => {
             const newSlides = [...prevSlides]
@@ -211,9 +254,10 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         })
     }
 
-    
+
     const createNewSlide = (): void => {
-        if (!canvas) return
+
+        if (!canvas || (isLocked && lockedBy != user?.email)) return
 
         // Create a blank canvas for new slide
         const blankCanvas = new fabric.Canvas(document.createElement('canvas'), {
@@ -229,43 +273,43 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         const newSlideId = slides.length
         const newSlideContent = JSON.stringify(blankCanvas)
 
-        
+
         setSlides(prevSlides => [
             ...prevSlides,
             { id: newSlideId, content: newSlideContent }
         ])
 
-        
+
         socket?.emit('new-slide', {
             roomId: roomId,
             id: newSlideId,
             content: newSlideContent,
-            index:newSlideId
+            index: newSlideId
         })
 
-        
+
         navigateToSlide(newSlideId)
 
-        
+
         blankCanvas.dispose()
     };
 
 
     const navigateToSlide = (slideIndex: number): void => {
-        if (slideIndex < 0 || slideIndex >= slides.length || !canvas) return;
+        if (slideIndex < 0 || slideIndex >= slides.length || !canvas ) return;
 
-        
+
         if (currentSlideIndex >= 0 && currentSlideIndex < slides.length) {
             const currentContent = JSON.stringify(canvas.toJSON())
             console.log('Saving slide', currentSlideIndex, 'with content:', currentContent)
             updateSlideContent(currentContent)
         }
 
-        
+
         canvas.clear()
         canvas.backgroundColor = '#ffffff'
 
-        
+
         if (slides[slideIndex] && slides[slideIndex].content) {
             console.log('Loading slide', slideIndex, 'with content:', slides[slideIndex].content)
             canvas.loadFromJSON(slides[slideIndex].content, () => {
@@ -279,7 +323,7 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
             console.warn('No content found for slide', slideIndex)
         }
 
-        
+
         setCurrentSlideIndex(slideIndex)
 
         socket?.emit('slide-change', {
@@ -288,7 +332,7 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
             initiator: socket.id,
         });
     };
-   
+
     const prevSlide = (): void => {
         navigateToSlide(currentSlideIndex - 1);
     };
@@ -297,9 +341,11 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         navigateToSlide(currentSlideIndex + 1);
     };
 
-    
+
     const handleColorChange = (color: string): void => {
-        setCurrentColor(color);
+        setCurrentColor(color)
+        if (isLocked) return
+
         if (canvas) {
             const activeObject = canvas.getActiveObject()
             if (activeObject) {
@@ -330,7 +376,8 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
     const toggleDrawingMode = (mode: string): void => {
         setCurrentMode(mode)
-        if (!canvas) return
+        console.log('hhhaey')
+        if (!canvas || isLocked) return
 
         canvas.off('mouse:down')
 
@@ -391,7 +438,7 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
                             slideIndex: currentSlideIndex,
                             canvasData: jsonData,
                         });
-                        rect = null; // Reset to allow new rectangle after deselection
+                        rect = null
                     }
                 });
                 break;
@@ -455,8 +502,8 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
 
     const addShape = (type: string, x: number, y: number): void => {
-        if (!canvas || canvas.isDrawingMode) return;
-
+        if (!canvas || canvas.isDrawingMode || isLocked) return;
+        console.log('adding shappe')
         let shape: fabric.Rect | fabric.Circle;
         switch (type) {
             case 'rectangle':
@@ -494,8 +541,8 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
     // Clear current slide
     const clearCurrentSlide = (): void => {
-        if (!canvas) return;
-
+        if (!canvas || isLocked) return;
+        console.log('clering')
         canvas.clear();
         canvas.backgroundColor = '#ffffff';
         canvas.renderAll();
@@ -520,6 +567,9 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         prevSlide,
         navigateToSlide,
         deleteSelected,
+        lockBoard,
+        unlockBoard,
+        isLocked,
         currentMode,
         currentColor,
         brushSize,

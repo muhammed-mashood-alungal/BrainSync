@@ -2,11 +2,12 @@
 
 import { useWhiteBoard } from "@/Context/whiteBoardContex";
 import { Slide } from "@/types/whiteBoard.types";
+import { Lock, LockOpen } from "lucide-react";
 
 const WhiteboardWithSlides: React.FC = () => {
   const { toggleDrawingMode , currentMode, handleColorChange, clearCurrentSlide, deleteSelected,
     currentColor, handleBrushSizeChange, brushSize, canvas, canvasRef, createNewSlide,
-    currentSlideIndex, nextSlide, prevSlide, slides, navigateToSlide
+    currentSlideIndex, nextSlide, prevSlide, slides, navigateToSlide ,isLocked ,lockBoard , unlockBoard
   } = useWhiteBoard()
 
   return (
@@ -14,6 +15,11 @@ const WhiteboardWithSlides: React.FC = () => {
       {/* Toolbar */}
       <div className="flex flex-wrap gap-4 p-2 bg-gray-100 rounded-md absolute z-10 m-2 shadow-md">
         {/* Drawing tools */}
+        
+          <div className="mt-2">
+               { isLocked ? <Lock onClick={unlockBoard} color="black"/> : <LockOpen onClick={lockBoard} color="black"/>}
+          </div>
+         
         <div className="flex gap-2">
           <button
             className={`px-4 py-2 h-10  border border-gray-300 text-cyan-500 rounded-md cursor-pointer ${currentMode === 'pencil' ? 'bg-gray-200 border-gray-400' : 'bg-white'}`}

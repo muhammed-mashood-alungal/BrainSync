@@ -120,6 +120,9 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
                                     <h3 className="font-semibold mb-1">{session.sessionName}</h3>
                                     <p className="text-gray-400 text-sm mb-4">{session.subject}</p>
                                 </div>
+                                    {
+                                        session.isStopped && <p className='text-red-500'>Admin Blocked </p>
+                                    }
                                 <p>{getStatus(session.startTime, session.endTime) == 'Live' &&
                                     <StopCircle color='red' onClick={() => setSelectedSession(session._id)} />}
                                 </p>

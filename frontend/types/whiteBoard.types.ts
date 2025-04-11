@@ -28,6 +28,9 @@ export interface WhiteBoardContextProps {
     createNewSlide: () => void,
     nextSlide: () => void,
     prevSlide: () => void,
+    lockBoard : ()=>void,
+    unlockBoard: ()=>void,
+    isLocked:boolean,
     currentMode: string,
     currentColor: string,
     canvasRef:RefObject<HTMLCanvasElement | null>

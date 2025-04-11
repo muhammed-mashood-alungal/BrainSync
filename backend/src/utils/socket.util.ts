@@ -147,6 +147,15 @@ export default function setupSocket(io: Server) {
       const data = { id: id ,content: content };
       socket.to(roomId).emit('new-slide' , data )
     })
+
+    socket.on('board-locked',({roomId , lockedBy})=>{
+      console.log('board locking' , roomId , lockedBy)
+      socket.to(roomId).emit('board-locked' , lockedBy)
+    })
+
+    socket.on('board-unlocked',({roomId})=>{
+      socket.to(roomId).emit('board-unlocked')
+    })
     // socket.on('slide-change',({roomId , slideIndex , initiator} )=>{
     //   if (!roomId) {
     //     console.error('No roomId provided in canvas-data');
@@ -158,7 +167,6 @@ export default function setupSocket(io: Server) {
 
 
     socket.on('send-message',(message)=>{
-      console.log('iam in server' , socket.roomId)
       socket.to(socket.roomId as string).emit('message' , message)
     })
 
