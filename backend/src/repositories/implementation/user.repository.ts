@@ -21,7 +21,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
         }
     }
 
-    async findByEmail(email: string): Promise<IUserModel | null> {
+    async findUserByEmail(email: string): Promise<IUserModel | null> {
         try {
             return await this.findOne({ email })
         } catch (error) {
@@ -42,7 +42,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
 
         return user;
     }
-    async findById(id: Types.ObjectId): Promise<IUserModel | null> {
+    async findByUserId(id: Types.ObjectId): Promise<IUserModel | null> {
         return await super.findById(id)
     }
     async updatePassword(email: string, hashedPassword: string): Promise<IUserModel | null> {
@@ -54,7 +54,7 @@ export class UserRepository extends BaseRepository<IUserModel> implements IUserR
         user.save()
         return user
     }
-    async searchByEmail(query: string): Promise<{ email: string, _id: Types.ObjectId }[]> {
+    async searchUserByEmail(query: string): Promise<{ email: string, _id: Types.ObjectId }[]> {
         return await this.find({ email: { $regex: query, $options: "i" }, isAcitve: true, role: 'student' })
     }
     async deleteAvatar(userId: Types.ObjectId): Promise<string | undefined> {

@@ -47,7 +47,7 @@ export class SessionServices implements ISessionServices {
 
 
         const inserted = await this._sesionRepository.createSession(sessionData)
-        return await this._sesionRepository.findById(inserted._id as Types.ObjectId)
+        return await this._sesionRepository.findBySessionId(inserted._id as Types.ObjectId)
     }
     createSessionCode(date: Date): string {
         const hash = uuidv4()
@@ -141,7 +141,7 @@ export class SessionServices implements ISessionServices {
         return { status: true, message: 'Session is Valid' }
     }
     async updateSession(sessionData: ISessionModal, sessionId: unknown, userId: unknown): Promise<ISessionModal | null> {
-        const session = await this._sesionRepository.findById(sessionId as Types.ObjectId)
+        const session = await this._sesionRepository.findBySessionId(sessionId as Types.ObjectId)
 
         if (!session) {
             createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.RESOURCE_NOT_FOUND)
@@ -186,7 +186,7 @@ export class SessionServices implements ISessionServices {
         sessionData.date = sessionDate
 
         console.log(sessionData)
-        return await this._sesionRepository.update(sessionData, sessionId as Types.ObjectId)
+        return await this._sesionRepository.updateSession(sessionData, sessionId as Types.ObjectId)
 
     }
 

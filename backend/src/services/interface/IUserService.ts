@@ -7,7 +7,7 @@ export interface IUserService {
     editUsername(userId: unknown , newName : string): Promise<Boolean> 
     updatePassword(userId : unknown , oldPass  :string, newPass : string): Promise<Boolean>
     getAllStudents(skip : unknown , limit : unknown , searchQuery : string) : Promise<{students : IUser[] , count : number}>
-    blockOrUnblock(id: unknown): Promise<boolean> 
+    blockOrUnblockUser(id: unknown): Promise<boolean> 
     isStudentsBlocked(id: unknown): Promise<boolean> 
     searchUserByEmail(query : string ) : Promise<{email : string ,_id : Types.ObjectId}[]>
     deleteProfilePic(userId : unknown ) : Promise<Boolean>

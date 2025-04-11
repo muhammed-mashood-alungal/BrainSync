@@ -118,7 +118,6 @@ export class AuthController implements IAuthController {
         try {
             const { accessToken } = req.cookies;
             if (!accessToken) {
-                console.log('No acces token')
                 throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN)
             }
             const user = await this._authService.authMe(accessToken)

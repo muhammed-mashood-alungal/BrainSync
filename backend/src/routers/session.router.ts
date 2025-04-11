@@ -14,11 +14,11 @@ const sessionServices = new SessionServices(sessionRepo,groupRepo)
 const sessionController = new SessionController(sessionServices)
 
 
-sessionRouter.post('/create' , authMiddleware,sessionController.create.bind(sessionController))
+sessionRouter.post('/create' , authMiddleware,sessionController.createSession.bind(sessionController))
 sessionRouter.get('/' , adminAuth , sessionController.allSessions.bind(sessionController))
 sessionRouter.get('/my-sessions' , authMiddleware , sessionController.mySessions.bind(sessionController))
 sessionRouter.get('/validate/:sessionCode', authMiddleware , sessionController.validateSession.bind(sessionController) )
-sessionRouter.post('/update/:sessionId',authMiddleware , sessionController.updateSession.bind(sessionController))
+sessionRouter.put('/update/:sessionId',authMiddleware , sessionController.updateSession.bind(sessionController))
 sessionRouter.post('/stop-session/:sessionId' , authMiddleware , sessionController.stopSession.bind(sessionController))
 
 export default sessionRouter

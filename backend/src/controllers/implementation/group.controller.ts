@@ -72,7 +72,7 @@ export class GroupController implements IGroupController {
             next(error)
          }
      }
-     async handleActivation (req : Request , res : Response , next : NextFunction) : Promise<void> {
+     async handleGroupActivation (req : Request , res : Response , next : NextFunction) : Promise<void> {
         try{
             const {groupId} = req.params
             const group =  await this._groupServices.handleGroupActivation(groupId)

@@ -40,7 +40,7 @@ export class GroupServices implements IGroupService {
 
     async handleGroupActivation(groupId : unknown) :Promise<Boolean> {
         console.log('inide services')
-        const result = await this._groupRepository.handleActivation(groupId as Types.ObjectId)
+        const result = await this._groupRepository.handleGroupActivation(groupId as Types.ObjectId)
         return result
     }
     

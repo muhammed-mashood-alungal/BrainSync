@@ -48,7 +48,7 @@ export class UserServices implements IUserService {
         const [count , students ] =await Promise.all([ this._userRepository.countStudents(searchQuery), this._userRepository.findAllStudents(sk, lim , searchQuery)] )
         return {students , count}
     }
-    async blockOrUnblock(id: unknown): Promise<boolean> {
+    async blockOrUnblockUser(id: unknown): Promise<boolean> {
         const stud = await this._userRepository.findById(id as Types.ObjectId)
         if (!stud) throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND)
         stud.isAcitve = !stud?.isAcitve
@@ -60,7 +60,7 @@ export class UserServices implements IUserService {
         return stud?.isAcitve == false
     }  
     async searchUserByEmail(query: string): Promise<{ email: string, _id: Types.ObjectId }[]> {
-        return await this._userRepository.searchByEmail(query)
+        return await this._userRepository.searchUserByEmail(query)
     }
     async deleteProfilePic(userId: unknown): Promise<Boolean> {
 

@@ -14,7 +14,7 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
     constructor() {
         super(Session)
     }
-    async findById(id: Types.ObjectId): Promise<ISessionModal | null> {
+    async findBySessionId(id: Types.ObjectId): Promise<ISessionModal | null> {
         return await this.model.findById(id).populate('createdBy').populate('groupId')
     }
     async createSession(data: Partial<ISessionTypes>): Promise<ISessionModal> {
@@ -29,7 +29,7 @@ export class SessionRepository extends BaseRepository<ISessionModal> implements 
     async getAllSessions(): Promise<ISessionModal[]> {
         return await this.model.find({}).populate("createdBy").populate('groupId').sort({createdAt : -1})
     }
-    async update(newData: ISessionModal , sessionId : Types.ObjectId): Promise<ISessionModal | null> {
+    async updateSession(newData: ISessionModal , sessionId : Types.ObjectId): Promise<ISessionModal | null> {
         return await this.model.findByIdAndUpdate(sessionId,{
             $set : newData
         },{new :true}).populate(['createdBy' , 'groupId'])

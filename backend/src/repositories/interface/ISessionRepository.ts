@@ -12,7 +12,7 @@ export interface ISessionRepository {
      getSessionByCode(code: string): Promise<ISessionModal | null>
      getGroupsSessions(groups:Types.ObjectId[], filter : IFilter): Promise<ISessionModal[]>
      getAllSessions() : Promise<ISessionModal[]>
-     update(newData :ISessionModal , sessionId  :Types.ObjectId) : Promise<ISessionModal |null>
-     findById(id:Types.ObjectId) : Promise<ISessionModal |null>
+     updateSession(newData :ISessionModal , sessionId  :Types.ObjectId) : Promise<ISessionModal |null>
+     findBySessionId(id:Types.ObjectId) : Promise<ISessionModal |null>
      stopSession(sessionId :Types.ObjectId) : Promise<ISessionModal | null> 
 }

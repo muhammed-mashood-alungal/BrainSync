@@ -27,6 +27,5 @@ authRouter.post('/reset-password', authController.resetPassword.bind(authControl
 authRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email" ,
     "https://www.googleapis.com/auth/calendar"
 ]  , prompt: 'select_account'}))
-
 authRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: `${env.CLIENT_ORIGIN}/login` }), authController.googleAuthRedirect.bind(authController))
 export default authRouter 

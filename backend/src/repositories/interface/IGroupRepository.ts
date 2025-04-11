@@ -10,5 +10,5 @@ export interface IGroupRepository {
     getGroupData(groupId : Types.ObjectId) : Promise<IGroupModel | null>
     getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]>
     getAllGroups() : Promise<IGroupModel[]>
-    handleActivation(groupId : Types.ObjectId) :Promise<Boolean>
+    handleGroupActivation(groupId : Types.ObjectId) :Promise<Boolean>
 }

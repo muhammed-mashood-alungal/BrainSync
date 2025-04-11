@@ -7,5 +7,5 @@ export interface IGroupController {
      getAllGroups(req:Request , res : Response , next : NextFunction) : Promise<void>
      getGroupData(req:Request , res : Response , next : NextFunction) : Promise<void>
      getMyGroups(req:Request , res : Response , next : NextFunction) : Promise<void>
-     handleActivation (req : Request , res : Response , next : NextFunction) : Promise<void>
+     handleGroupActivation (req : Request , res : Response , next : NextFunction) : Promise<void>
 }

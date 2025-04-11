@@ -14,7 +14,7 @@ export class WhiteboardRepository implements IWhiteboardRepository {
         return snapshot.val()
     }
 
-    listenToChanges(roomId: string, callback: (data: CanvasData | null) => void) : Unsubscribe {
+    listenToBoardChanges(roomId: string, callback: (data: CanvasData | null) => void) : Unsubscribe {
         const whiteboardRef = ref(firebaseDB, `whiteboards/${roomId}`)
           console.log(whiteboardRef)
         const unsubscribe = onValue(whiteboardRef, (snapshot : any) => {

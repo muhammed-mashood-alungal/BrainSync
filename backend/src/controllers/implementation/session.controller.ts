@@ -8,7 +8,7 @@ import { successResponse } from "../../utils/response";
 export class SessionController implements ISessionController {
     constructor(private _sessionServices: ISessionServices) { }
 
-    async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async createSession(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const data = req.body
             const userId = req.user

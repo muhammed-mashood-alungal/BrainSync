@@ -64,7 +64,7 @@ export class UserController implements IUserController {
     async blockOrUnblock(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { studentId } = req.params
-            await this._userServices.blockOrUnblock(studentId)
+            await this._userServices.blockOrUnblockUser(studentId)
 
             res.status(200).json(successResponse(HttpResponse.UPDATED))
         } catch (error) {

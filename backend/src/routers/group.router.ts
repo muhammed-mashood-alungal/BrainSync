@@ -22,6 +22,6 @@ groupRouter.put('/left-group/:groupId', authMiddleware, groupController.leftGrou
 groupRouter.get('/', adminAuth, groupController.getAllGroups.bind(groupController))
 groupRouter.get('/my-groups/:userId', authMiddleware, groupController.getMyGroups.bind(groupController))
 groupRouter.get('/:groupId', groupController.getGroupData.bind(groupController))
-groupRouter.put('/:groupId/handle-activation', adminAuth, groupController.handleActivation.bind(groupController))
+groupRouter.put('/:groupId/handle-activation', adminAuth, groupController.handleGroupActivation.bind(groupController))
 
 export default groupRouter

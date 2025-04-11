@@ -28,7 +28,7 @@ export const SessionServices = {
     },
     async updateSession(formData: Partial<ISessionTypes> , sessionId : string): Promise<Session> {
         try {
-            const response = await sessionInstances.post(`/update/${sessionId}`, formData)
+            const response = await sessionInstances.put(`/update/${sessionId}`, formData)
             return response.data?.updatedSession
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
