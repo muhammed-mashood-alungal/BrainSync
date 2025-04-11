@@ -189,7 +189,7 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
                         disabled={currentPage === totalPages}
                         className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
                     >
-                        Next
+                        Next  
                     </button>
                 </div>
             </div>
