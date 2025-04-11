@@ -19,7 +19,7 @@ function ReportsListing() {
     useEffect(() => {
         async function fetchReports() {
             const {reports ,count} = await reportService.getAllReports(status , (currentPage - 1)*limit , limit)
-            console.log(reports.count)
+        
             setTotalPage( Math.ceil(count / limit))
             setReports(reports)
         }

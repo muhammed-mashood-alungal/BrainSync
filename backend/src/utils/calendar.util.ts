@@ -9,12 +9,10 @@
 // const auth = new GoogleAuth({
 //     keyFile: SERVICE_ACCOUNT_KEY_PATH,
 //     scopes: ["https://www.googleapis.com/auth/calendar"],
-    
+
 // });
 
-
 // const calendar = google.calendar({ version: "v3", auth });
-
 
 // export async function createGroupSessionServiceAccount(
 //     sessionDetails: {

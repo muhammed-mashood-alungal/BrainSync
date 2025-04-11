@@ -67,7 +67,6 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Sessio
           toast.success("Session Created Successfully")
           onClose(response)
         } else {
-          console.log(formData)
           const response: Session = await SessionServices.updateSession(formData, data?._id as string)
           toast.success("Session Updated Successfully")
           onClose(response)

@@ -22,9 +22,6 @@ const MenuBar = () => {
     // Update state with the new content
     setEditorContent(html);
 
-    // Log or use the content as needed
-    console.log('HTML Content:', html);
-    console.log('JSON Content:', json);
   };
 
 
@@ -232,7 +229,6 @@ export default ({ roomId }: { roomId: string }) => {
   useEffect(() => {
     async function fetchContent() {
       const content = await noteServices.getInitialContent(roomId)
-      console.log(content)
       setEditorContent(content)
     }
     fetchContent()

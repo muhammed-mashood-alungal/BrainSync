@@ -1,10 +1,26 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 
-export  interface  IUserController {
-    changeProfilePic(req:Request , res: Response , next : NextFunction) : Promise<void>
-    getUserData(req:Request , res: Response , next : NextFunction) : Promise<void>
-    editUsername(req:Request , res : Response , next : NextFunction) : Promise<void>
-    changePassword(req: Request, res: Response, next: NextFunction): Promise<void>
-    getAllStudents(req: Request, res: Response, next: NextFunction): Promise<void>
-    searchUserbyEmail(req:Request , res: Response , next : NextFunction ) : Promise<void>
-} 
+export interface IUserController {
+  changeProfilePic(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getUserData(req: Request, res: Response, next: NextFunction): Promise<void>;
+  editUsername(req: Request, res: Response, next: NextFunction): Promise<void>;
+  changePassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  getAllStudents(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  searchUserbyEmail(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+}

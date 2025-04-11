@@ -17,7 +17,6 @@ function SignUpForm() {
   const { user } = useAuth()
   useEffect(() => {
     if (user) {
-      console.log(user)
       router.push('/')
     }
   }, [user])
@@ -28,7 +27,6 @@ function SignUpForm() {
 
   useEffect(() => {
     const error = searchParams.get('$error')
-    console.log(error)
     if (error) {
       toast.error(error)
     }
@@ -70,7 +68,6 @@ function SignUpForm() {
       let result = validateSignUpForm(formData)
       if (result.status) {
         await AuthServices.registerService(formData)
-        console.log("OTP Has sent to you email !")
         sessionStorage.setItem('email', formData.email)
         router.push('/verify-otp')
       } else {

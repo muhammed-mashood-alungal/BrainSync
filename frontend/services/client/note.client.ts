@@ -14,7 +14,6 @@ export const noteServices = {
     saveNote: async (roomId: string): Promise<{ success: boolean, message?: string }> => {
         try {
             const response = await noteInstances.post(`/save/${roomId}`)
-            console.log(response)
             return { success: true }
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
@@ -36,7 +35,6 @@ export const noteServices = {
     myNotes: async (searchQuery: string , skip : number , limit : number) => {
         try {
             const response = await noteInstances.get(`/my-notes?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`)
-            console.log(response)
             return response?.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>

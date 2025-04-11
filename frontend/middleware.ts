@@ -24,10 +24,7 @@ export async function middleware(req: NextRequest) {
         if(!user){
             user = await AuthServices.refreshToken(refreshToken as string) as JwtPayload
         }
-         console.log(user)
         if (isAdminRoute && (!user || user.role !== "admin")) {
-            console.log('Redirecting')
-            console.log(user)
             return NextResponse.redirect(new URL("/", req.url))
         }  
 
@@ -37,7 +34,6 @@ export async function middleware(req: NextRequest) {
         } 
         return NextResponse.next()
     } catch (err : unknown) {
-        console.log(err)
         if(err instanceof Error){
             console.log(err.message)
         }

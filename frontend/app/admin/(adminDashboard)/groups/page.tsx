@@ -10,7 +10,6 @@ const GroupsPage: React.FC =async () => {
     try {
       return await getAllGroupsServer();
     } catch (err) {
-      console.log(err);
       return [];
     }
   };

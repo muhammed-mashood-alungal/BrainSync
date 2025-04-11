@@ -15,7 +15,6 @@ export const UserServices = {
     getUserData: async (userId: string) => {
         try {
             const response = await userInstances.get(`/${userId}`)
-            console.log(response)
             return response.data?.user
         } catch (error: unknown) {
             const err = error as AxiosError<{ error: string }>
@@ -26,7 +25,6 @@ export const UserServices = {
     editUsername: async (userId: string, username: string) => {
         try {
             const response = await userInstances.put(`/edit-username/${userId}`, { username })
-            console.log(response)
             return response.data?.user
         } catch (error: unknown) {
             const err = error as AxiosError<{ error: string }>

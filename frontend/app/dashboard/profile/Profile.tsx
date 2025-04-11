@@ -131,7 +131,6 @@ function Profile() {
             reader.readAsDataURL(croppedFile)
             const formData = new FormData()
             formData.append('image', croppedFile)
-            console.log(user)
             await UserServices.changeProfilePic(formData, user?.id as string)
 
             toast.success("Profile Picture Changed Successfully")
@@ -175,7 +174,6 @@ function Profile() {
     
     const logout = async () => {
         try {
-            console.log('LOging OUt..........')
             await AuthServices.logout()
             checkAuth()
             router.push('/login')

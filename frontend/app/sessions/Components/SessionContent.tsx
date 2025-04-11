@@ -93,7 +93,6 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                 type: "Session",
                 reportedby: user?.id
             }
-            console.log(data)
             await reportService.reportSession(data)
             toast.success("Reported Successfully")
             setConfirmationOn(true)

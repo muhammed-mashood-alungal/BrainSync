@@ -23,6 +23,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.16",
+    "prettier": "^3.5.3",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
   },

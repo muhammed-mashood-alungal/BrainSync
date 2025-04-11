@@ -272,7 +272,6 @@ const SessionsListing: React.FC<{ initialSessions: Session[] }> = ({ initialSess
             {iscreatOpen && <CreateSession onClose={(newSession? : Session) => {
                 setCreateOpen(false)
                 if(newSession){
-                    console.log('Logger')
                     setSessions((prev)=>{
                         return [...prev ,newSession]
                     })

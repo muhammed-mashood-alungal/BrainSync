@@ -1,9 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 
 export interface INoteController {
-    writeNote(req: Request , res: Response , next : NextFunction) : Promise<void>
-    saveNote(req: Request , res: Response , next : NextFunction) : Promise<void>
-    getNotePdf(req: Request , res: Response , next : NextFunction) : Promise<void>
-    getInitialContent(req : Request , res : Response  , next : NextFunction) : Promise<void>
-    myNotes(req : Request , res : Response  , next : NextFunction) : Promise<void>
+  writeNote(req: Request, res: Response, next: NextFunction): Promise<void>;
+  saveNote(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getNotePdf(req: Request, res: Response, next: NextFunction): Promise<void>;
+  getInitialContent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  myNotes(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

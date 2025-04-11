@@ -15,7 +15,6 @@ function ResetForm() {
     const { user } = useAuth()
     useEffect(() => {
         if (user) {
-            console.log(user)
             router.push('/')
         }
     }, [user])

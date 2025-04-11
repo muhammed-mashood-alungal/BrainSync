@@ -38,7 +38,6 @@ export const SessionServices = {
     },
     async getFilteredSessions(subject :string , date : string):Promise<Session[]>{
         try {
-            console.log(subject , date)
             const response = await sessionInstances.get(`/my-sessions/?subject=${subject}&date=${date}`)
             return response.data?.sessions
         } catch (error) {

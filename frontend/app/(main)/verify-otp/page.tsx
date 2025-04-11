@@ -18,7 +18,6 @@ export default function VerifyOtp() {
   const [loading , setLoading] = useState(false)
   useEffect(() => {
     if (user) {
-      console.log(user)
       router.push('/')
     }
   }, [user])
@@ -50,7 +49,6 @@ export default function VerifyOtp() {
     e.preventDefault()
     setLoading(true)
     try {
-      console.log(email,otp)
       await AuthServices.verifyOtp(otp, email as string)
       checkAuth()
       router.push('/')

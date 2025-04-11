@@ -19,7 +19,6 @@ export default function Resources() {
     useEffect(() => {
         async function fetchMyNotes() {
             const { notes, count } = await noteServices.myNotes(searchTerm, (currentPage - 1) * limit, limit)
-            console.log(notes)
             setTotalPage(Math.ceil(count / limit))
             setNotes(notes)
         }

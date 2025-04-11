@@ -17,7 +17,6 @@ function ForgotForm() {
 
     useEffect(() => {
         if (user) {
-            console.log(user)
             router.push('/')
         }
     }, [user])

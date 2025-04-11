@@ -1,41 +1,44 @@
-import { Document, model, Schema, Types } from "mongoose";
-import { IUser } from "../types/user.types";
-
+import { Document, model, Schema, Types } from 'mongoose';
+import { IUser } from '../types/user.types';
 
 // export interface IUserModel extends Document, Omit<IUser, "_id"> { }
-export interface IUserModel extends Document<Types.ObjectId>, Omit<IUser, "_id"> {}
+export interface IUserModel
+  extends Document<Types.ObjectId>,
+    Omit<IUser, '_id'> {}
 
-const userSchema = new Schema<IUserModel>({
+const userSchema = new Schema<IUserModel>(
+  {
     username: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String
+      type: String,
     },
-    googleId:{
-        type:String
+    googleId: {
+      type: String,
     },
     isAcitve: {
-        type: Boolean,
-        default: true
+      type: Boolean,
+      default: true,
     },
     role: {
-        type: String,
-        enum: ['student', "admin"]
+      type: String,
+      enum: ['student', 'admin'],
     },
     profilePicture: {
-        url : {type : String },
-        publicId : {type : String}
-    }
-
-}, {
-    timestamps: true
-})
-const User = model<IUserModel>('User' , userSchema)
-export default User
+      url: { type: String },
+      publicId: { type: String },
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+const User = model<IUserModel>('User', userSchema);
+export default User;

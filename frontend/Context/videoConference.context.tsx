@@ -87,8 +87,6 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
                 return { peerId: usr.userId, peer  , email : usr.email}
               });
             peersRef.current = [...peersRef.current, ...newPeers ]
-            console.log('setting new Peers')
-            console.log(peersRef.current)
             setPeers(peersRef.current)
           });
 
@@ -97,8 +95,6 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
             const peer = addPeer(userId, socketRef.current!.id as string, stream)
             const newPeer = { peerId: userId, peer , email  }
             peersRef.current = [...peersRef.current, newPeer ]
-            console.log(peersRef.current)
-            console.log('userConnectes')
             
             setPeers((prev) =>{
               if(prev.some((p) => p.peerId === userId)){

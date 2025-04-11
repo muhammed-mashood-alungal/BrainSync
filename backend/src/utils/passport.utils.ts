@@ -1,45 +1,44 @@
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { UserRepository } from "../repositories/implementation/user.repository";
-import { env } from "../configs/env.config";
-import { Types } from "mongoose";
-import { redisClient } from "../configs/redis.config";
+import passport from 'passport';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { UserRepository } from '../repositories/implementation/user.repository';
+import { env } from '../configs/env.config';
+import { Types } from 'mongoose';
+import { redisClient } from '../configs/redis.config';
 
-
-const _userRepository = new UserRepository()
-const clientID = env.CLIENT_ID as string
-const clientSecret = env.CLIENT_SECRET as string
+const _userRepository = new UserRepository();
+const clientID = env.CLIENT_ID as string;
+const clientSecret = env.CLIENT_SECRET as string;
 passport.use(
   new GoogleStrategy(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: "/api/auth/google/callback",
+      callbackURL: '/api/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const user = await _userRepository.findOrCreateUser(profile)
+        const user = await _userRepository.findOrCreateUser(profile);
 
-        return done(null, user)
+        return done(null, user);
       } catch (error) {
-        return done(error)
+        return done(error);
       }
     }
   )
 );
 
 passport.serializeUser((user: any, done) => {
-  done(null, user.id)
+  done(null, user.id);
 });
 
 passport.deserializeUser(async (id: unknown, done) => {
   try {
-    const userId = id as Types.ObjectId
-    const user = await _userRepository.findById(userId)
-    done(null, user)
+    const userId = id as Types.ObjectId;
+    const user = await _userRepository.findById(userId);
+    done(null, user);
   } catch (error) {
-    done(error, null)
+    done(error, null);
   }
 });
 
-export default passport
+export default passport;

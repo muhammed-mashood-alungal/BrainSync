@@ -63,7 +63,6 @@ const SessionsListing: React.FC<{ sessions: Session[] }> = ({ sessions }) => {
         try {
             await SessionServices.stopSession(selectedSession , )
         } catch (error) {
-            console.log(error)
         } finally {
             setSelectedSession('')
         }

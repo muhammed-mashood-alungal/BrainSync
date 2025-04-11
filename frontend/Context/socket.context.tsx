@@ -15,7 +15,6 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     if(!user?.email) return
     const socketConnection = io(process.env.NEXT_PUBLIC_BACKEND_ROOT_URL!);
     setSocket(socketConnection);
-    console.log('Socket connected')
     return () => {
       socketConnection.disconnect();
     };

@@ -19,7 +19,6 @@ const AdminPortal = () => {
     const [loading , setLoading] = useState(false)
  
     useEffect(()=>{
-        console.log(user)
        if(user && user.role == 'admin'){
         router.push('/admin/students')
        }else if(user){
@@ -37,7 +36,6 @@ const AdminPortal = () => {
             if (res.status) {
                 await AuthServices.loginService({ email, password })
                 checkAuth()
-                console.log(user)
                 if (user?.role != 'admin') {
                     router.push('/')
                     return

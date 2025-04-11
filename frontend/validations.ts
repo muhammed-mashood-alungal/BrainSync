@@ -147,7 +147,6 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>): { status:
         const selectedStartTime = new Date(formData.date as Date)
         selectedStartTime.setHours(hours, minutes, 0, 0)
 
-        console.log(selectedStartTime.getTime() , currentDate.getTime())
         if (selectedStartTime.getTime() < currentDate.getTime() && currentDate.toISOString().split("T")[0] == formData.date) {
             errors.startTime = "Start Time Cannot be in the Past."
             status = false;

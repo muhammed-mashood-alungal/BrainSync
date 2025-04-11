@@ -54,7 +54,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
         setSlides([{ id: 0, content: JSON.stringify(fabricCanvas.toJSON()) }]);
 
         const handleResize = () => {
-            console.log('resinng')
             fabricCanvas.setDimensions({
                 width: parent?.clientWidth,
                 height: parent?.clientHeight
@@ -139,9 +138,8 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
             canvas.selection = false;
             canvas.forEachObject(obj => obj.selectable = false);
             canvas.renderAll();
-            console.log('A user logged', lockedBy)
-            setIsLocked(true)
-            setLockedBy(lockedBy)
+            setIsLocked(true);
+            setLockedBy(lockedBy);
         })
 
         socket.on("board-unlocked", () => {
@@ -170,14 +168,12 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
     }, [currentColor])
 
     const lockBoard = () => {
-        console.log('Locking')
         setIsLocked(true)
         setLockedBy(user?.email as string)
         socket?.emit('board-locked', { roomId, lockedBy: user?.email as string })
     }
 
     const unlockBoard = () => {
-        console.log('unlocking')
         let usr = user?.email as string
         if (usr != lockedBy) {
             return
@@ -216,11 +212,9 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
 
         canvas.on('path:created', () => {
-            console.log(isLocked, (isLocked && lockedBy != user?.email), user?.email, lockedBy)
             if ((isLocked && lockedBy != user?.email)) return
             const jsonData = JSON.stringify(canvas.toJSON());
             updateSlideContent(jsonData)
-            console.log(178)
             socket?.emit('canvas-data', {
                 roomId: roomId,
                 slideIndex: currentSlideIndex,
@@ -230,7 +224,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
 
         canvas.on('object:modified', () => {
-            console.log('Koi')
             if ((isLocked && lockedBy != user?.email)) return
             const jsonData = JSON.stringify(canvas.toJSON())
             updateSlideContent(jsonData);
@@ -301,7 +294,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
         if (currentSlideIndex >= 0 && currentSlideIndex < slides.length) {
             const currentContent = JSON.stringify(canvas.toJSON())
-            console.log('Saving slide', currentSlideIndex, 'with content:', currentContent)
             updateSlideContent(currentContent)
         }
 
@@ -311,7 +303,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
 
         if (slides[slideIndex] && slides[slideIndex].content) {
-            console.log('Loading slide', slideIndex, 'with content:', slides[slideIndex].content)
             canvas.loadFromJSON(slides[slideIndex].content, () => {
                 canvas.backgroundColor = '#ffffff'
                 canvas.renderAll()
@@ -376,7 +367,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
     const toggleDrawingMode = (mode: string): void => {
         setCurrentMode(mode)
-        console.log('hhhaey')
         if (!canvas || isLocked) return
 
         canvas.off('mouse:down')
@@ -399,7 +389,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
                     const pointer = canvas.getPointer(e.e);
                     startX = pointer.x
                     startY = pointer.y
-                    console.log(currentColor)
                     rect = new fabric.Rect({
                         left: startX,
                         top: startY,
@@ -503,7 +492,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
 
     const addShape = (type: string, x: number, y: number): void => {
         if (!canvas || canvas.isDrawingMode || isLocked) return;
-        console.log('adding shappe')
         let shape: fabric.Rect | fabric.Circle;
         switch (type) {
             case 'rectangle':
@@ -542,7 +530,6 @@ export const WhiteBoardProvider = ({ roomId, children }: { roomId: string, child
     // Clear current slide
     const clearCurrentSlide = (): void => {
         if (!canvas || isLocked) return;
-        console.log('clering')
         canvas.clear();
         canvas.backgroundColor = '#ffffff';
         canvas.renderAll();

@@ -1,15 +1,14 @@
 export class HttpError extends Error {
-    statusCode : number ;
+  statusCode: number;
 
-    constructor(statusCode : number , message : string){
-        super(message)
-        this.statusCode = statusCode
-        Error.captureStackTrace(this,this.constructor)
-    }
+  constructor(statusCode: number, message: string) {
+    super(message);
+    this.statusCode = statusCode;
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
-export const createHttpsError = (statusCode : number , message  : string)=>{
-    const errResponse  = new HttpError(statusCode , message)
-    console.log(errResponse)
-    return errResponse
-}
+export const createHttpsError = (statusCode: number, message: string) => {
+  const errResponse = new HttpError(statusCode, message);
+  return errResponse;
+};

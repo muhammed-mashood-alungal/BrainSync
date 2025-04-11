@@ -1,7 +1,6 @@
 import { authInstance } from "@/axios/createInstance";
 import { IuserLogin, IuserSignUp } from "@/types/userSignUp.types";
 import { AxiosError } from "axios";
-import { verify } from "crypto";
 
 export const AuthServices = {
     registerService: async (data: IuserSignUp): Promise<{ status: number, message: string }> => {
@@ -19,7 +18,6 @@ export const AuthServices = {
             const response = await authInstance.post('/signin', data)
             return response.data?.tokens
         } catch (error: unknown) {
-            console.log(error)
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Login failed. Please try again.";
             throw new Error(errorMessage)
@@ -66,7 +64,6 @@ export const AuthServices = {
                 })
             return response.data
         } catch (error) {
-            console.log(error)
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Failed. Please try again.";
             return null
@@ -90,7 +87,7 @@ export const AuthServices = {
     },
     googleAuth: async (): Promise<void> => {
         try {
-            window.location.href = "http://localhost:5000/api/auth/google";
+            window.location.href = `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google`;
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Google Auth failed. Please try again.";
@@ -110,13 +107,10 @@ export const AuthServices = {
     logout: async (): Promise<{ id: string, email: string, role: string }> => {
         try {
             const response = await authInstance.post('/logout')
-            console.log(response)
             return response.data
         } catch (error) {
-            console.log(error)
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Logout failed. Please try again.";
-            console.log(err)
             throw new Error(errorMessage)
         }
     },
@@ -127,8 +121,7 @@ export const AuthServices = {
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Reset Password failed. Please try again.";
-            console.log(err)
             throw new Error(errorMessage)
         }
     }
-}
+}  

@@ -17,7 +17,6 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
     const { user, checkAuth } = useAuth()
     useEffect(() => {
         if (user) {
-            console.log(user)
             router.push('/')
         }
     }, [user])

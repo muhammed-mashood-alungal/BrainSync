@@ -76,9 +76,7 @@ export const validateSession = async (sessionId: string) => {
         return response.data.result
 
     } catch (err:unknown) {
-        console.log(err)
         const error = err as AxiosError<{ error: string }>
-         console.log(error.response?.data)
         return {status : false , message : error.response?.data || "UnExpected Error Occured"}
     }
 }

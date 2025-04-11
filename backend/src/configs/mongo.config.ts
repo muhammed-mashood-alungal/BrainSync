@@ -1,105 +1,75 @@
-import mongoose from 'mongoose'
-import { env } from './env.config'
+import mongoose from 'mongoose';
+import { env } from './env.config';
 import { Db, GridFSBucket } from 'mongodb';
 
-
-// class MongoDBConfig {
-//     private static instance: MongoDBConfig
-//     private gfs: GridFSBucket | null = null
-
-//     public static getInstance(): MongoDBConfig {
-//         if (!MongoDBConfig.instance) {
-//             MongoDBConfig.instance = new MongoDBConfig();
-//         }
-//         return MongoDBConfig.instance;
-//     }
-//     public async connectDB() {
-//         try {
-//             await mongoose.connect(URI)
-//             console.log('MongoDB Connected Succesfully')
-//             const conn = mongoose.connection;
-//             conn.once('open', () => {
-//                 this.gfs = new GridFSBucket(conn.db as Db, { bucketName: 'pdfs' });
-//             })
-//         } catch (err) {
-//             console.log(err)
-//         }
-//     }
-
-//     public getGridFSBucket(): GridFSBucket {
-//         if (!this.gfs) {
-//             throw new Error('GridFSBucket not initialized. Ensure MongoDB is connected.');
-//         }
-//         return this.gfs;
-//     }
-// }
-
-
-const URI = env.MONGO_URI as string
+const URI = env.MONGO_URI as string;
 
 if (!URI) {
-    throw new Error("MONGO_URI is not defined in the environment variables.")
+  throw new Error('MONGO_URI is not defined in the environment variables.');
 }
-
 
 class MongoDBConfig {
-    private static instance: MongoDBConfig
-    private gfs: GridFSBucket | null = null
-    private connectionPromise: Promise<void> | null = null
+  private static instance: MongoDBConfig;
+  private gfs: GridFSBucket | null = null;
+  private connectionPromise: Promise<void> | null = null;
 
-    public static getInstance(): MongoDBConfig {
-        if (!MongoDBConfig.instance) {
-            MongoDBConfig.instance = new MongoDBConfig();
-        }
-        return MongoDBConfig.instance;
+  public static getInstance(): MongoDBConfig {
+    if (!MongoDBConfig.instance) {
+      MongoDBConfig.instance = new MongoDBConfig();
     }
+    return MongoDBConfig.instance;
+  }
 
-    public connectDB(): Promise<void> {
-        if (!this.connectionPromise) {
-            this.connectionPromise = new Promise(async (resolve, reject) => {
-                try {
-                    await mongoose.connect(URI);
-                    console.log('MongoDB Connected Successfully');
-                    
-                    const conn = mongoose.connection;
-                    // If connection is already open, set up GridFS immediately
-                    if (conn.readyState === 1) {
-                        this.gfs = new GridFSBucket(conn.db as Db, { bucketName: 'pdfs' });
-                        resolve();
-                    } else {
-                        // Otherwise wait for the open event
-                        conn.once('open', () => {
-                            this.gfs = new GridFSBucket(conn.db as Db, { bucketName: 'pdfs' });
-                            resolve();
-                        });
-                        
-                        conn.on('error', (err) => {
-                            reject(err);
-                        });
-                    }
-                } catch (err) {
-                    console.log(err);
-                    reject(err);
-                }
+  public connectDB(): Promise<void> {
+    if (!this.connectionPromise) {
+      this.connectionPromise = new Promise(async (resolve, reject) => {
+        try {
+          await mongoose.connect(URI);
+          console.log('MongoDB Connected Successfully');
+
+          const conn = mongoose.connection;
+          // If connection is already open, set up GridFS immediately
+          if (conn.readyState === 1) {
+            this.gfs = new GridFSBucket(conn.db as Db, { bucketName: 'pdfs' });
+            resolve();
+          } else {
+            // Otherwise wait for the open event
+            conn.once('open', () => {
+              this.gfs = new GridFSBucket(conn.db as Db, {
+                bucketName: 'pdfs',
+              });
+              resolve();
             });
+
+            conn.on('error', err => {
+              reject(err);
+            });
+          }
+        } catch (err) {
+          console.log(err);
+          reject(err);
         }
-        return this.connectionPromise;
+      });
+    }
+    return this.connectionPromise;
+  }
+
+  public async getGridFSBucket(): Promise<GridFSBucket> {
+    if (!this.connectionPromise) {
+      await this.connectDB();
+    } else {
+      await this.connectionPromise;
     }
 
-    public async getGridFSBucket(): Promise<GridFSBucket> {
-        if (!this.connectionPromise) {
-            await this.connectDB();
-        } else {
-            await this.connectionPromise;
-        }
-        
-        if (!this.gfs) {
-            throw new Error('GridFSBucket not initialized. Ensure MongoDB is connected.');
-        }
-        return this.gfs;
+    if (!this.gfs) {
+      throw new Error(
+        'GridFSBucket not initialized. Ensure MongoDB is connected.'
+      );
     }
+    return this.gfs;
+  }
 }
 
-const mongoDBConfig = new MongoDBConfig()
+const mongoDBConfig = new MongoDBConfig();
 
-export default mongoDBConfig
+export default mongoDBConfig;
