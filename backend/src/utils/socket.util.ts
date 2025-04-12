@@ -158,6 +158,10 @@ export default function setupSocket(io: Server) {
       socket.to(socket.roomId as string).emit('message', message);
     });
 
+    socket.on('delete-message' , ({id})=>{
+      socket.to(socket.roomId as string).emit('delete-message' ,id) 
+    })
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
 

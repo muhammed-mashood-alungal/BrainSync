@@ -2,13 +2,15 @@ import { Children, createContext, ReactNode, useContext, useEffect, useState } f
 import { useSocket } from "./socket.context";
 
 interface Message {
+    id:string,
     sender: string,
     text: string,
     time: string
 }
 interface ChatContextProvider {
     messages: Message[]
-    sendMessage: (sender: string, text: string, time: string) => void
+    sendMessage: (id : string , sender: string, text: string, time: string) => void
+    deleteMessage :(id : string) => void
 }
 
 const ChatContext = createContext<ChatContextProvider | undefined>(undefined)
@@ -24,16 +26,29 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
                 return [...prev, messageData]
             })
         })
+
+        socket.on('delete-message', (id: string) => {
+            setMessages((prev)=>{
+                return prev.filter((msg)=>msg.id != id)
+            })
+        })
     }, [socket])
 
-    const sendMessage = (sender: string, text: string, time: string) => {
-        socket?.emit('send-message',{sender , text , time})
+    const sendMessage = ( id : string , sender: string, text: string, time: string) => {
+        socket?.emit('send-message',{id , sender , text , time})
         setMessages((prev) => {
-            return [...prev, {sender , text , time}]
+            return [...prev, {id , sender , text , time}]
+        })
+    }
+
+    const deleteMessage = (id : string)=>{
+        socket?.emit('delete-message' , {id})
+        setMessages((prev)=>{
+            return prev.filter((msg)=>msg.id != id)
         })
     }
     return (
-      <ChatContext.Provider value={{sendMessage , messages}}>
+      <ChatContext.Provider value={{sendMessage , messages , deleteMessage}}>
         {children}
       </ChatContext.Provider>
     )

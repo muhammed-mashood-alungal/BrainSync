@@ -288,6 +288,7 @@ const Page: React.FC<PageProps> = ({ sessionCode, validationRes, session }:
             router.push('/dashboard/sessions')
         }
     }, [validationRes])
+    if(!validationRes.status) return 
     return (
         <SocketProvider>
             <VideoCallProvider roomId={sessionCode as string}>

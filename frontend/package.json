@@ -20,6 +20,7 @@
     "@tiptap/starter-kit": "^2.11.7",
     "axios": "^1.8.2",
     "date-fns": "^4.1.0",
+    "emoji-picker-react": "^4.12.2",
     "fabric": "^6.6.2",
     "headlessui": "^0.0.0",
     "jsonwebtoken": "^9.0.2",
@@ -35,7 +36,8 @@
     "recharts": "^2.15.1",
     "sass": "^1.86.3",
     "simple-peer": "^9.11.1",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

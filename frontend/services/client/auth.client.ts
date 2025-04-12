@@ -62,7 +62,7 @@ export const AuthServices = {
                     },
                     withCredentials: true,
                 })
-            return response.data
+            return response.data.user
         } catch (error) {
             const err = error as AxiosError<{ error: string }>;
             const errorMessage = err.response?.data?.error || "Failed. Please try again.";

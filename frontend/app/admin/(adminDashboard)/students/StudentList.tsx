@@ -8,7 +8,7 @@ import { IUserType } from '@/types/userTypes'
 import Table from '@/Components/Table/Table'
 
 
-function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
+function StudentList({ initialStudents  , totalCount : initialCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
 
     const [students, setStudents] = useState<IUserType[]>(initialStudents)
     const [selectedStudent, setSelectedStudent] = useState<IUserType | null>(null)
@@ -16,33 +16,36 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
     const [loading , setIsLoading] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [blockingStudent, setblockingStudents] = useState('')
-    const [currentPage, setCurrentPage] = useState(1)
+   // const [currentPage, setCurrentPage] = useState(1)
     const limit = 8
-    const [totalPages , setTotalPage] = useState(totalCount / limit)
+   // const [totalPages , setTotalPage] = useState(initialCount / limit)
     
+    const [totalCount , setTotalCount] = useState(initialCount)
 
     useEffect(() => {
-        const fetchStudents = async () => {
-            setIsLoading(true)
-            try {
-                const {students , count} = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
-                setTotalPage( Math.ceil(count / limit))
-                setStudents(students)
-            } catch (error) {
-                if (error instanceof Error) {
-                    toast.error(error.message)
-                } else {
-                    toast.error("An unexpected error occurred.")
-                }
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchStudents()
+        fetchStudents(1,limit,searchQuery)
         setIsLoading(false)
-    }, [currentPage , searchQuery])
+    }, [])
 
+    const fetchStudents = async (currentPage : number , limit  : number , searchQuery : string ) => {
+        setIsLoading(true)
+        console.log(currentPage , limit , searchQuery)
+        try {
+            const {students , count} = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
+            console.log('new count ' + count)
+            setTotalCount(count)
+           // setTotalPage(Math.ceil(count / limit))
+            setStudents(students)
+        } catch (error) {
+            if (error instanceof Error) {
+                toast.error(error.message)
+            } else {
+                toast.error("An unexpected error occurred.")
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
     
 
     const blockOrUnblock = async () => {
@@ -75,9 +78,6 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
         student.email.toLowerCase().includes(searchQuery.toLowerCase())
     )
 
-
-    
-
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -92,35 +92,16 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
 
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-0">Students Management</h1>
-                <div className="w-full md:w-auto">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search students..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full md:w-64 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8979FF]"
-                        />
-                        <svg
-                            className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="M21 21l-4.35-4.35" />
-                        </svg>
-                    </div>
-                </div>
+              
             </div>
 
 
-            <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">
+            <div className="overflow-x-auto">
                 <Table
+                    onPageChange={(page : number , limit : number , searchQuery : string | undefined)=>{
+                        fetchStudents(page , limit , searchQuery as string )
+                    }}
+                    totalCount={totalCount}
                     columns={[
                         {
                             key: "username",
@@ -175,7 +156,7 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
 
                     )}
                 />
-                <div className="flex justify-center items-center my-3">
+                {/* <div className="flex justify-center items-center my-3">
                     <button
                         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                         disabled={currentPage === 1}
@@ -191,7 +172,7 @@ function StudentList({ initialStudents  ,totalCount}: { initialStudents: IUserTy
                     >
                         Next  
                     </button>
-                </div>
+                </div> */}
             </div>
 
 

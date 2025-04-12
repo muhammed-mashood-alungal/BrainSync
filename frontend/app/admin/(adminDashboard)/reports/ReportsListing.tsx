@@ -13,18 +13,20 @@ import Table from "@/Components/Table/Table";
 function ReportsListing() {
     const [reports, setReports] = useState<IReportTypes[]>([])
     const [status, setStatus] = useState('All')
-    const [currentPage, setCurrentPage] = useState(1)
-    const limit = 8
-    const [totalPages, setTotalPage] = useState(1 / limit)
+    // const [currentPage, setCurrentPage] = useState(1)
+   const limit = 8
+    // const [totalPages, setTotalPage] = useState(1 / limit)
+    const [totalCount , setTotalCount] = useState(0)
     useEffect(() => {
-        async function fetchReports() {
-            const {reports ,count} = await reportService.getAllReports(status , (currentPage - 1)*limit , limit)
-        
-            setTotalPage( Math.ceil(count / limit))
-            setReports(reports)
-        }
-        fetchReports()
-    }, [currentPage,limit])
+        fetchReports(1 , limit)
+    }, [])
+
+    async function fetchReports(currentPage : number, limit : number) {
+        const {reports , count} = await reportService.getAllReports(status , (currentPage - 1)*limit , limit)
+        setTotalCount(count)
+      //  setTotalPage( Math.ceil(count / limit))
+        setReports(reports)
+    }
 
 
     const handleResolve = async (report: IReportTypes) => {
@@ -96,8 +98,10 @@ function ReportsListing() {
 
     return (
         <>
-            <Table data={reports} columns={columns} actions={actions} />
-            <div className="flex justify-center items-center my-3">
+            <Table data={reports} columns={columns} actions={actions} totalCount={totalCount} 
+            onPageChange={(page : number  , limit : number)=>fetchReports(page , limit)}
+            />
+            {/* <div className="flex justify-center items-center my-3">
                 <button
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                     disabled={currentPage === 1}
@@ -113,7 +117,7 @@ function ReportsListing() {
                 >
                     Next
                 </button>
-            </div>
+            </div> */}
         </>
     )
 }

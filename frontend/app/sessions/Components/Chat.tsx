@@ -1,14 +1,19 @@
+import Confirm from '@/Components/ConfirmModal/ConfirmModal';
 import { useAuth } from '@/Context/auth.context';
 import { useChat } from '@/Context/chat.context';
+import { Delete, DeleteIcon, Trash } from 'lucide-react';
 import React, { useState, useRef, useEffect, SyntheticEvent, RefObject } from 'react';
-
+import { v4 as uuidv4 } from 'uuid';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 const ChatComponent = () => {
     const [isOpen, setIsOpen] = useState(false)
-    const { messages, sendMessage } = useChat()
+    const { messages, sendMessage , deleteMessage} = useChat()
     const [newMessage, setNewMessage] = useState('')
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
     const { user } = useAuth()
+    const [deletingMsg , setDeletingMsg] = useState('')
+    const [showPicker, setShowPicker] = useState(false);
 
     const toggleChat = () => {
         setIsOpen(!isOpen);
@@ -18,14 +23,25 @@ const ChatComponent = () => {
         setIsOpen(false);
     };
 
+    const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
+        setNewMessage((prev) => prev + emojiData.emoji);
+      };
+
     const handleSendMessage = (e: SyntheticEvent) => {
         e.preventDefault();
         if (newMessage.trim() === '') return;
-
+        const id = uuidv4()
+        console.log('Unique id  is :', id)
         const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        sendMessage(user?.email as string, newMessage, currentTime)
+        sendMessage(id , user?.email as string, newMessage, currentTime)
         setNewMessage('')
     };
+
+    const handleDeleteMessage = () =>{
+       if(!deletingMsg) return 
+       deleteMessage(deletingMsg)
+       setDeletingMsg('')
+    }
 
     
     useEffect(() => {
@@ -33,6 +49,8 @@ const ChatComponent = () => {
             messagesEndRef?.current?.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
+
+
 
     return (
         <div className="fixed bottom-4 right-4 z-50">
@@ -60,7 +78,7 @@ const ChatComponent = () => {
                         </div>
                         <button
                             onClick={closeChat}
-                            className="text-gray-400 hover:text-white"
+                            className="text-gray-400 hover:text-white hover:cursor-pointer"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -72,38 +90,62 @@ const ChatComponent = () => {
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
                         {messages.length > 0 && messages.map((msg, idx) => (
                             <div key={idx} className="bg-gray-800 rounded p-2">
-                                <div className="flex justify-between items-center mb-1">
-                                    <span className="text-s text-white">{msg.sender === user?.email ? 'You' : msg.sender}</span>
-                                   
-                                    <span className="text-xs text-gray-400">{msg.time}</span>
-                                    
+                                <div className="flex justify-between items-center ">
+                                    <span className="text-xs text-cyan-500">{msg.sender === user?.email ? 'You' : msg.sender}</span>
+                                    {
+                                        msg.sender == user?.email &&   <span className='hover:cursor-pointer hover:text-red-400' 
+                                        onClick={()=>setDeletingMsg(msg.id)}
+                                       ><Trash size={14}/>  </span>
+                                    }
                                 </div>
-                                <p className="text-gray-300 text-sm p-2">{msg.text}</p>
+                                <p className="text-gray-300 text-sm break-words whitespace-pre-wrap pr-2">{msg.text}</p>
+
+                                <div className='flex justify-end'>
+                                <span className="text-xs text-gray-400">{msg.time}</span>
+                                </div>
                             </div>
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
 
                     {/* Message Input */}
+                   
                     <form onSubmit={handleSendMessage} className="bg-gray-800 p-2 flex items-center">
-                        <input
-                            type="text"
-                            placeholder="Type a message......"
-                            className="bg-gray-700 text-white rounded-full py-2 px-4 flex-1 outline-none"
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                        />
+                        <img src="/happiness_yellow.png" alt="" className='h-6 w-6 mr-1 hover:cursor-pointer' 
+                        onClick={() => setShowPicker(!showPicker)}/>
+                        <textarea
+                           placeholder="Type a message..."
+                           className="bg-gray-700 text-white rounded-xl py-2 px-4 flex-1 outline-none resize-none overflow-hidden"
+                          rows={1}
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault()
+                              handleSendMessage(e)
+                        }
+                        }}
+/>
                         <button
                             type="submit"
-                            className="ml-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-2"
+                            className="ml-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-2 hover:cursor-pointer"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                         </button>
                     </form>
+                    {showPicker && (
+                    <div className="absolute bottom-12 z-50">
+                      <EmojiPicker onEmojiClick={handleEmojiClick} />
+                    </div>
+                     )}
+     
                 </div>
             )}
+            <Confirm title='Are Your sure to delete the Message ?' isOpen={Boolean(deletingMsg)} 
+             onClose={()=>setDeletingMsg('')} onConfirm={handleDeleteMessage}
+            />
         </div>
     );
 };
