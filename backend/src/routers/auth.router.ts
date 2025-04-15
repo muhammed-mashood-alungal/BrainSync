@@ -6,11 +6,13 @@ import passport from '../utils/passport.utils';
 import { UserServices } from '../services/implementation/user.services';
 import { env } from '../configs/env.config';
 import { authMiddleware } from '../middlewares/auth.middleware';
+import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 const authRouter = Router();
 
 const userRepository = new UserRepository();
+const sessionActivityRepo = new SessionActivityRepository()
 const authService = new AuthService(userRepository);
-const userService = new UserServices(userRepository);
+const userService = new UserServices(userRepository,sessionActivityRepo);
 const authController = new AuthController(authService, userService);
 
 authRouter.post('/signup', authController.signup.bind(authController));

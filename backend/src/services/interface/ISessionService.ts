@@ -17,12 +17,13 @@ export interface ISessionServices {
   getAllSessions(): Promise<ISessionModal[]>;
   validateSession(
     sessionCode: string,
-    userId: unknown
+    userId: unknown 
   ): Promise<{ status: boolean; message: string }>;
   updateSession(
     sessionData: ISessionModal,
     sessionId: unknown,
     userId: unknown
-  ): Promise<ISessionModal | null>;
+  ): Promise<ISessionModal | null>; 
   stopSession(sessionId: unknown): Promise<void>;
+  addTimeSpendOnSession(userId : unknown ,   sessionCode: string,  duration : number , log: { joinTime: Date; leaveTime: Date; duration: number }): Promise<void>;
 }

@@ -9,7 +9,6 @@ import { validateResetPasswords } from '@/validations';
 import Link from 'next/link'
 import { ChangeEvent, use, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { Trash } from "lucide-react";
 import { AuthServices } from '@/services/client/auth.client';
 import { useRouter } from 'next/navigation';
@@ -17,21 +16,8 @@ import { useRouter } from 'next/navigation';
 function Profile() {
     const { user, checkAuth } = useAuth()
     const [userData, setUserData] = useState<{ username: string, email: string, profilePic: string } | null>(null)
+    
    
-    const data = [
-        { name: 'Jan', '2022': 80, '2023': 40, '2024': 80 },
-        { name: 'Feb', '2022': 35, '2023': 15, '2024': 60 },
-        { name: 'Mar', '2022': 70, '2023': 20, '2024': 40 },
-        { name: 'Apr', '2022': 15, '2023': 35, '2024': 70 },
-        { name: 'May', '2022': 60, '2023': 95, '2024': 50 },
-        { name: 'Jun', '2022': 70, '2023': 80, '2024': 60 },
-        { name: 'Jul', '2022': 35, '2023': 60, '2024': 10 },
-        { name: 'Aug', '2022': 75, '2023': 50, '2024': 90 },
-        { name: 'Sep', '2022': 60, '2023': 10, '2024': 90 },
-        { name: 'Oct', '2022': 80, '2023': 60, '2024': 90 },
-        { name: 'Nov', '2022': 35, '2023': 85, '2024': 30 },
-        { name: 'Dec', '2022': 30, '2023': 95, '2024': 80 },
-    ];
 
     const stats = [
         { value: '12', label: 'Total Session' },
@@ -259,25 +245,7 @@ function Profile() {
                 </div>
 
                 {/* Progress Chart */}
-                <div className="bg-[#2B2B2B] rounded-lg p-6">
-                    <div className="h-80">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-                                <XAxis dataKey="name" stroke="#888" />
-                                <YAxis stroke="#888" />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#333', borderColor: '#555' }}
-                                    labelStyle={{ color: '#fff' }}
-                                />
-                                <Legend />
-                                <Line type="monotone" dataKey="2022" stroke="#7547F7" activeDot={{ r: 8 }} />
-                                <Line type="monotone" dataKey="2023" stroke="#FF6B6B" activeDot={{ r: 8 }} />
-                                <Line type="monotone" dataKey="2024" stroke="#00D2D9" activeDot={{ r: 8 }} />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+             
             </div>
             <ImageCropModal
                 isOpen={isModalOpen}

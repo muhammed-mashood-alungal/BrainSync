@@ -6,6 +6,8 @@ import { useSocket } from './socket.context';
 import { noteServices } from '@/services/client/note.client';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { UserServices } from '@/services/client/user.client';
+import { SessionServices } from '@/services/client/session.client';
 
 interface PeerData {
   peerId: string;
@@ -22,7 +24,7 @@ interface VideoCallState {
   toggleMute: (state: boolean) => void;
   toggleVideo: (state: boolean) => void;
   speakingUsers: Set<string>;
-  leaveRoom: () => void;
+  leaveRoom: (duration : number ,  log: { joinTime: Date; leaveTime: Date; duration: number }) => void;
   audioMutedUsers: Set<string>
   videoOffUsers: Set<string>
   amSpeaking: boolean
@@ -313,7 +315,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
     };
   };
 
-  const leaveRoom = async () => {
+  const leaveRoom = async (duration : number , log: { joinTime: Date; leaveTime: Date; duration: number }) => {
     try {
       if (myStreamRef.current) {
         myStreamRef.current.getTracks().forEach((track) => {
@@ -333,6 +335,7 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       if (socketRef.current) {
         socketRef.current.disconnect()
       }
+      await SessionServices.addSessionTimeSpendByUser(roomId , duration , log)
       const response = await noteServices.saveNote(roomId)
       if(response.success){
          toast.success("Note Saved in you Resources")

@@ -23,4 +23,10 @@ export interface IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getUserSessionProgress(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
+  
 }

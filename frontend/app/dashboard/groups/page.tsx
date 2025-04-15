@@ -13,6 +13,7 @@ import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/Components/GroupDetails/GroupDetails";
 import EmptyList from "@/Components/EmptyList/EmptyList";
 import { ArrowLeftIcon, LogOut, LogOutIcon, Plus, PlusCircle, PlusIcon, PlusSquare, PlusSquareIcon, UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>();
@@ -24,6 +25,15 @@ const GroupsPage: React.FC = () => {
   const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [viewGroup, setViewGroup] = useState<IGroupType>();
+  const router = useRouter()
+
+  useEffect(()=>{
+   const hash = window.location.hash
+   if(hash == "#create"){
+    setIsModalOpen(true)
+   }
+  },[])
+
   const [err, setErr] = useState({
     groupName: "",
     members: "",
@@ -138,7 +148,10 @@ const GroupsPage: React.FC = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-white">My Groups</h1>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() =>{
+            setIsModalOpen(true)
+            router.push('/dashboard/groups#create')
+          }}
           className="bg-cyan-500 hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
         >
           Create Group

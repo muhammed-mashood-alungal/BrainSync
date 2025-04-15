@@ -8,8 +8,9 @@ import { IUser } from '../../types/user.types';
 import { comparePassword, hashPassword } from '../../utils/bcrypt.util';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
+import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 export class UserServices implements IUserService {
-  constructor(private _userRepository: UserRepository) {}
+  constructor(private _userRepository: UserRepository ,private _sessionActiviesRepo : ISessionActivityRepository) {}
 
   async changeProfilePic(
     userId: unknown,
@@ -104,4 +105,9 @@ export class UserServices implements IUserService {
 
     return true;
   }
+
+  async getUserSessionProgress(userId: unknown,  filterBy : string): Promise<{ graph: any[]; }> {
+    return await this._sessionActiviesRepo.getUserSessionProgress(userId as Types.ObjectId , filterBy)
+  }
+ 
 }

@@ -1,5 +1,9 @@
 import { Server, Socket } from 'socket.io';
 import { WhiteboardRepository } from '../repositories/implementation/whiteboard.repository';
+import { UserServices } from '../services/implementation/user.services';
+import { UserRepository } from '../repositories/implementation/user.repository';
+import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
+
 
 interface CustomSocket extends Socket {
   roomId?: string;
@@ -28,6 +32,9 @@ export function stopRoomSession(roomId: string) {
 }
 
 const whiteBoardRepo = new WhiteboardRepository();
+const userReport = new UserRepository()
+const sesssionActivityRepo = new SessionActivityRepository()
+const userServervices = new UserServices(userReport,sesssionActivityRepo)
 
 export default function setupSocket(io: Server) {
   ioInstance = io;
@@ -64,6 +71,7 @@ export default function setupSocket(io: Server) {
       socket.emit('all-users', otherUsers);
 
       socket.to(roomId).emit('user-joined', socket.id, email);
+      
     });
 
     // Handle signaling for WebRTC with simple-peer

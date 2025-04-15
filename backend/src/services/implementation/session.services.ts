@@ -13,11 +13,14 @@ import { env } from '../../configs/env.config';
 import { sendSessionLinktoAttendees } from '../../utils/sendEmail.utils';
 import { IGroupTypes } from '../../types/group.types';
 import { stopRoomSession } from '../../utils/socket.util';
+import { ISessionActivity } from '../../types/sessionActivity.types';
+import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 
 export class SessionServices implements ISessionServices {
   constructor(
     private _sesionRepository: ISessionRepository,
-    private _groupRepository: IGroupRepository
+    private _groupRepository: IGroupRepository,
+    private _sessionActivityRepo: ISessionActivityRepository
   ) {}
 
   async createSession(
@@ -115,14 +118,13 @@ export class SessionServices implements ISessionServices {
   }
   async getAllSessions(): Promise<ISessionModal[]> {
     const result = await this._sesionRepository.getAllSessions();
-  
+
     return result;
   }
   async validateSession(
     sessionCode: string,
     userId: unknown
   ): Promise<{ status: boolean; message: string }> {
-    
     if (!sessionCode) return { status: false, message: 'Invalid Session Code' };
 
     const session = await this._sesionRepository.getSessionByCode(sessionCode);
@@ -139,14 +141,10 @@ export class SessionServices implements ISessionServices {
         ? session.endTime
         : new Date(session.endTime);
 
-   
-   
-
     if (session.startTime.toISOString() > currentTime) {
       return { status: false, message: 'Session Time is not reached' };
     }
 
-  
     if (session.endTime.toISOString() < currentTime) {
       return { status: false, message: 'Session Ended' };
     }
@@ -245,5 +243,18 @@ export class SessionServices implements ISessionServices {
       sessionId as Types.ObjectId
     );
     stopRoomSession(session?.code as string);
+  }
+  async addTimeSpendOnSession(
+    userId: unknown,
+    sessionCode: string,
+    duration: number,
+    log: { joinTime: Date; leaveTime: Date; duration: number }
+  ): Promise<void> {
+    await this._sessionActivityRepo.addTimeSpend(
+      userId as Types.ObjectId,
+      sessionCode,
+      duration,
+      log
+    );
   }
 }

@@ -5,12 +5,18 @@ import { SessionController } from '../controllers/implementation/session.control
 import { GroupRepository } from '../repositories/implementation/group.repository';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { adminAuth } from '../middlewares/admin.middleware';
+import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 
 const sessionRouter = Router();
 
 const sessionRepo = new SessionRepository();
 const groupRepo = new GroupRepository();
-const sessionServices = new SessionServices(sessionRepo, groupRepo);
+const sessionActivityRepo = new SessionActivityRepository();
+const sessionServices = new SessionServices(
+  sessionRepo,
+  groupRepo,
+  sessionActivityRepo
+);
 const sessionController = new SessionController(sessionServices);
 
 sessionRouter.post(
@@ -41,7 +47,11 @@ sessionRouter.put(
 sessionRouter.post(
   '/stop-session/:sessionId',
   authMiddleware,
+  adminAuth,
   sessionController.stopSession.bind(sessionController)
 );
+
+sessionRouter.put('/add-session-activity/:sessionCode', authMiddleware , sessionController.addTimeSpendOnSession.bind(sessionController));
+
 
 export default sessionRouter;

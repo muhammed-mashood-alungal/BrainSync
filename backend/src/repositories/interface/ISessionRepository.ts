@@ -21,4 +21,5 @@ export interface ISessionRepository {
   ): Promise<ISessionModal | null>;
   findBySessionId(id: Types.ObjectId): Promise<ISessionModal | null>;
   stopSession(sessionId: Types.ObjectId): Promise<ISessionModal | null>;
+  
 }

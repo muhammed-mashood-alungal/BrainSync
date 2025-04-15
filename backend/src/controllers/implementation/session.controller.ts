@@ -89,7 +89,7 @@ export class SessionController implements ISessionController {
       const { sessionId } = req.params;
       const data = req.body;
       const userId = req.user;
-
+     
       const updatedSession = await this._sessionServices.updateSession(
         data,
         sessionId,
@@ -113,6 +113,27 @@ export class SessionController implements ISessionController {
       const { sessionId } = req.params;
       const response = await this._sessionServices.stopSession(sessionId);
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
+    } catch (error) {
+      next(error);
+    }
+  }
+  async addTimeSpendOnSession(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.user;
+      const { sessionCode } = req.params;
+      const { duration, log } = req.body;
+      console.log(userId , sessionCode , duration , log)
+      const response = await this._sessionServices.addTimeSpendOnSession(
+        userId,
+        sessionCode,
+        duration,
+        log
+      );
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
     } catch (error) {
       next(error);
     }

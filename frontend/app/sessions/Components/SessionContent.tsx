@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Mic,
   MicOff,
@@ -45,6 +45,22 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
   const [confirmationOn, setConfirmationOn] = useState(false);
   const { leaveRoom } = useVideoCall();
   const { user } = useAuth();
+  const joinTimeRef = useRef(0);
+  useEffect(() => {
+    joinTimeRef.current = Date.now();
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      const {duration , log} = getTimeSpent();
+
+      //console.log(`Session Duration: ${totalDurationMinutes} minutes`);
+       leaveRoom(duration ,log);
+      e.preventDefault();
+      //e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [roomId]);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -58,7 +74,6 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
         setIsVisible(false);
       }
     };
-
     window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
@@ -74,8 +89,21 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
     "Off-Topic or Misuse",
   ];
 
+  const getTimeSpent = () => {
+    const leaveTime = new Date(); // Instead of Date.now()
+    const joinTime = new Date(joinTimeRef.current); // Convert timestamp to Date
+  
+    const duration = leaveTime.getTime() - joinTime.getTime(); 
+
+
+    return  {duration : duration , log : {joinTime : joinTime , leaveTime : leaveTime , duration : duration}}
+  };
+
   const handleLeave = () => {
-    leaveRoom();
+    const {duration , log} = getTimeSpent();
+    // console.log(`Session Duration: ${totalDurationMinutes} minutes`);
+     
+    leaveRoom(duration,log);
     router.push("/dashboard/sessions");
   };
 
@@ -433,6 +461,7 @@ const Page: React.FC<PageProps> = ({
       router.push("/dashboard/sessions");
     }
   }, [validationRes]);
+
   if (!validationRes.status) return;
   return (
     <SocketProvider>

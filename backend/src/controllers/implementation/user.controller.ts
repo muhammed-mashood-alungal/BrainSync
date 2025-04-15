@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, response } from 'express';
 import { UserServices } from '../../services/implementation/user.services';
 import { IUserController } from '../interface/IUserController';
 import { createHttpsError } from '../../utils/httpError.utils';
@@ -136,6 +136,23 @@ export class UserController implements IUserController {
       const { userId } = req.params;
       await this._userServices.deleteProfilePic(userId);
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED));
+    } catch (error) {
+      next(error);
+    }
+  }
+  async getUserSessionProgress(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.user;
+      const { filterBy } = req.query;
+      const {graph} = await this._userServices.getUserSessionProgress(
+        userId,
+        filterBy as string
+      );
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, {graph}));
     } catch (error) {
       next(error);
     }

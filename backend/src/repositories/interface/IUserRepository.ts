@@ -21,4 +21,5 @@ export interface IUserRepository {
     searchQuery: string
   ): Promise<IUserModel[]>;
   countStudents(searchQuery: string): Promise<number>;
+ 
 }

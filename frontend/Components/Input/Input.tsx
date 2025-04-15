@@ -6,9 +6,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     type: string;
     name: string;
     placeholder: string;
+    className?: string
   }
 
-function Input({ value, onChange, type, name, placeholder, ...rest }: InputProps) {
+function Input({ value, onChange, type, name, placeholder,className, ...rest }: InputProps) {
     return (
         <input
             type={type}
@@ -16,8 +17,8 @@ function Input({ value, onChange, type, name, placeholder, ...rest }: InputProps
             value={value}
             onChange={onChange}
             placeholder={placeholder}
-            className="w-full px-4 py-3 bg-transparent border border-gray-700 rounded-md focus:outline-none focus:border-cyan-400"
-            {...rest}       />
+            className={`${className} w-full px-4 py-3 bg-transparent border border-gray-700 rounded-md focus:outline-none focus:border-cyan-400`}
+            {...rest }       />
     )
 }
 
