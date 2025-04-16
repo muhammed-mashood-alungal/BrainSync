@@ -51,7 +51,6 @@ export default function setupSocket(io: Server) {
 
       socket.roomId = roomId;
       socket.userId = userId;
-      //socket.email = email
       users[userId] = email;
 
       // Initialize room if needed
@@ -170,12 +169,37 @@ export default function setupSocket(io: Server) {
       socket.to(socket.roomId as string).emit('delete-message' ,id) 
     })
 
+    /// Code Editor Listeners
+    socket.on('change-language' , ({language})=>{
+      console.log(`[Server] Language changed to: ${language}`);
+      socket.to(socket.roomId as string).emit('change-language' , language)
+    })
+
+
+    socket.on('writing' , ({writer})=>{
+      socket.to(socket.roomId as string).emit('writing' ,writer)
+    })
+    socket.on('output', ({output , isError})=>{
+      socket.to(socket.roomId as string).emit('output' , output , isError)
+    })
+    socket.on('source-code',({code})=>{
+      socket.to(socket.roomId as string).emit('source-code' , code)
+    })
+
+    socket.on('code-locked' , ({lockedby})=>{
+      socket.to(socket.roomId as string).emit('code-locked' , lockedby)
+    })
+    socket.on('code-unlocked' , ()=>{
+      socket.to(socket.roomId as string).emit('code-unlocked')
+    }) 
+
+
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
 
       // Remove from room tracking
       if (socket.roomId && rooms[socket.roomId]) {
-        console.log('before delting');
+        
         console.log(rooms[socket.roomId]);
         rooms[socket.roomId] = rooms[socket.roomId].filter(usr => {
           return usr.userId != socket.id;

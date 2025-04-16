@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@monaco-editor/react": "^4.7.0",
     "@next/font": "^14.2.15",
     "@tiptap/extension-color": "^2.11.7",
     "@tiptap/extension-text-align": "^2.11.7",
@@ -38,7 +40,8 @@
     "sass": "^1.86.3",
     "simple-peer": "^9.11.1",
     "socket.io-client": "^4.8.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "worker-loader": "^3.0.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -30,6 +30,8 @@ import { useAuth } from "@/Context/auth.context";
 import { reportInsances } from "@/axios/createInstance";
 import { reportService } from "@/services/client/report.client";
 import Button from "@/Components/Button/Button";
+import CodeEditor from "./CodeEditor";
+import { CodeEditorProvider } from "@/Context/codeEditor.context";
 
 const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
   const router = useRouter();
@@ -273,7 +275,8 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
               activeTab === "code" ? "block" : "hidden"
             } h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}
           >
-            <p className="text-gray-400">Code editor will appear here</p>
+            {/* <p className="text-gray-400">Code editor will appear here</p> */}
+            <CodeEditor/>
           </div>
           <div
             className={`${
@@ -467,9 +470,11 @@ const Page: React.FC<PageProps> = ({
     <SocketProvider>
       <VideoCallProvider roomId={sessionCode as string}>
         <ChatProvider>
+          <CodeEditorProvider>
           <WhiteBoardProvider roomId={sessionCode as string}>
             <SessionContent roomId={sessionCode} />
           </WhiteBoardProvider>
+          </CodeEditorProvider>
         </ChatProvider>
       </VideoCallProvider>
     </SocketProvider>
