@@ -276,7 +276,7 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
             } h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}
           >
             {/* <p className="text-gray-400">Code editor will appear here</p> */}
-            <CodeEditor/>
+            <CodeEditor roomId={roomId }/>
           </div>
           <div
             className={`${

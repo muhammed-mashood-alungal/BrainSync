@@ -11,6 +11,7 @@ export default function Sidebar() {
     { icon: 'home', label: 'Dashboard', path: '/dashboard' },
     { icon: 'file-text', label: 'My Sessions', path: '/dashboard/sessions' },
     { icon: 'folder', label: 'Notes', path: '/dashboard/notes' },
+    { icon: 'code', label: 'Codes', path: '/dashboard/code-snippets' },
     { icon: 'users', label: 'My Groups', path: '/dashboard/groups' },
     { icon: 'user', label: 'Profile', path: '/dashboard/profile' }
   ];

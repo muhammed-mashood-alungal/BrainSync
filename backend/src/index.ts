@@ -61,6 +61,7 @@ import groupRouter from './routers/group.router';
 import sessionRouter from './routers/session.router';
 import noteRouter from './routers/note.router';
 import reportRouter from './routers/report.routes';
+import codeSnippetRouter from './routers/codeSnippet.routes';
 
 app.use('/api/auth/', authRouter);
 app.use('/api/users/', userRouter);
@@ -69,6 +70,7 @@ app.use('/api/groups/', groupRouter);
 app.use('/api/sessions/', sessionRouter);
 app.use('/api/notes/', noteRouter);
 app.use('/api/reports/', reportRouter);
+app.use('/api/code-snippets',codeSnippetRouter)
 
 app.use(pageNotFound);
 app.use(errorHandler);

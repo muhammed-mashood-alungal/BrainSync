@@ -13,8 +13,11 @@ import { Code } from "lucide-react";
 import { pistonInstances } from "@/axios/createInstance";
 import { codeEditorServices } from "@/services/client/code.client";
 import { useCodeEditor } from "@/Context/codeEditor.context";
-function CodeEditor() {
-  
+import BaseModal from "@/Components/Modal/Modal";
+import Input from "@/Components/Input/Input";
+import { toast } from "react-toastify";
+import { codeSnippetServices } from "@/services/client/codeSnippet";
+function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,
     isError,
@@ -32,11 +35,14 @@ function CodeEditor() {
     onMount,
     onSelect,
     runCode,
-    onClearOutput
+    onClearOutput,
   } = useCodeEditor();
   // const [language, setLanguage] = useState<Language>("javascript");
   // const [output, setOutput] = useState([]);
   //  const [isError, setIsError] = useState(false);
+  const [isTitleModalOpen, setIsTitleModalOpen] = useState(false);
+  const [title, setTitle] = useState("");
+  const [titleError, setSetTitleError] = useState("");
   type Language = "javascript" | "python" | "java" | "c" | "go";
 
   const langauges = ["javascript", "python", "java", "c", "go"];
@@ -48,6 +54,32 @@ function CodeEditor() {
     go: "1.16.2",
   };
 
+  const isValidFileName = (name: string) => {
+    const invalidChars = /[\\\/:*?"<>|]/;
+    return !invalidChars.test(name.trim()) && name.trim().length > 0;
+  };
+  
+
+  const saveNote = async () => {
+    try {
+      setTitle("");
+      
+      if (!isValidFileName(title)) {
+        return setSetTitleError("Please Enter a valid Title");
+      }
+      const result = await codeSnippetServices.saveCode({
+        title,
+        language,
+        sourceCode: value,
+        sessionId: roomId,
+      });
+      toast.success("Code Saved Successfully");
+      setIsTitleModalOpen(false);
+    } catch (error: unknown) {
+      setSetTitleError((error as Error).message || "Something Went Wrong");
+    }
+  };
+
   const CODE_SNIPPETS: Record<Language, string> = {
     javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Javascript");\n`,
     python: `\ndef greet(name):\n\tprint("Hello, " + name + "!")\n\ngreet("Python")\n`,
@@ -56,11 +88,10 @@ function CodeEditor() {
     go: `\npackage main\n\nimport "fmt"\n\nfunc greet(name string) {\n\tfmt.Println("Hello, " + name + "!")\n}\n\nfunc main() {\n\tgreet("Golang")\n}\n`,
   };
 
-//   const [value, setValue] = useState<string | undefined>(
-//     CODE_SNIPPETS["javascript"]
-//   );
+  //   const [value, setValue] = useState<string | undefined>(
+  //     CODE_SNIPPETS["javascript"]
+  //   );
 
- 
   return (
     <>
       <div className=" z-10 flex  flex-col">
@@ -155,7 +186,7 @@ function CodeEditor() {
                 className="px-4 py-2 m-2 border-2 rounded-4xl border-cyan-400 text-cyan-400
             hover:cursor-pointer hover:text-cyan-600
             "
-                onClick={runCode}
+                onClick={() => setIsTitleModalOpen(true)}
               >
                 Save
               </button>
@@ -178,6 +209,22 @@ function CodeEditor() {
           </div>
         </div>
       </div>
+      <BaseModal
+        isOpen={isTitleModalOpen}
+        onClose={() => setIsTitleModalOpen(false)}
+        title="Enter a Name For Your Code Snippet"
+        onSubmit={saveNote}
+        submitText="Save Code"
+      >
+        <Input
+          name="title"
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
+          placeholder="Enter a title"
+          type="text"
+        />
+        <span className="text-red-600 ml-1"> {titleError}</span>
+      </BaseModal>
     </>
   );
 }

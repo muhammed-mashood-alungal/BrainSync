@@ -10,8 +10,13 @@ import {
 } from "react";
 import { useSocket } from "./socket.context";
 import { codeEditorServices } from "@/services/client/code.client";
+import { codeSnippetServices } from "@/services/client/codeSnippet";
+import { stringify } from "querystring";
+import { SourceCode } from "eslint";
+import { toast } from "react-toastify";
+import { totalmem } from "os";
 
-type Language = "javascript" | "python" | "java" | "c" | "go";
+export type Language = "javascript" | "python" | "java" | "c" | "go";
 
 interface CodeEditorProvider {
   language: string;
@@ -30,7 +35,8 @@ interface CodeEditorProvider {
   onMount: (editor: any) => void;
   setValue: (value: string) => void;
   onCodeChange:(code : string) =>void;
-  onClearOutput : ()=>void
+  onClearOutput : ()=>void;
+  saveNote : (title :string) =>void
 }
 const codeEditorContext = createContext<CodeEditorProvider | undefined>(
   undefined
@@ -124,6 +130,15 @@ export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
     socket?.emit("output" , {output :[] , isError : false});
   }
 
+  const saveNote=async(title : string)=>{
+    try {
+        const result = await codeSnippetServices.saveCode({title , language , sourceCode : value  })
+        toast.success("Code Saved Successfully")
+    } catch (error : unknown) {
+        toast.error((error as Error).message || "Something Went Wrong")
+    }
+  }
+
   const onMount = (editor: any) => {
     editorRef.current = editor;
     editor.focus();
@@ -137,6 +152,7 @@ export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
   return (
     <codeEditorContext.Provider
       value={{
+        saveNote,
         onClearOutput,
         onSelect,
         onMount,
