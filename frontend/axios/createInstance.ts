@@ -17,4 +17,5 @@ export const sessionInstances = createAxiosInstance(`${process.env.NEXT_PUBLIC_B
 export const noteInstances = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/notes/`)
 export const reportInsances = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/reports/`)
 export const codeSnippetInstances = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/code-snippets/`)
+export const plansInstances = createAxiosInstance(`${process.env.NEXT_PUBLIC_BACKEND_URL}/plans/`)
 export const pistonInstances = createAxiosInstance(`${process.env.NEXT_PISTON_API}/`)

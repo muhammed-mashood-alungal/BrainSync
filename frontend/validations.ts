@@ -2,6 +2,7 @@ import { stat } from "fs"
 import { IuserLogin, IuserSignUp } from "./types/userSignUp.types"
 import { IUserType } from "./types/userTypes"
 import { ISessionTypes } from "./types/sessionTypes"
+import { IPlanError, IPlans } from "./types/plans.types"
 
 export const validateSignUpForm = (formData: IuserSignUp) => {
     let err: IuserSignUp = { username: '', email: '', password: '', confirmPassword: '' }
@@ -173,3 +174,57 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>): { status:
 
     return { status, errors }
 };
+
+
+  
+  export const validatePlanForm = (plan: Omit<IPlans, '_id'>) => {
+    let err: IPlanError = {
+      name: '',
+      price: '',
+      interval: '',
+      features: [],
+      isActive: '',
+      isHighlighted: '',
+    }
+  
+    let status = true
+  
+    if (plan.name.trim() === '') {
+      err.name = 'Please provide a plan name'
+      status = false
+    }
+  
+    if (isNaN(plan.price) || plan.price <= 0) {
+      err.price = 'Price must be a number greater than 0'
+      status = false
+    }
+  
+    if (!['monthly', 'yearly'].includes(plan.interval)) {
+      err.interval = 'Billing interval must be either "monthly" or "yearly"'
+      status = false
+    }
+  
+    // Features validation
+    if (!Array.isArray(plan.features)) {
+      err.features = []
+      status = false
+    } else {
+      err.features = plan.features.map((feature) => {
+        const featureError = { title: '', description: '' }
+  
+        if (feature.title.trim() === '') {
+          featureError.title = 'Feature title is required'
+          status = false
+        }
+  
+        if (feature.description.trim() === '') {
+          featureError.description = 'Feature description is required'
+          status = false
+        }
+  
+        return featureError
+      })
+    }
+  
+    return { status, err }
+  }

@@ -13,7 +13,7 @@ export class CodeSnippetRepository
   async saveCodeSnippet(
     codeData: Partial<ICodeSnippetModel>
   ): Promise<ICodeSnippetModel> {
-    return this.create(codeData);
+    return await this.create(codeData);
   }
   async getUserCodeSnippets(
     userId: Types.ObjectId,
@@ -41,6 +41,6 @@ export class CodeSnippetRepository
     title: string,
     sessionCode:  Types.ObjectId,
   ): Promise<ICodeSnippetModel | null> {
-    return this.findOne({ createdBy, title, sessionCode });
+    return  await this.findOne({ createdBy, title, sessionCode });
   }
 }

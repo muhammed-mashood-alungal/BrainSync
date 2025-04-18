@@ -12,7 +12,8 @@ export default function AdminSidebar() {
     { icon: 'file-text', label: 'Students', path: '/admin/students' },
     { icon: 'folder', label: 'Sessions', path: '/admin/sessions' },
     { icon: 'users', label: 'Groups', path: '/admin/groups' },
-    { icon: 'user', label: 'Reports', path: '/admin/reports' }
+    { icon: 'user', label: 'Reports', path: '/admin/reports' },
+    { icon: 'user', label: 'Plans', path: '/admin/plans' }
   ]
   
   return (
