@@ -9,4 +9,7 @@ export interface ISubscriptionServices {
       getUserSubscription(
         userId:unknown
       ): Promise<IUserSubscriptionModel[]>;
+      cancelSubscription(
+        subscriptionId : unknown
+      ):Promise<void> 
 }

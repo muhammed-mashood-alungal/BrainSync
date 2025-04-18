@@ -21,10 +21,10 @@ export const subscriptionServices = {
       throw new Error(errorMessage);
     }
   },
-  getAllSubscription: async (): Promise<IUserSubscription[] | undefined> => {
+  getAllSubscription: async (status : string , skip : number  , limit : number): Promise<{subscriptions  :IUserSubscription[] , count : number}> => {
     try {
-      const response = await subscriptionInstances.get("/all-subscribtions");
-      return response.data.subscribtions;
+      const response = await subscriptionInstances.get(`/all-subscriptions?status=${status}&skip=${skip}&limit=${limit}`);
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
@@ -45,4 +45,16 @@ export const subscriptionServices = {
       throw new Error(errorMessage);
     }
   },
+  cancelSubscription : async (subscriptionId : string ) : Promise<void>=>{
+    try {
+        const response = await subscriptionInstances.put(`/cancel/${subscriptionId}`);
+        return response.data;
+      } catch (error) {
+        const err = error as AxiosError<{ error: string }>;
+        const errorMessage =
+          err.response?.data?.error ||
+          "Subscription fetching failed. Please try again.";
+        throw new Error(errorMessage);
+      }
+  }
 };

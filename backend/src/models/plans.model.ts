@@ -38,3 +38,4 @@ const PlansSchema = new Schema<IPlanModel>(
 );
 
 export const Plans = mongoose.model<IPlanModel>('Plan', PlansSchema);
+ 

@@ -27,9 +27,13 @@ subscriptionRouter.get(
   subscriptionController.getAllSubscription.bind(subscriptionController)
 );
 subscriptionRouter.get(
-  '/usr-subscriptions',
+  '/user-subscriptions',
   authMiddleware,
   subscriptionController.getUserSubscription.bind(subscriptionController)
 );
-
+subscriptionRouter.put(
+    '/cancel/:subscriptionId',
+    authMiddleware,
+    subscriptionController.cancelSubsription.bind(subscriptionController)
+  );
 export default subscriptionRouter;

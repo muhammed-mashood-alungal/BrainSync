@@ -47,4 +47,10 @@ export class SubscriptionServices implements ISubscriptionServices {
       userId as Types.ObjectId
     );
   }
+  async cancelSubscription(
+    subscriptionId : unknown
+  ):Promise<void> {
+    const userId = await this._subscriptionRepo.cancelSubscription(subscriptionId as Types.ObjectId)
+    await this._userRepo.cancelUserSubscription(userId)
+  }
 }

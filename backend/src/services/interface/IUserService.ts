@@ -33,4 +33,5 @@ export interface IUserService {
 
   deleteProfilePic(userId: unknown): Promise<Boolean>;
   getUserSessionProgress(userId : unknown , filterBy : string) : Promise<{graph : any[]}>
+
 }

@@ -12,8 +12,11 @@ interface TableProps<T> {
   columns: Column<T>[];
   actions?: (item: T) => React.ReactNode;
   totalCount: number;
-  onPageChange: (page: number, limit: number, searchQuery?: string) => void;
+  onPageChange: (page: number, limit: number, searchQuery?: string , selectValue?: string) => void;
   title?: string;
+  ShowSearchBar?: boolean;
+  ShowDropDown?: boolean;
+  dropDownLists?: {value :string , label : string}[];
 }
 
 const Table = <T,>({
@@ -23,14 +26,18 @@ const Table = <T,>({
   totalCount,
   onPageChange,
   title,
+  ShowSearchBar = true,
+  ShowDropDown = false,
+  dropDownLists,
 }: TableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 8;
   const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectValue , setSelectValue] = useState('All')
   useEffect(() => {
-    onPageChange(currentPage, limit, searchQuery);
-  }, [currentPage, searchQuery]);
+    onPageChange(currentPage, limit, searchQuery , selectValue);
+  }, [currentPage, searchQuery , selectValue]);
   useEffect(() => {
     console.log("total totalCount :" + totalCount, limit);
     setTotalPages(Math.ceil(totalCount / limit));
@@ -44,27 +51,44 @@ const Table = <T,>({
             {title}
           </h2>
         </div>
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full md:w-64 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8979FF]"
-          />
-          <svg
-            className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <path d="M21 21l-4.35-4.35" />
-          </svg>
+        <div className="flex">
+        {ShowDropDown && dropDownLists &&  dropDownLists?.length > 0 && (
+           <div className="relative m-1">
+            <select name="" id="" onChange={(e)=>{setSelectValue(e.target.value)}} 
+              className="w-full h-10  p-2 border border-gray-300 bg-gray-900 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+               <option value="All" >All</option>
+               {dropDownLists.map((item ,index)=>{
+                return <option  key={index} value={item.value}>{item.label}</option>
+               })}
+            </select>
+           </div>
+        )
+        
+        }
+        {ShowSearchBar && (
+          <div className="relative m-1">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full md:w-64 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8979FF]"
+            />
+            <svg
+              className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+          </div>
+        )}
         </div>
       </div>
       <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">

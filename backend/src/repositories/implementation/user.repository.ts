@@ -116,5 +116,16 @@ export class UserRepository
 
     user.save()
   }
+  async cancelUserSubscription(userId : Types.ObjectId ) : Promise<void>{
+    const user = await this.model.findById(userId)
+    if(!user){
+      throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
+    }
+
+    user.subscription.isActive = false
+    const newUser = await user.save()
+    console.log('new use ++++++++++++++')
+    console.log(newUser)
+  }
 
 }

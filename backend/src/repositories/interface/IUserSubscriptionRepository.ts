@@ -9,5 +9,5 @@ export interface IUserSubscriptionRepository {
   getUserSubscription(
     userId: Types.ObjectId
   ): Promise<IUserSubscriptionModel[]>;
- 
+  cancelSubscription(subscriptionId : Types.ObjectId) : Promise<Types.ObjectId>
 }

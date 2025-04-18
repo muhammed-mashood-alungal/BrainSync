@@ -32,6 +32,8 @@ export class SubscriptionController implements ISubscriptionController {
         const {status , skip , limit} = req.query
       const {subscriptions , count } =
         await this._subscriptionServices.getAllSubscription(status as string , skip , limit);
+
+        console.log(subscriptions , count)
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { subscriptions , count}));
@@ -51,6 +53,23 @@ export class SubscriptionController implements ISubscriptionController {
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { subscriptions }));
+    } catch (error) {
+      next(error);
+    }
+  }
+  async cancelSubsription(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+        const {subscriptionId} = req.params
+        console.log(subscriptionId+"================================")
+      await this._subscriptionServices.cancelSubscription(subscriptionId)
+      console.log('Alllllllll Doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK));
     } catch (error) {
       next(error);
     }
