@@ -85,6 +85,7 @@ export class NoteRepository
     pdfFileId: Types.ObjectId,
     sessionName: string
   ): Promise<void> {
+    console.log('creating note')
     await this.model.updateOne(
       { sessionId, userId },
       { $set: { pdfFileId: pdfFileId, noteName: sessionName + '-note' } },

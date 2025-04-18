@@ -33,4 +33,6 @@ export const HttpResponse = {
   ENDED_SESSION: 'This Session Already Ended And its Data is Recorded !',
   SESSION_ID_NOT_PROVIDED: 'Invalid Session ID',
   NO_CONTENT_FOR_PDF: 'No Content in Your Pdf',
+  PAYMENT_FAILED : 'Payment Transaction Failed',
+  USER_ALREADY_HAVE_AN_ACTIVE_PLAN : 'This is user have already a Active Plan'
 };

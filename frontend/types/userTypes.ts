@@ -18,5 +18,6 @@ export interface IUserType {
 export interface IDecodedUserType{
     id : string,
     email : string,
-    role : string
+    role : string,
+    isPremiumMember? : boolean
 }

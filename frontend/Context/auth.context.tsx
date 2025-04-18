@@ -8,12 +8,13 @@ interface User {
    id: string;
    role: string;
    email: string;
+   isPremiumMember : boolean
 }
 
 interface AuthContextType {
   user: User | null
   loading: boolean,
-  checkAuth : Function
+  checkAuth : Function,
 }
 
 
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading  ,checkAuth}}>
+    <AuthContext.Provider value={{ user, loading  ,checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

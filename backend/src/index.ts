@@ -63,6 +63,8 @@ import noteRouter from './routers/note.router';
 import reportRouter from './routers/report.routes';
 import codeSnippetRouter from './routers/codeSnippet.routes';
 import plansRouter from './routers/plans.router';
+import paymentRouter from './routers/payment.routes';
+import subscriptionRouter from './routers/subscription.routes';
 
 app.use('/api/auth/', authRouter);
 app.use('/api/users/', userRouter);
@@ -73,6 +75,8 @@ app.use('/api/notes/', noteRouter);
 app.use('/api/reports/', reportRouter);
 app.use('/api/code-snippets', codeSnippetRouter);
 app.use('/api/plans', plansRouter);
+app.use('/api/payment', paymentRouter);
+app.use('/api/subscriptions', subscriptionRouter);
 
 app.use(pageNotFound);
 app.use(errorHandler);

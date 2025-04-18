@@ -21,5 +21,5 @@ export interface IUserRepository {
     searchQuery: string
   ): Promise<IUserModel[]>;
   countStudents(searchQuery: string): Promise<number>;
- 
+  setSubscription(userId : Types.ObjectId , planId : Types.ObjectId ) : Promise<void>
 }

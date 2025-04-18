@@ -9,6 +9,7 @@ import {
   Send,
   Flashlight,
   Flag,
+  Crown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import VideoConference from "./VideoConference";
@@ -220,7 +221,7 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                 clipRule="evenodd"
               />
             </svg>
-            <span className="sm:text-sm  md:text-md">Code Editor</span>
+            <span className="sm:text-sm  md:text-md flex">Code Editor {!user?.isPremiumMember && <Crown color="yellow" className="ml-2" size={16}/>}</span>
           </button>
           <button
             className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center  text-xs sm:text-md ${

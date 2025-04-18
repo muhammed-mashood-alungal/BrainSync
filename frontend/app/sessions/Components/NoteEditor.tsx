@@ -246,19 +246,21 @@ export default ({ roomId }: { roomId: string }) => {
 
   return (
     <>
-      <div className="border border-gray-300 rounded-md h-full w-full overflow-y-auto">
-        <EditorProvider
+      <div className="border border-gray-300 rounded-md h-full w-full overflow-y-auto ">
+        
+         <EditorProvider
          
-          slotBefore={<MenuBar />}
-          extensions={extensions}
-          content={editorContent}
-          onUpdate={handleUpdate}
-          editorProps={{
-            attributes: {
-              class: `${styles.proseMirror} prose max-w-none p-4 focus:outline-none`, // Apply the scoped class
-            },
-          }}
-        />
+         slotBefore={<MenuBar />}
+         extensions={extensions}
+         content={editorContent}
+         onUpdate={handleUpdate}
+         editorProps={{
+           attributes: {
+             class: `${styles.proseMirror} prose max-w-none p-4 focus:outline-none`, // Apply the scoped class
+           },
+         }}
+       /> 
+       
       </div>
     </>
 

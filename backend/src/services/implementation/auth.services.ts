@@ -193,7 +193,7 @@ export class AuthService implements IAuthService {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
-    return decoded;
+    return {...decoded , isPremiumMember : user?.subscription?.isActive ? true : false};
   }
   generateTokens(user: IUserModel): {
     accessToken: string;

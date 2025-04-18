@@ -12,6 +12,10 @@ export interface IUser {
     url: string;
     publicId: string;
   };
+  subscription : {
+    planId : Types.ObjectId,
+    isActive : boolean
+  }
   createdAt: Date;
   updatedAt: Date;
 }

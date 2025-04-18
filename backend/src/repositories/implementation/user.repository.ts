@@ -101,5 +101,20 @@ export class UserRepository
     }
     return this.model.countDocuments(find);
   }
+  async setSubscription(userId: Types.ObjectId, planId: Types.ObjectId): Promise<void> {
+    const user = await this.findById(userId)
+    if(!user){
+      throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
+    }
+    if(user.subscription.isActive){
+      throw createHttpsError(HttpStatus.BAD_REQUEST , HttpResponse.USER_ALREADY_HAVE_AN_ACTIVE_PLAN)
+    }
+    user.subscription ={
+       planId : planId,
+       isActive : true
+    }
+
+    user.save()
+  }
 
 }

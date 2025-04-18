@@ -34,6 +34,13 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+       <head>
+        {/* Add Razorpay Script */}
+        <script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+       //   strategy="beforeInteractive" // Ensures the script is loaded before interactive
+        ></script>
+      </head>
       <body
         className={`${archivo.variable} antialiased`}
       >

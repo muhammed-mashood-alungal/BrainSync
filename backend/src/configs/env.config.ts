@@ -49,4 +49,10 @@ export const env = {
   get SHARED_CALENDAR_ID() {
     return process.env.SHARED_CALENDAR_ID;
   },
+  get RAZORPAY_SECRET_KEY(){
+    return process.env.RAZORPAY_SECRET_KEY
+  },
+  get RAZORPAY_KEY_ID(){
+    return process.env.RAZORPAY_KEY_ID
+  }
 };

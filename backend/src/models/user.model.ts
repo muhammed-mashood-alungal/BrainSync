@@ -35,6 +35,10 @@ const userSchema = new Schema<IUserModel>(
       url: { type: String },
       publicId: { type: String },
     },
+    subscription : {
+       planId: {type  : Schema.Types.ObjectId},
+       isActive: {type : Boolean}
+    }
   },
   {
     timestamps: true,
