@@ -180,7 +180,8 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>): { status:
   export const validatePlanForm = (plan: Omit<IPlans, '_id'>) => {
     let err: IPlanError = {
       name: '',
-      price: '',
+      offerPrice: '',
+      orginalPrice : '',
       interval: '',
       features: [],
       isActive: '',
@@ -193,10 +194,19 @@ export const validateSessionForm = (formData: Partial<ISessionTypes>): { status:
       err.name = 'Please provide a plan name'
       status = false
     }
+    if (isNaN(plan.orginalPrice) || plan.orginalPrice <= 0) {
+        err.orginalPrice = 'Original Price must be a number greater than 0'
+        status = false
+      }
   
-    if (isNaN(plan.price) || plan.price <= 0) {
-      err.price = 'Price must be a number greater than 0'
+    if (isNaN(plan.offerPrice) || plan.offerPrice <= 0) {
+      err.offerPrice = 'Offer Price must be a number greater than 0'
       status = false
+    }
+    
+    if(Number(plan?.offerPrice) > Number(plan?.orginalPrice)){
+        err.offerPrice  = 'Offer Price cannot be greater than Orginal Price'
+        status = false
     }
   
     if (!['monthly', 'yearly'].includes(plan.interval)) {

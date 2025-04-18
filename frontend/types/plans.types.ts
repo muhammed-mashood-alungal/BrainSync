@@ -1,7 +1,8 @@
 export interface IPlans {
     _id : string
     name: string,
-    price: number, 
+    orginalPrice: number, 
+    offerPrice : number,
     interval: "monthly" | "yearly",
     features: {title : string , description : string}[],
     isActive: boolean,
@@ -11,7 +12,8 @@ export interface IPlans {
 
 export type IPlanError = {
     name: string
-    price: string
+    orginalPrice: string, 
+    offerPrice : string,
     interval: string
     features: { title: string; description: string }[]
     isActive: string

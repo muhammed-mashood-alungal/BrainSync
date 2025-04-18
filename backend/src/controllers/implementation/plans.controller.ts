@@ -42,9 +42,7 @@ export class PlanController implements IPlanController {
   async updatePlan(req: Request, res: Response, next: NextFunction): Promise<void> {
       try {
         const {newData} = req.body
-        console.log(newData )
         const {planId } = req.params
-        console.log(planId)
         await this._planServices.updatePlan(planId , newData)
         res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
       } catch (error) {

@@ -15,7 +15,8 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 }) => {
   const [plan, setPlan] = useState<Omit<IPlans, "_id">>({
     name: initialPlan?.name || "",
-    price: initialPlan?.price || 0,
+    orginalPrice: initialPlan?.orginalPrice || 0,
+    offerPrice: initialPlan?.offerPrice || 0,
     interval: initialPlan?.interval || "monthly",
     features: initialPlan?.features || [],
     isActive: initialPlan?.isActive ?? true,
@@ -23,7 +24,8 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
   });
   const [planErr, setPlanErr] = useState<IPlanError>({
     name: "",
-    price: "",
+    orginalPrice: "",
+    offerPrice: "",
     interval: "",
     features: [{ title: "", description: "" }],
     isActive: "",
@@ -34,12 +36,13 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target as HTMLInputElement;
-
+    console.log(name, value, type);
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setPlan({ ...plan, [name]: checked });
-    } else if (name === "price") {
-      setPlan({ ...plan, [name]: parseFloat(value) || 0 });
+    } else if (name === "offerPrice" || name === "originalPrice") {
+      const num = value === "" ? "" : parseInt(value, 10);
+      setPlan({ ...plan, [name]: num });
     } else {
       setPlan({ ...plan, [name]: value });
     }
@@ -79,8 +82,10 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(plan)
     const { status, err } = validatePlanForm(plan);
-    if(!status){
+    console.log(status , err)
+    if (!status) {
       return setPlanErr(err);
     }
     onSubmit(plan);
@@ -112,34 +117,50 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-white mb-1">
-                Price
+                Orginal Price
               </label>
               <input
                 type="number"
-                name="price"
-                value={plan.price}
+                name="orginalPrice"
+                value={plan.orginalPrice}
                 onChange={handleInputChange}
                 min="0"
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
-              <span className="text-red-600 ml-1"> {planErr?.price}</span>
+              <span className="text-red-600 ml-1">
+                {" "}
+                {planErr?.orginalPrice}
+              </span>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-white  mb-1">
-              Billing Interval
-            </label>
-            <select
-              name="interval"
-              value={plan.interval}
-              onChange={handleInputChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            >
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-            <span className="text-red-600 ml-1"> {planErr?.interval}</span>
+            <div>
+              <label className="block text-sm font-medium text-white mb-1">
+                Offer Price
+              </label>
+              <input
+                type="number"
+                name="offerPrice"
+                value={plan.offerPrice}
+                onChange={handleInputChange}
+                min="0"
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+              <span className="text-red-600 ml-1"> {planErr?.offerPrice}</span>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-white  mb-1">
+                Billing Interval
+              </label>
+              <select
+                name="interval"
+                value={plan.interval}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-gray-300 bg-black rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              >
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+              <span className="text-red-600 ml-1"> {planErr?.interval}</span>
+            </div>
           </div>
 
           {/* Plan Features */}
@@ -212,7 +233,10 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                         }
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
-                      <span className="text-red-600 ml-1"> {planErr?.features[index]?.title}</span>
+                      <span className="text-red-600 ml-1">
+                        {" "}
+                        {planErr?.features[index]?.title}
+                      </span>
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-white  mb-1">
@@ -226,10 +250,12 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                         }
                         className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       />
-                      <span className="text-red-600 ml-1"> {planErr?.features[index]?.description}</span>
+                      <span className="text-red-600 ml-1">
+                        {" "}
+                        {planErr?.features[index]?.description}
+                      </span>
                     </div>
                   </div>
-                  
                 </div>
               ))}
 

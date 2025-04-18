@@ -49,7 +49,11 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   <div className="text-white">
                     {plan.interval === "monthly" ? "Monthly" : "Yearly"}
                   </div>
-                  <div className="text-3xl font-bold">₹{plan.price}</div>
+                  
+                  <div className="text-3xl ">
+                  <span className="line-through text-gray-500">{plan.orginalPrice}</span>
+                    <span className="font-bold"> ₹{plan.offerPrice}</span>
+                    </div>
                 </div>
               </div>
 

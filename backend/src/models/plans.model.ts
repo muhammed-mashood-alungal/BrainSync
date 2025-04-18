@@ -10,7 +10,10 @@ const PlansSchema = new Schema<IPlanModel>(
         unique : true,
         required : true
     },
-    price :{
+    offerPrice : {
+        type : Number
+    },
+    orginalPrice :{
         type : Number,
         required:true
     },
