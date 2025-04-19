@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import { Trash } from "lucide-react";
 import { AuthServices } from '@/services/client/auth.client';
 import { useRouter } from 'next/navigation';
+import UserInNav from '@/Components/UserInNav/UserInNav';
 
 function Profile() {
     const { user, checkAuth } = useAuth()
@@ -174,18 +175,8 @@ function Profile() {
             <div className="flex-1 p-8">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-white">My Profile</h1>
-                    <div className="flex items-center gap-4">
-                        <button onClick={logout} className="text-[#00D2D9] hover:underline">
-                            Logout
-                        </button>
-                        <div className="w-10 h-10 rounded-full overflow-hidden">
-                            <img
-                                src={preview ? preview : "/profilePic.png"}
-                                alt="Profile"
-                                className="w-full h-full object-cover"
-                            />
-                        </div>
-                    </div>
+                    <UserInNav/>
+                    
                 </div>
 
                 {/* Profile info card */}

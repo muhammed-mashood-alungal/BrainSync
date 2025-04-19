@@ -124,8 +124,14 @@ export class UserRepository
 
     user.subscription.isActive = false
     const newUser = await user.save()
-    console.log('new use ++++++++++++++')
-    console.log(newUser)
   }
 
+  async getAllPremiumUsers() : Promise<IUserModel[]>{
+    return await this.find({'subscription.isActive' : true})
+  }
+  async userSubscriptionExpired(userId: Types.ObjectId): Promise<void> {
+     await this.findByIdAndUpdate(userId , {
+      $set:{subscription : {isActive : false }}
+     })
+   }
 }

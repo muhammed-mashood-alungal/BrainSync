@@ -3,6 +3,7 @@ import EmptyList from "@/Components/EmptyList/EmptyList";
 import { SessionServices } from "@/services/client/session.client";
 import { IGroupType } from "@/types/groupTypes";
 import { Session } from "@/types/sessionTypes";
+import { Divide, FileQuestion, Inbox, ListX } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
@@ -47,9 +48,8 @@ function ScheduledSessions() {
   return (
     <>
       <section className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Scheduled Sessions</h2>
+        <h2 className="text-xl font-semibold mb-4">Todays Scheduled Sessions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Data Structure Revision Session */}
           {todaysSessions.length > 0 ? todaysSessions.map((session)=>{
             return <div className="bg-gray-800 rounded-lg overflow-hidden relative">
             <div className="absolute top-0 bottom-0 left-0 w-1 bg-cyan-500"></div>
@@ -87,7 +87,13 @@ function ScheduledSessions() {
               </div>
             </div>
           </div>
-          }) : <EmptyList/>}
+          }) :
+          <div className="text-gray-500 bg-gray-800 rounded-lg p-5">
+            <FileQuestion size={100} />
+            You Have No Scheduled Sesssions Today
+            </div>
+            
+            }
         </div>
       </section>
     </>

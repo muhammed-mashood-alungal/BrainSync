@@ -8,7 +8,8 @@ interface User {
    id: string;
    role: string;
    email: string;
-   isPremiumMember : boolean
+   isPremiumMember : boolean;
+   profileImg : string
 }
 
 interface AuthContextType {

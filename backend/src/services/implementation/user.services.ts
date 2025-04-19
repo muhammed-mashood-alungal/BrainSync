@@ -9,6 +9,7 @@ import { comparePassword, hashPassword } from '../../utils/bcrypt.util';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
+import { IUserModel } from '../../models/user.model';
 export class UserServices implements IUserService {
   constructor(private _userRepository: UserRepository ,private _sessionActiviesRepo : ISessionActivityRepository) {}
 
@@ -109,5 +110,10 @@ export class UserServices implements IUserService {
   async getUserSessionProgress(userId: unknown,  filterBy : string): Promise<{ graph: any[]; }> {
     return await this._sessionActiviesRepo.getUserSessionProgress(userId as Types.ObjectId , filterBy)
   }
+
+  async getAllPremiumUsers():Promise<IUserModel[]>{
+    return await this._userRepository.getAllPremiumUsers()
+  }
+
  
 }

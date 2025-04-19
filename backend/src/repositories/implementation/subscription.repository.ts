@@ -32,8 +32,19 @@ export class UserSubscriptionRepository extends BaseRepository<IUserSubscription
         if(!subscription) throw createHttpsError(HttpStatus.BAD_REQUEST , HttpResponse.RESOURCE_NOT_FOUND)
         subscription.status = 'cancelled'
         const res = await subscription.save()
-        console.log('[[[[[[[[[[[[[[[[[[[[[[[[')
         console.log(res)
         return subscription.userId
     }
+    async getAllActiveSubscriptions(): Promise<IUserSubscriptionModel[]> {
+        return await this.find({status : 'active'})
+    }
+    async getAllExpiredSubscriptions(): Promise<IUserSubscriptionModel[]> {
+        return await this.find({status : 'expired'})
+    }
+    async subscriptionExpired(subscriptionId : Types.ObjectId): Promise<void> {
+        await this.findByIdAndUpdate(subscriptionId , {
+            $set : {status : 'expired'}
+        })
+    }
+    
 }

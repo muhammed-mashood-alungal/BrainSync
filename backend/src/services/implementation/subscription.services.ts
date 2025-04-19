@@ -53,4 +53,15 @@ export class SubscriptionServices implements ISubscriptionServices {
     const userId = await this._subscriptionRepo.cancelSubscription(subscriptionId as Types.ObjectId)
     await this._userRepo.cancelUserSubscription(userId)
   }
+  async getAllActiveSubscriptions():Promise<IUserSubscriptionModel[]>{
+    return await this._subscriptionRepo.getAllActiveSubscriptions()
+  }
+  async getAllExpiredSubscriptions() : Promise<IUserSubscriptionModel[]>{
+    return await this._subscriptionRepo.getAllExpiredSubscriptions()
+  }
+
+  async subscriptionExpired(subscriptionId : unknown , userId  : unknown): Promise<void> {
+     await this._subscriptionRepo.subscriptionExpired(subscriptionId as Types.ObjectId)
+     await this._userRepo.userSubscriptionExpired(userId as Types.ObjectId)
+  }
 }

@@ -44,6 +44,7 @@ app.use(
     exposedHeaders: ['Authorization'],
   })
 );
+import './utils/cron-job.utils'
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -65,6 +66,7 @@ import codeSnippetRouter from './routers/codeSnippet.routes';
 import plansRouter from './routers/plans.router';
 import paymentRouter from './routers/payment.routes';
 import subscriptionRouter from './routers/subscription.routes';
+import notificationRouter from './routers/notification.routes';
 
 app.use('/api/auth/', authRouter);
 app.use('/api/users/', userRouter);
@@ -77,6 +79,7 @@ app.use('/api/code-snippets', codeSnippetRouter);
 app.use('/api/plans', plansRouter);
 app.use('/api/payment', paymentRouter);
 app.use('/api/subscriptions', subscriptionRouter);
+app.use('/api/notifications', notificationRouter);
 
 app.use(pageNotFound);
 app.use(errorHandler);

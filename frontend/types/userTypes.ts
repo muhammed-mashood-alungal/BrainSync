@@ -20,4 +20,5 @@ export interface IDecodedUserType{
     email : string,
     role : string,
     isPremiumMember? : boolean
+    profileImg? :string
 }

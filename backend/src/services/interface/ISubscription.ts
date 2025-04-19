@@ -12,4 +12,7 @@ export interface ISubscriptionServices {
       cancelSubscription(
         subscriptionId : unknown
       ):Promise<void> 
+      getAllActiveSubscriptions():Promise<IUserSubscriptionModel[]>
+      getAllExpiredSubscriptions() : Promise<IUserSubscriptionModel[]>
+     subscriptionExpired(subscriptionId : unknown, userId  : unknown): Promise<void> 
 }

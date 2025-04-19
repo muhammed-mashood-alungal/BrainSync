@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { IUser } from '../../types/user.types';
+import { IUserModel } from '../../models/user.model';
 
 export interface IUserService {
   changeProfilePic(
@@ -33,5 +34,5 @@ export interface IUserService {
 
   deleteProfilePic(userId: unknown): Promise<Boolean>;
   getUserSessionProgress(userId : unknown , filterBy : string) : Promise<{graph : any[]}>
-
+  getAllPremiumUsers():Promise<IUserModel[]>
 }
