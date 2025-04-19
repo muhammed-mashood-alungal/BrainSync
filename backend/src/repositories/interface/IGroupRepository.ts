@@ -12,4 +12,6 @@ export interface IGroupRepository {
   getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]>;
   getAllGroups(): Promise<IGroupModel[]>;
   handleGroupActivation(groupId: Types.ObjectId): Promise<Boolean>;
+  totalGroupsofUser(userId :unknown) :Promise<number>
+  getTotalGroupCount() :Promise<number>
 }

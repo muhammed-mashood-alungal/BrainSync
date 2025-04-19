@@ -64,9 +64,7 @@ export class SubscriptionController implements ISubscriptionController {
   ): Promise<void> {
     try {
         const {subscriptionId} = req.params
-        console.log(subscriptionId+"================================")
       await this._subscriptionServices.cancelSubscription(subscriptionId)
-      console.log('Alllllllll Doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK));

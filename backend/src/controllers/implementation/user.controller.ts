@@ -157,4 +157,13 @@ export class UserController implements IUserController {
       next(error);
     }
   }
+  async getProfileStats(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const userId = req.user
+     const  stats =await this._userServices.getUserOverallStats(userId)
+     res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {stats}))
+    } catch (error) {
+      next(error)
+    }
+  }
 }

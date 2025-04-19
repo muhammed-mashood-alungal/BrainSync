@@ -13,7 +13,6 @@ import { env } from '../../configs/env.config';
 import { sendSessionLinktoAttendees } from '../../utils/sendEmail.utils';
 import { IGroupTypes } from '../../types/group.types';
 import { stopRoomSession } from '../../utils/socket.util';
-import { ISessionActivity } from '../../types/sessionActivity.types';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 
 export class SessionServices implements ISessionServices {
@@ -256,5 +255,14 @@ export class SessionServices implements ISessionServices {
       duration,
       log
     );
+  }
+  async totalSessionCount(): Promise<number> {
+    return await this._sesionRepository.getTotalSessionCount()
+  }
+  async getTotalSessionTime(): Promise<string> {
+    return await this._sesionRepository.getTotalSessionTime()
+  }
+  async getSessionCreationTrend(lastXDays: unknown): Promise<any> {
+    return await this._sesionRepository.getSessionCreationTrend(lastXDays as number)
   }
 }

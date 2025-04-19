@@ -9,4 +9,5 @@ export interface IGroupService {
   myGroups(userId: unknown): Promise<IGroupModel[]>;
   groupData(id: unknown): Promise<IGroupModel | null>;
   handleGroupActivation(groupId: unknown): Promise<Boolean>;
+  totalGroupCount():Promise<number>
 }

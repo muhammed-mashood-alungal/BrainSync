@@ -236,7 +236,7 @@ function ProgressChart() {
   useEffect(() => {
     const fetchData =async () => {
     
-    const result =await UserServices.getUserStats(selectedFilter)
+    const result =await UserServices.getUserSessionGraph(selectedFilter)
     console.log(result)
       if(result){
         setGraphData(

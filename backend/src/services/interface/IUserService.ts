@@ -35,4 +35,6 @@ export interface IUserService {
   deleteProfilePic(userId: unknown): Promise<Boolean>;
   getUserSessionProgress(userId : unknown , filterBy : string) : Promise<{graph : any[]}>
   getAllPremiumUsers():Promise<IUserModel[]>
+  getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>
+  totalUsersCount(): Promise<number>
 }

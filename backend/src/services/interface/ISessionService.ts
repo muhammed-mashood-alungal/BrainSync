@@ -26,4 +26,7 @@ export interface ISessionServices {
   ): Promise<ISessionModal | null>; 
   stopSession(sessionId: unknown): Promise<void>;
   addTimeSpendOnSession(userId : unknown ,   sessionCode: string,  duration : number , log: { joinTime: Date; leaveTime: Date; duration: number }): Promise<void>;
+  totalSessionCount(): Promise<number>
+  getTotalSessionTime():Promise<string>
+  getSessionCreationTrend(lastXDays : unknown) : Promise<{ date: string; sessions: number }[]>
 }

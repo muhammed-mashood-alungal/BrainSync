@@ -5,12 +5,14 @@ import { UserController } from '../controllers/implementation/user.controller';
 import upload from '../configs/multer.configs';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
+import { GroupRepository } from '../repositories/implementation/group.repository';
 
 const userRouter = Router();
 
 const userRepo = new UserRepository();
-const sessionActivityRepo = new SessionActivityRepository()
-const userServices = new UserServices(userRepo , sessionActivityRepo);
+const sessionActivityRepo = new SessionActivityRepository();
+const groupRepo = new GroupRepository();
+const userServices = new UserServices(userRepo, sessionActivityRepo, groupRepo);
 const userController = new UserController(userServices);
 
 userRouter.put(
@@ -25,7 +27,17 @@ userRouter.get(
   userController.searchUserbyEmail.bind(userController)
 );
 
-userRouter.get('/user-session-progress' , authMiddleware , userController.getUserSessionProgress.bind(userController)) 
+userRouter.get(
+  '/user-session-progress',
+  authMiddleware,
+  userController.getUserSessionProgress.bind(userController)
+);
+
+userRouter.get(
+  '/profile-stats',
+  authMiddleware,
+  userController.getProfileStats.bind(userController)
+);
 
 userRouter.put(
   '/edit-username/:userId',
@@ -48,6 +60,5 @@ userRouter.get(
   authMiddleware,
   userController.getUserData.bind(userController)
 );
-
 
 export default userRouter;

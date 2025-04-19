@@ -134,4 +134,7 @@ export class UserRepository
       $set:{subscription : {isActive : false }}
      })
    }
+   async getTotalUsersCount(): Promise<number> {
+     return await this.model.countDocuments({})
+   }
 }

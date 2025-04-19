@@ -10,8 +10,13 @@ import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 import { IUserModel } from '../../models/user.model';
+import { IGroupRepository } from '../../repositories/interface/IGroupRepository';
 export class UserServices implements IUserService {
-  constructor(private _userRepository: UserRepository ,private _sessionActiviesRepo : ISessionActivityRepository) {}
+  constructor(
+    private _userRepository: UserRepository,
+    private _sessionActiviesRepo: ISessionActivityRepository,
+    private _groupRepo? : IGroupRepository
+  ) {}
 
   async changeProfilePic(
     userId: unknown,
@@ -107,13 +112,26 @@ export class UserServices implements IUserService {
     return true;
   }
 
-  async getUserSessionProgress(userId: unknown,  filterBy : string): Promise<{ graph: any[]; }> {
-    return await this._sessionActiviesRepo.getUserSessionProgress(userId as Types.ObjectId , filterBy)
+  async getUserSessionProgress(
+    userId: unknown,
+    filterBy: string
+  ): Promise<{ graph: any[] }> {
+    return await this._sessionActiviesRepo.getUserSessionProgress(
+      userId as Types.ObjectId,
+      filterBy
+    );
   }
 
-  async getAllPremiumUsers():Promise<IUserModel[]>{
-    return await this._userRepository.getAllPremiumUsers()
+  async getAllPremiumUsers(): Promise<IUserModel[]> {
+    return await this._userRepository.getAllPremiumUsers();
   }
-
- 
+  async getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>{
+    const totalGroups =await this._groupRepo?.totalGroupsofUser(userId as Types.ObjectId) as  number
+    const totalTimeSpend =await this._sessionActiviesRepo.totalTimeSendByUser(userId as Types.ObjectId)
+    const totalSessionsAttended =await this._sessionActiviesRepo.totalSessionAttendedByUser(userId as Types.ObjectId) as number
+      return {totalGroups  ,totalTimeSpend , totalSessionsAttended}
+  }
+  async totalUsersCount(): Promise<number> {
+    return await this._userRepository.getTotalUsersCount()
+  }
 }

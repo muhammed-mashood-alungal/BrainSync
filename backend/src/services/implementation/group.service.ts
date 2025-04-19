@@ -58,4 +58,7 @@ export class GroupServices implements IGroupService {
     );
     return result;
   }
+  async totalGroupCount(): Promise<number> {
+    return await this._groupRepository.getTotalGroupCount()
+  }
 }

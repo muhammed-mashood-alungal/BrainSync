@@ -3,7 +3,7 @@ import { ISessionActivityModel } from '../../models/sessionActivity.model';
 import { ISessionActivityRepository } from '../interface/ISessionActivity.repository';
 import { SessionActivity } from '../../models/sessionActivity.model';
 import mongoose, { Types } from 'mongoose';
-import { format, startOfWeek, addDays, subDays, startOfToday } from "date-fns";
+import { format, startOfWeek, addDays, subDays, startOfToday } from 'date-fns';
 
 export class SessionActivityRepository
   extends BaseRepository<ISessionActivityModel>
@@ -38,25 +38,24 @@ export class SessionActivityRepository
     const now = new Date();
     let dateFormat = '';
     let labels: string[] = [];
-  
-    // 🧠 Decide date format & labels
+
     switch (filterBy) {
       case 'Daily':
         dateFormat = '%Y-%m-%d';
         break;
-  
+
       case 'Weekly':
         dateFormat = '%Y-%m-%d'; // Still group by day, but label as Mon, Tue, ...
         labels = Array.from({ length: 7 }).map((_, i) =>
           format(subDays(startOfToday(), 6 - i), 'EEEE')
         );
         break;
-  
+
       case 'Monthly':
         dateFormat = '%d'; // Just day of month
         labels = Array.from({ length: 30 }).map((_, i) => `${i + 1}`);
         break;
-  
+
       case 'Yearly':
         dateFormat = '%m'; // Just month number
         labels = Array.from({ length: 12 }).map((_, i) =>
@@ -64,7 +63,7 @@ export class SessionActivityRepository
         );
         break;
     }
-  
+
     // 🔍 Aggregate logs by formatted date
     const stats = await this.model.aggregate([
       { $match: { userId: userIdObj } },
@@ -82,10 +81,10 @@ export class SessionActivityRepository
       },
       { $sort: { _id: 1 } },
     ]);
-  
+
     const graphMap: Record<string, number> = {};
-  
-    stats.forEach((item) => {
+
+    stats.forEach(item => {
       if (filterBy === 'Weekly') {
         const day = format(new Date(item._id), 'EEEE');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
@@ -94,28 +93,55 @@ export class SessionActivityRepository
         graphMap[dayNum.toString()] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Yearly') {
         const monthIndex = parseInt(item._id, 10) - 1;
-        const monthLabel = format(new Date(now.getFullYear(), monthIndex, 1), 'MMM');
+        const monthLabel = format(
+          new Date(now.getFullYear(), monthIndex, 1),
+          'MMM'
+        );
         graphMap[monthLabel] = Math.floor(item.totalDuration / 1000);
       } else {
         // Daily
         graphMap[item._id] = Math.floor(item.totalDuration / 1000);
       }
     });
-  
+
     let graphData: any[] = [];
-  
+
     if (filterBy === 'Daily') {
       graphData = stats.map(item => ({
         name: new Date(item._id).toLocaleDateString(),
         duration: Math.floor(item.totalDuration / 1000),
       }));
     } else {
-      graphData = labels.map((label) => ({
+      graphData = labels.map(label => ({
         name: label,
         duration: graphMap[label] || 0,
       }));
     }
-     console.log(graphData)
+    console.log(graphData);
     return { graph: graphData };
+  }
+  async totalTimeSendByUser(userId: Types.ObjectId): Promise<string> {
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+    const result = await this.model.aggregate([
+      {
+        $match: { userId: userIdObj },
+      },
+      {
+        $group: {
+          _id: null,
+          totalTime: { $sum: '$totalDuration' },
+        },
+      },
+    ]);
+    const totalMilliseconds = result[0]?.totalTime || 0;
+    const totalMinutes = Math.floor(totalMilliseconds / (1000 * 60));
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${hours}h ${minutes}m`;
+  }
+  async totalSessionAttendedByUser(userId: Types.ObjectId): Promise<number> {
+    return await this.model.countDocuments({ userId: userId });
   }
 }

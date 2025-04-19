@@ -82,12 +82,20 @@ export const UserServices = {
       throw new Error(errorMessage);
     }
   },
-   getUserStats  : async (filterBy : string) : Promise<any[] | undefined>=>{
+   getUserSessionGraph  : async (filterBy : string) : Promise<any[] | undefined>=>{
     try {
         const response = await userInstances.get(`/user-session-progress?filterBy=${filterBy}`)
         return response.data.graph
     } catch (error) {
         console.log(error)
+    }
+   },
+   getUserOverallStats : async () : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number} | undefined>=>{
+    try {
+      const response = await userInstances.get('/profile-stats')
+      return response.data.stats
+    } catch (error) {
+      console.log(error)
     }
    }
 };

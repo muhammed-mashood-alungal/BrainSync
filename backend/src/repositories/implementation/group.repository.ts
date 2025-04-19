@@ -51,4 +51,10 @@ export class GroupRepository
     }
     return true;
   }
+  async totalGroupsofUser(userId: unknown): Promise<number> {
+    return this.model.countDocuments({members:userId , isActive : true})
+  }
+  async getTotalGroupCount(): Promise<number> {
+    return await this.model.countDocuments({})
+  }
 }

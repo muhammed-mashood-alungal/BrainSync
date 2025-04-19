@@ -25,4 +25,5 @@ export interface IUserRepository {
   cancelUserSubscription(userId : Types.ObjectId ) : Promise<void>
   getAllPremiumUsers() : Promise<IUserModel[]>
   userSubscriptionExpired(userId  : Types.ObjectId) : Promise<void>
+  getTotalUsersCount() : Promise<number>
 }

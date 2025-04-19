@@ -1,6 +1,7 @@
 // components/Sidebar.jsx
 'use client';
 
+import { Coins } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -8,12 +9,13 @@ export default function AdminSidebar() {
   const pathname = usePathname();
   
   const navItems = [
-    { icon: 'home', label: 'Dashboard', path: '/admin' },
+    { icon: 'home', label: 'Dashboard', path: '/admin/dashboard' },
     { icon: 'file-text', label: 'Students', path: '/admin/students' },
     { icon: 'folder', label: 'Sessions', path: '/admin/sessions' },
     { icon: 'users', label: 'Groups', path: '/admin/groups' },
     { icon: 'user', label: 'Reports', path: '/admin/reports' },
-    { icon: 'user', label: 'Plans', path: '/admin/plans' }
+    { icon: 'user', label: 'Plans', path: '/admin/plans' },
+    { icon: 'subscription', label: 'Subscription', path: '/admin/subscriptions' },
   ]
   
   return (
@@ -69,6 +71,9 @@ export default function AdminSidebar() {
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                   <circle cx="12" cy="7" r="4"></circle>
                 </svg>
+              )}
+              {item.icon == "subscription" && (
+                <Coins/>
               )}
             </span>
             <span className="text-base font-medium">{item.label}</span>
