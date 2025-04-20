@@ -100,7 +100,7 @@ export class SessionRepository
     const today = startOfDay(new Date());
     const startDate = subDays(today, lastXDays - 1); 
 
-    // Fetch sessions created in the date range
+
     const sessions = await this.model.aggregate([
       {
         $match: {
@@ -127,12 +127,10 @@ export class SessionRepository
       },
     ]);
 
-    // Convert aggregation to a map for quick lookup
     const sessionMap = new Map(
       sessions.map(item => [item.date, item.sessions])
     );
 
-    // Build the full trend array, including dates with 0 sessions
     const result = Array.from({ length: lastXDays }, (_, i) => {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);

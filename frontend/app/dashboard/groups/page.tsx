@@ -14,6 +14,7 @@ import GroupDetails from "@/Components/GroupDetails/GroupDetails";
 import EmptyList from "@/Components/EmptyList/EmptyList";
 import { ArrowLeftIcon, LogOut, LogOutIcon, Plus, PlusCircle, PlusIcon, PlusSquare, PlusSquareIcon, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>();
@@ -25,6 +26,7 @@ const GroupsPage: React.FC = () => {
   const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [viewGroup, setViewGroup] = useState<IGroupType>();
+  const [leavingGroupId ,setLeavingGroupId] = useState('')
   const router = useRouter()
 
   useEffect(()=>{
@@ -120,9 +122,9 @@ const GroupsPage: React.FC = () => {
       checkAuth();
     }
   };
-  const leaveGroup = async (groupId: string) => {
+  const leaveGroup = async () => {
     try {
-      GroupServices.leftGroup(groupId, user?.id as string);
+      GroupServices.leftGroup(leavingGroupId, user?.id as string);
       toast.success("Leaved Group Successfully");
       checkAuth();
     } catch (error: unknown) {
@@ -133,6 +135,7 @@ const GroupsPage: React.FC = () => {
       }
     } finally {
       closeModal();
+      setLeavingGroupId('')
     }
   };
 
@@ -178,7 +181,7 @@ const GroupsPage: React.FC = () => {
                 ) : (
                   <button
                     className=" text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                    onClick={() => leaveGroup(group._id)}
+                    onClick={() => setLeavingGroupId(group._id)}
                   >
                    <LogOutIcon style={{ transform: 'scaleX(-1)' }} />
                   </button>
@@ -409,6 +412,7 @@ const GroupsPage: React.FC = () => {
           onRemoveMember={() => console.log("removing")}
         />
       </BaseModal>
+      <Confirm isOpen={Boolean(leavingGroupId)} onClose={()=>setLeavingGroupId('')} onConfirm={leaveGroup} />
     </div>
   );
 };
