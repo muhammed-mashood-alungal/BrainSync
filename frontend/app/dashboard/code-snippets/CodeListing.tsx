@@ -1,11 +1,8 @@
 "use client";
 import Table from "@/Components/Table/Table";
-import { INoteTypes } from "@/types/note.types";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { noteServices } from "@/services/client/note.client";
 import { Download } from "lucide-react";
-import { codeEditorServices } from "@/services/client/code.client";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { ICodeSnippetTypes } from "@/types/codeSnippetTypes";
 import { ISessionTypes } from "@/types/sessionTypes";
@@ -13,6 +10,7 @@ import { Language } from "@/Context/codeEditor.context";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
+
 function CodeSnippetListing() {
   const [snippets, setSnippets] = useState<ICodeSnippetTypes[]>([]);
   const limit = 8;
@@ -27,8 +25,6 @@ function CodeSnippetListing() {
     title: string;
     language: string;
   }) => {
-    console.log("downloading");
-    // Set extension based on language
     const extensions = {
       javascript: "js",
       python: "py",
@@ -64,10 +60,6 @@ function CodeSnippetListing() {
     setTotalCount(count);
     setSnippets(snippets);
   }
-
-  //   const downloadPdf = (pdfFileId: string) => {
-  //     noteServices.getNotePdf(pdfFileId);
-  //   };
 
   const columns = [
     {

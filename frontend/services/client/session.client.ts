@@ -45,12 +45,41 @@ export const SessionServices = {
       throw new Error(errorMessage);
     }
   },
-  async getFilteredSessions(subject: string, date: string): Promise<Session[]> {
+  async getFilteredSessions(
+    searchQuery: string,
+    subject: string,
+    startDate: string | null,
+    endDate: string | null,
+    sort: number,
+    skip : number,
+    limit : number
+  ): Promise<{sessions :Session[] , count : number}> {
     try {
       const response = await sessionInstances.get(
-        `/my-sessions/?subject=${subject}&date=${date}`
+        `/my-sessions/?searchQuery=${searchQuery}&subject=${subject}&startDate=${startDate}&endDate=${endDate}&sort=${sort}&skip=${skip}&limit=${limit}`
       );
-      return response.data?.sessions;
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError<{ error: string }>;
+      const errorMessage =
+        err.response?.data?.error || "Group Creation failed. Please try again.";
+      throw new Error(errorMessage);
+    }
+  },
+  async getAllSessions(
+    searchQuery: string,
+    subject: string,
+    startDate: string | null,
+    endDate: string | null,
+    sort: number,
+    skip : number,
+    limit : number
+  ): Promise<{sessions :Session[] , count : number}> {
+    try {
+      const response = await sessionInstances.get(
+        `/?searchQuery=${searchQuery}&subject=${subject}&startDate=${startDate}&endDate=${endDate}&sort=${sort}&skip=${skip}&limit=${limit}`
+      );
+      return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =
@@ -83,7 +112,9 @@ export const SessionServices = {
       );
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
-      const errorMessage = err.response?.data?.error || "Adding Time Spend failed. Please try again.";
+      const errorMessage =
+        err.response?.data?.error ||
+        "Adding Time Spend failed. Please try again.";
       throw new Error(errorMessage);
     }
   },

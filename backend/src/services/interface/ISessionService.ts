@@ -11,10 +11,23 @@ export interface ISessionServices {
   createSessionCode(date: Date): string;
   getMySessions(
     userId: unknown,
-    subject?: string,
-    date?: string
-  ): Promise<ISessionModal[]>;
-  getAllSessions(): Promise<ISessionModal[]>;
+    sort : unknown,
+    skip : unknown ,
+    limit : unknown,
+    searchQuery?:string,
+    subject? : string,
+    startDate? :string | undefined,
+    endDate? : string,
+  ): Promise<{sessions : ISessionModal[] , count : number}>;
+  getAllSessions(
+    sort : unknown,
+    skip : unknown ,
+    limit : unknown,
+    searchQuery?:unknown ,
+    subject? : unknown,
+    startDate? :unknown,
+    endDate? : unknown,
+  ): Promise<{sessions : ISessionModal[] , count : number}>;
   validateSession(
     sessionCode: string,
     userId: unknown 

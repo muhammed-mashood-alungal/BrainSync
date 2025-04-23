@@ -33,10 +33,20 @@ export class SessionController implements ISessionController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const sessions = await this._sessionServices.getAllSessions();
+      const { searchQuery , subject,startDate,endDate,sort,skip,limit} = req.query
+      console.log(searchQuery , subject , startDate , endDate , skip , limit)
+      const {sessions , count} = await this._sessionServices.getAllSessions(
+        sort,
+        skip,
+        limit,
+        searchQuery as string,
+        subject as string,
+        startDate as string,
+        endDate as string
+      );
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { sessions: sessions }));
+        .json(successResponse(HttpResponse.OK, { sessions: sessions , count : count}));
     } catch (err) {
       next(err);
     }
@@ -48,15 +58,24 @@ export class SessionController implements ISessionController {
   ): Promise<void> {
     try {
       const userId = req.user;
-      const { subject, date } = req.query;
-      const sessions = await this._sessionServices.getMySessions(
+      const { searchQuery, subject, startDate, endDate, sort, skip, limit } =
+        req.query;
+      console.log('queury')
+      console.log(startDate , endDate)
+      const {sessions , count} = await this._sessionServices.getMySessions(
         userId,
+        sort,
+        skip,
+        limit,
+        searchQuery as string,
         subject as string,
-        date as string
+        startDate as string,
+        endDate as string
       );
+
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { sessions: sessions }));
+        .json(successResponse(HttpResponse.OK, { sessions: sessions  , count }));
     } catch (err) {
       next(err);
     }
@@ -89,7 +108,7 @@ export class SessionController implements ISessionController {
       const { sessionId } = req.params;
       const data = req.body;
       const userId = req.user;
-     
+
       const updatedSession = await this._sessionServices.updateSession(
         data,
         sessionId,
@@ -126,14 +145,14 @@ export class SessionController implements ISessionController {
       const userId = req.user;
       const { sessionCode } = req.params;
       const { duration, log } = req.body;
-      console.log(userId , sessionCode , duration , log)
+      console.log(userId, sessionCode, duration, log);
       const response = await this._sessionServices.addTimeSpendOnSession(
         userId,
         sessionCode,
         duration,
         log
       );
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
       next(error);
     }

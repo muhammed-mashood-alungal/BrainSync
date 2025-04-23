@@ -67,58 +67,52 @@ export class SessionServices implements ISessionServices {
 
   async getMySessions(
     userId: unknown,
-    subject: string,
-    date: string
-  ): Promise<ISessionModal[]> {
+    sort : unknown,
+    skip : unknown ,
+    limit : unknown,
+    searchQuery?:unknown ,
+    subject? : unknown,
+    startDate? :unknown,
+    endDate? : unknown,
+  ): Promise<{sessions : ISessionModal[] , count : number}> {
     const myGroups = await this._groupRepository.getMyGroups(
       userId as Types.ObjectId
     );
     const groups = myGroups.map(grp => grp._id);
-
-    interface IFilter {
-      subject?: string;
-      date?: {};
-    }
-
-    let filter: IFilter = {};
-    if (subject && subject !== 'Subject') {
-      filter.subject = subject;
-    }
-
-    if (date && date !== 'Date') {
-      const now = new Date();
-      let startDate, endDate;
-
-      if (date === 'Today') {
-        startDate = new Date();
-        startDate.setHours(0, 0, 0, 0);
-        endDate = new Date();
-        endDate.setHours(23, 59, 59, 999);
-      } else if (date === 'This Week') {
-        startDate = new Date(now);
-        startDate.setDate(now.getDate() - now.getDay());
-        startDate.setHours(0, 0, 0, 0);
-
-        endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 6);
-        endDate.setHours(23, 59, 59, 999);
-      } else if (date === 'This Month') {
-        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      }
-
-      filter.date = { $gte: startDate, $lte: endDate };
-    }
-    const result = await this._sesionRepository.getGroupsSessions(
+    
+    console.log(startDate , endDate)
+    const {sessions , count} = await this._sesionRepository.getGroupsSessions(
       groups as Types.ObjectId[],
-      filter
+      sort as boolean,
+      skip as number,
+      limit as number,
+      searchQuery ? searchQuery as string : '',
+      subject ? subject as string  : ''  ,
+      startDate ? startDate as string : undefined,
+      endDate? endDate as string : undefined
     );
-    return result;
+    return {sessions , count};
   }
-  async getAllSessions(): Promise<ISessionModal[]> {
-    const result = await this._sesionRepository.getAllSessions();
-
-    return result;
+  async getAllSessions(
+    sort : unknown,
+    skip : unknown ,
+    limit : unknown,
+    searchQuery?:unknown ,
+    subject? : unknown,
+    startDate? :unknown,
+    endDate? : unknown,
+  ): Promise<{sessions : ISessionModal[] , count : number}> {
+    const {sessions , count} = await this._sesionRepository.getAllSessions(
+      sort as boolean,
+      skip as number,
+      limit as number,
+      searchQuery ? searchQuery as string : '',
+      subject ? subject as string  : ''  ,
+      startDate ? startDate as string : undefined,
+      endDate? endDate as string : undefined
+    );
+     
+    return {sessions , count};
   }
   async validateSession(
     sessionCode: string,

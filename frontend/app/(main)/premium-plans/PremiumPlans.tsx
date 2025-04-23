@@ -24,11 +24,11 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           throw new Error("Razorpay key is missing in environment variables");
         }
 
-        const order = await paymentServices.createPaymentOrder(amount);
+        const order = await paymentServices.createPaymentOrder(amount * 100);
 
         const options = {
           key: RAZORPAY_KEY_ID,
-          amount: order.amount * 100,
+          amount: order.amount ,
           currency: order.currency,
           name: "Brain Sync",
           description: "Payment for your order",

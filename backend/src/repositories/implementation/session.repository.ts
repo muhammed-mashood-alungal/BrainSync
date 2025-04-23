@@ -5,11 +5,6 @@ import Session, { ISessionModal } from '../../models/session.modal';
 import { ObjectId, Types } from 'mongoose';
 import { startOfDay, formatISO, subDays } from 'date-fns';
 
-interface IFilter {
-  subject?: string;
-  date?: {};
-}
-
 export class SessionRepository
   extends BaseRepository<ISessionModal>
   implements ISessionRepository
@@ -34,20 +29,98 @@ export class SessionRepository
   }
   async getGroupsSessions(
     groups: Types.ObjectId[],
-    filter: IFilter
-  ): Promise<ISessionModal[]> {
-    return await this.model
-      .find({ ...filter, groupId: { $in: groups } })
-      .sort({ createdAt: -1 })
+    sort: boolean,
+    skip: number,
+    limit: number,
+    searchQuery?: string,
+    subject?: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<{ sessions: ISessionModal[]; count: number }> {
+    console.log(sort);
+    let sortOrder: 1 | -1 = sort == true ? 1 : -1;
+    let find: any = {};
+    if (subject) {
+      find.subject = { $regex: subject, $options: 'i' };
+    }
+    console.log('start and end Date');
+    console.log(startDate, endDate);
+    console.log(((startDate as string) + endDate) as string);
+
+    if (startDate && endDate && startDate != 'null' && endDate != 'null') {
+      const start = new Date(startDate as string);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(endDate as string);
+      end.setHours(23, 59, 59, 999);
+
+      find.date = {
+        $gt: start,
+        $lt: end,
+      };
+    }
+    if (searchQuery) {
+      find.sessionName = { $regex: searchQuery, $options: 'i' };
+    }
+    console.log(sortOrder);
+    const count = await this.model.countDocuments({
+      ...find,
+      groupId: { $in: groups },
+    });
+    const sessions = await this.model
+      .find({ ...find, groupId: { $in: groups } })
+      .skip(skip)
+      .limit(limit)
+      .sort({ date: sortOrder })
       .populate('createdBy')
       .populate('groupId');
+    return { sessions, count };
   }
-  async getAllSessions(): Promise<ISessionModal[]> {
-    return await this.model
-      .find({})
+
+  async getAllSessions(
+    sort: boolean,
+    skip: number,
+    limit: number,
+    searchQuery?: string,
+    subject?: string,
+    startDate?: string,
+    endDate?: string
+  ): Promise<{ sessions: ISessionModal[]; count: number }> {
+    console.log(sort);
+    let sortOrder: 1 | -1 = sort == true ? 1 : -1;
+    let find: any = {};
+    console.log(subject)
+    if (subject) {
+      find.subject = { $regex: subject, $options: 'i' };
+    }
+
+    if (startDate && endDate && startDate != 'null' && endDate != 'null') {
+      const start = new Date(startDate as string);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(endDate as string);
+      end.setHours(23, 59, 59, 999);
+
+      find.date = {
+        $gt: start,
+        $lt: end,
+      };
+    }
+    if (searchQuery) {
+      find.sessionName = { $regex: searchQuery, $options: 'i' };
+    }
+    console.log(sortOrder);
+    console.log(find)
+    const count = await this.model.countDocuments(find);
+    const sessions = await this.model
+      .find(find)
+      .skip(skip)
+      .limit(limit)
+      .sort({ date: sortOrder })
       .populate('createdBy')
-      .populate('groupId')
-      .sort({ createdAt: -1 });
+      .populate('groupId');
+     console.log(count)
+    return { sessions, count };
   }
   async updateSession(
     newData: ISessionModal,
@@ -98,8 +171,7 @@ export class SessionRepository
     lastXDays: number
   ): Promise<{ date: string; sessions: number }[]> {
     const today = startOfDay(new Date());
-    const startDate = subDays(today, lastXDays - 1); 
-
+    const startDate = subDays(today, lastXDays - 1);
 
     const sessions = await this.model.aggregate([
       {

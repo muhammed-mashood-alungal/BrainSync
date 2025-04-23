@@ -137,7 +137,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Sessio
                 <Input
                   type="text"
                   name="date"
-                  placeholder="Date"
+                  placeholder="Session Date"
                   value={formData.date}
                   onChange={handleChange}
                   onFocus={(e) => e.target.type = 'date'}

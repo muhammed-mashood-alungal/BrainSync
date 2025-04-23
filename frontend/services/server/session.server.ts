@@ -22,7 +22,7 @@ export const getMySessions = async () => {
             }
         })
 
-        return response.data.sessions
+        return response.data
 
     } catch (err) {
 
