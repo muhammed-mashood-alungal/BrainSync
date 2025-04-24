@@ -9,7 +9,7 @@ export interface INoteRepository {
   saveNoteAsPdf(
     htmlContent: string,
     sessionId: string
-  ): Promise<Types.ObjectId>;
+  ): Promise<Types.ObjectId | null>;
   getPdfStream(fileId: Types.ObjectId): Promise<GridFSBucketReadStream>;
   createNote(
     sessionId: Types.ObjectId,

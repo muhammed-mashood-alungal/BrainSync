@@ -32,7 +32,8 @@ export class CodeSnippetRepository
       .find(find)
       .populate('sessionId')
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({createdAt : -1});
 
     return { snippets: res, count: count };
   }

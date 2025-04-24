@@ -73,7 +73,8 @@ export const validateSession = async (sessionId: string) => {
                 "Cookie": cookieString
             }
         })
-        return response.data.result
+        console.log(response.data)
+        return response.data
 
     } catch (err:unknown) {
         const error = err as AxiosError<{ error: string }>

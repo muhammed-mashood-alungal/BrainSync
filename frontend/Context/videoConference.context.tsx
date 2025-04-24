@@ -339,8 +339,8 @@ export const VideoCallProvider = ({ roomId, children }: { roomId: string; childr
       const response = await noteServices.saveNote(roomId)
       if(response.success){
          toast.success("Note Saved in you Resources")
-      }else{
-        toast.error(response.message)
+      }else if(response.message){
+        toast.error(response?.message)
       }
       
     } catch (error) {

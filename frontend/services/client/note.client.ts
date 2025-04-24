@@ -14,12 +14,13 @@ export const noteServices = {
     saveNote: async (roomId: string): Promise<{ success: boolean, message?: string }> => {
         try {
             const response = await noteInstances.post(`/save/${roomId}`)
-            return { success: true }
+            let status  = response?.data?.status
+            return { success: status , message :status ? "Note Saved To Resources" : ""   }
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Note Saving failed. Please try again."
             return { success: false, message: errorMessage }
-            //throw new Error(errorMessage)
+            
         }
     },
     getInitialContent: async (roomId: string): Promise<string> => {

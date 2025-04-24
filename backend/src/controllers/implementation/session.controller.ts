@@ -33,9 +33,9 @@ export class SessionController implements ISessionController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { searchQuery , subject,startDate,endDate,sort,skip,limit} = req.query
-      console.log(searchQuery , subject , startDate , endDate , skip , limit)
-      const {sessions , count} = await this._sessionServices.getAllSessions(
+      const { searchQuery, subject, startDate, endDate, sort, skip, limit } =
+        req.query;
+      const { sessions, count } = await this._sessionServices.getAllSessions(
         sort,
         skip,
         limit,
@@ -46,7 +46,9 @@ export class SessionController implements ISessionController {
       );
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { sessions: sessions , count : count}));
+        .json(
+          successResponse(HttpResponse.OK, { sessions: sessions, count: count })
+        );
     } catch (err) {
       next(err);
     }
@@ -60,9 +62,9 @@ export class SessionController implements ISessionController {
       const userId = req.user;
       const { searchQuery, subject, startDate, endDate, sort, skip, limit } =
         req.query;
-      console.log('queury')
-      console.log(startDate , endDate)
-      const {sessions , count} = await this._sessionServices.getMySessions(
+      console.log('queury');
+      console.log(startDate, endDate);
+      const { sessions, count } = await this._sessionServices.getMySessions(
         userId,
         sort,
         skip,
@@ -75,7 +77,7 @@ export class SessionController implements ISessionController {
 
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { sessions: sessions  , count }));
+        .json(successResponse(HttpResponse.OK, { sessions: sessions, count }));
     } catch (err) {
       next(err);
     }
@@ -88,13 +90,16 @@ export class SessionController implements ISessionController {
     try {
       const { sessionCode } = req.params;
       const userId = req.user;
-      const result = await this._sessionServices.validateSession(
-        sessionCode,
-        userId
-      );
+      const { status, message, sessionDetails } =
+        await this._sessionServices.validateSession(sessionCode, userId);
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { result: result }));
+        .json(
+          successResponse(HttpResponse.OK, {
+            result: { status, message },
+            sessionDetails: sessionDetails,
+          })
+        );
     } catch (err) {
       next(err);
     }

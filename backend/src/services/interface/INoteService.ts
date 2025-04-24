@@ -11,7 +11,7 @@ export interface INoteService {
   saveNoteService(
     sessionId: string,
     userId: string
-  ): Promise<{ pdfFileId: string }>;
+  ): Promise<{ pdfFileId: string , status : boolean}>;
   getNotePdf(fileId: string): Promise<GridFSBucketReadStream>;
   getInitialContent(roomId: string, userId: string): Promise<string>;
   myNotes(

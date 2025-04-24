@@ -109,14 +109,12 @@ export class SessionRepository
     if (searchQuery) {
       find.sessionName = { $regex: searchQuery, $options: 'i' };
     }
-    console.log(sortOrder);
-    console.log(find)
     const count = await this.model.countDocuments(find);
     const sessions = await this.model
       .find(find)
       .skip(skip)
       .limit(limit)
-      .sort({ date: sortOrder })
+      .sort({ date: sortOrder , createdAt : sortOrder })
       .populate('createdBy')
       .populate('groupId');
      console.log(count)

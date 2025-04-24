@@ -176,16 +176,7 @@ function Profile() {
     }
   };
 
-  // const logout = async () => {
-  //     try {
-  //         await AuthServices.logout()
-  //         checkAuth()
-  //         router.push('/login')
-  //     } catch (err) {
-  //         toast.error("Logout Failed")
-  //     }
-  // }
-
+ 
   return (
     <>
       <div className="flex-1 p-8">

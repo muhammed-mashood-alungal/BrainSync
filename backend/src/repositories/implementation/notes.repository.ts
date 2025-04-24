@@ -11,7 +11,6 @@ import { INoteTypes } from '../../types/note.types';
 import { GridFSBucketReadStream } from 'mongodb';
 import { ISessionTypes } from '../../types/session.types';
 
-//export class GroupRepository extends BaseRepository<IGroupModel> implements IGroupRepository
 export class NoteRepository
   extends BaseRepository<INoteModel>
   implements INoteRepository
@@ -42,9 +41,15 @@ export class NoteRepository
   async saveNoteAsPdf(
     htmlContent: string,
     sessionId: string
-  ): Promise<Types.ObjectId> {
+  ): Promise<Types.ObjectId | null> {
     if (!this.gfs) {
       this.gfs = await mongoDBConfig.getGridFSBucket();
+    }
+
+    console.log('HTML Content ===')
+    console.log(htmlContent)
+    if(!htmlContent?.length){
+      return null
     }
 
     const browser = await puppeteer.launch({ headless: true });
@@ -123,7 +128,8 @@ export class NoteRepository
       .find(find)
       .populate('sessionId')
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({createdAt : -1});
 
     return { notes: res, count: count };
   }

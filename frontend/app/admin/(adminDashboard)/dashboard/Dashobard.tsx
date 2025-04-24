@@ -1,6 +1,10 @@
 "use client";
+import { useAuth } from "@/Context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
+import { AuthServices } from "@/services/client/auth.client";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import {
   LineChart,
   Line,
@@ -40,12 +44,20 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   );
   const [sessionTrends, setSessionTrends] = useState<any>([]);
   const [stats, setStats] = useState<any>({
-    totalUsers :0,
-    totalGroups  : 0,
-    totalSessions : 0,
-    totalStudyTime : 0,
+    totalUsers: 0,
+    totalGroups: 0,
+    totalSessions: 0,
+    totalStudyTime: 0,
   });
+  
+  const { checkAuth , user} = useAuth()
+  const router = useRouter()
 
+  useEffect(()=>{
+     if(!user ||  user.role != 'admin'){
+      router.push('/login')
+     }
+  },[user])
   useEffect(() => {
     async function fetchDashboard() {
       let days = 0;
@@ -57,13 +69,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         days = 30;
       }
       const result = await AdminServices.getDashboardData(days);
-      console.log(result)
       setStats({
-        totalUsers :result.totalUsers,
-        totalGroups : result.totalGroups,
-        totalSessions : result.totalSessions,
-        totalStudyTime : result.totalStudyTime,
-      })
+        totalUsers: result.totalUsers,
+        totalGroups: result.totalGroups,
+        totalSessions: result.totalSessions,
+        totalStudyTime: result.totalStudyTime,
+      });
       setSessionTrends(result?.sessionCreationTrend);
     }
     fetchDashboard();
@@ -92,6 +103,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     );
   };
 
+
   const filteredTrends = getFilteredTrends();
 
   // Colors for charts
@@ -114,10 +126,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     { name: "Free Users", value: userDistribution.free },
   ];
 
+
+   const logout = async () => {
+      try {
+          await AuthServices.logout()
+          checkAuth()
+          router.push('/login')
+      } catch (err) {
+          toast.error("Logout Failed")
+      }
+  }
+
   return (
     <div className="min-h-screen text-white p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        <div className="flex justify-between">
+          <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+          <button onClick={logout} className="text-[#00D2D9] hover:underline">
+            Logout
+          </button>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -125,7 +153,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Users</h2>
-             
             </div>
             <div className="flex items-end">
               <h3 className="text-3xl font-bold">
@@ -139,7 +166,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Sessions</h2>
-              
             </div>
             <div className="flex items-end">
               <h3 className="text-3xl font-bold">
@@ -153,7 +179,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Groups</h2>
-             
             </div>
             <div className="flex items-end">
               <h3 className="text-3xl font-bold">
@@ -167,7 +192,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Study Hours</h2>
-             
             </div>
             <div className="flex items-end">
               <h3 className="text-3xl font-bold">

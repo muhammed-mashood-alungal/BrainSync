@@ -25,13 +25,15 @@ export class NoteService implements INoteService {
   async saveNoteService(
     sessionCode: string,
     userId: string
-  ): Promise<{ pdfFileId: string }> {
+  ): Promise<{ pdfFileId: string  , status : boolean}> {
     const htmlContent = await this._noteRepository.getContentFromFirebase(
       sessionCode,
       userId
     );
-    if (!htmlContent)
-      createHttpsError(HttpStatus.BAD_REQUEST, HttpResponse.NO_CONTENT_FOR_PDF);
+    // if (!htmlContent){
+    //   createHttpsError(HttpStatus.BAD_REQUEST, HttpResponse.NO_CONTENT_FOR_PDF);
+    // }
+     
 
     const session = await this._sessionRepository.getSessionByCode(sessionCode);
 
@@ -39,6 +41,9 @@ export class NoteService implements INoteService {
       htmlContent,
       session?._id as string
     );
+    if(!pdfFileId){
+      return {pdfFileId : '' , status : false}
+    }
 
     await this._noteRepository.createNote(
       session?._id as Types.ObjectId,
@@ -46,7 +51,7 @@ export class NoteService implements INoteService {
       pdfFileId,
       session?.sessionName as string
     );
-    return { pdfFileId: pdfFileId.toString() };
+    return { pdfFileId: pdfFileId.toString()  , status : true};
   }
 
   async getNotePdf(fileId: string): Promise<GridFSBucketReadStream> {

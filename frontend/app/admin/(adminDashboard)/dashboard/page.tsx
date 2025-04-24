@@ -18,17 +18,8 @@ export default function AdminDashboardPage() {
     paid: 2667,
   };
 
-  const stats = {
-    totalUsers: 12543,
-    totalSessions: 28976,
-    totalGroups: 4328,
-    totalStudyHours: 143567,
-  };
-
   return (
     <AdminDashboard
-      //stats={stats}
-    //  sessionTrends={sessionTrends}
       userDistribution={userDistribution}
     />
   );

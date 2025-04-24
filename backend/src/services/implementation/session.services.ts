@@ -117,12 +117,12 @@ export class SessionServices implements ISessionServices {
   async validateSession(
     sessionCode: string,
     userId: unknown
-  ): Promise<{ status: boolean; message: string }> {
-    if (!sessionCode) return { status: false, message: 'Invalid Session Code' };
+  ): Promise<{ status: boolean; message: string  , sessionDetails : ISessionModal | null}> {
+    if (!sessionCode) return { status: false, message: 'Invalid Session Code'  , sessionDetails : null};
 
     const session = await this._sesionRepository.getSessionByCode(sessionCode);
     if (!session)
-      return { status: false, message: 'Session Code is Not Valid' };
+      return { status: false, message: 'Session Code is Not Valid', sessionDetails : null };
     const currentTime = new Date().toISOString();
 
     const startTime =
@@ -135,23 +135,23 @@ export class SessionServices implements ISessionServices {
         : new Date(session.endTime);
 
     if (session.startTime.toISOString() > currentTime) {
-      return { status: false, message: 'Session Time is not reached' };
+      return { status: false, message: 'Session Time is not reached' , sessionDetails : null};
     }
 
     if (session.endTime.toISOString() < currentTime) {
-      return { status: false, message: 'Session Ended' };
+      return { status: false, message: 'Session Ended', sessionDetails : null };
     }
     const group = session.groupId as IGroupTypes;
 
     if (!group.isActive) {
-      return { status: false, message: 'Group is Not Active' };
+      return { status: false, message: 'Group is Not Active' , sessionDetails : null};
     }
     const members = group.members as string[];
     if (!members.includes(userId as string)) {
-      return { status: false, message: 'This is Session is Not Yours Group!' };
+      return { status: false, message: 'This is Session is Not Yours Group!', sessionDetails : null };
     }
 
-    return { status: true, message: 'Session is Valid' };
+    return { status: true, message: 'Session is Valid' , sessionDetails : session };
   }
   async updateSession(
     sessionData: ISessionModal,

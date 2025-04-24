@@ -18,7 +18,7 @@ import {
   VideoCallProvider,
 } from "@/Context/videoConference.context";
 import { toast } from "react-toastify";
-import { Session } from "@/types/sessionTypes";
+import { ISessionTypes, Session } from "@/types/sessionTypes";
 import WhiteBoard from "./WhiteBoard";
 import { WhiteBoardProvider } from "@/Context/whiteBoardContex";
 import { SocketProvider } from "@/Context/socket.context";
@@ -33,8 +33,12 @@ import { reportService } from "@/services/client/report.client";
 import Button from "@/Components/Button/Button";
 import CodeEditor from "./CodeEditor";
 import { CodeEditorProvider } from "@/Context/codeEditor.context";
+import { IGroupType } from "@/types/groupTypes";
 
-const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
+const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
+  roomId,
+  session,
+}) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("video");
   const [chatOpen, setChatOpen] = useState(true);
@@ -46,16 +50,16 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
   const [isReporting, setIsReporting] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [confirmationOn, setConfirmationOn] = useState(false);
-  const { leaveRoom } = useVideoCall();
+  const { leaveRoom, peers } = useVideoCall();
   const { user } = useAuth();
   const joinTimeRef = useRef(0);
   useEffect(() => {
     joinTimeRef.current = Date.now();
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      const {duration , log} = getTimeSpent();
+      const { duration, log } = getTimeSpent();
 
       //console.log(`Session Duration: ${totalDurationMinutes} minutes`);
-       leaveRoom(duration ,log);
+      leaveRoom(duration, log);
       e.preventDefault();
       //e.returnValue = "";
     };
@@ -95,18 +99,20 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
   const getTimeSpent = () => {
     const leaveTime = new Date(); // Instead of Date.now()
     const joinTime = new Date(joinTimeRef.current); // Convert timestamp to Date
-  
-    const duration = leaveTime.getTime() - joinTime.getTime(); 
 
+    const duration = leaveTime.getTime() - joinTime.getTime();
 
-    return  {duration : duration , log : {joinTime : joinTime , leaveTime : leaveTime , duration : duration}}
+    return {
+      duration: duration,
+      log: { joinTime: joinTime, leaveTime: leaveTime, duration: duration },
+    };
   };
 
   const handleLeave = () => {
-    const {duration , log} = getTimeSpent();
+    const { duration, log } = getTimeSpent();
     // console.log(`Session Duration: ${totalDurationMinutes} minutes`);
-     
-    leaveRoom(duration,log);
+
+    leaveRoom(duration, log);
     router.push("/dashboard/sessions");
   };
 
@@ -139,8 +145,12 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
           Brain Sync
         </div>
         <div className="text-center">
-          {/* <div className="text-xl">{session.sessionName || "Session Name"} </div>
-                    <div className="text-sm text-gray-400">{session.subject  || "Session Subject"}</div> */}
+          <div className="text-xl">
+            {session.sessionName || "Session Name"} {" "}
+            (
+              {session.subject || "Session Subject"}
+            )
+          </div>
         </div>
         <div className="flex items-center gap-2 mt-2 sm:mt-0">
           <div className="bg-gray-800 rounded-full px-4 py-1 flex items-center border border-cyan-400">
@@ -156,7 +166,10 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                 clipRule="evenodd"
               />
             </svg>
-            {/* <span>{(session?.groupId as IGroupType)?.members?.length || "5 Members"}</span> */}
+            <span>
+              {peers.length  + 1} /
+              {(session?.groupId as IGroupType)?.members?.length || "5 Members"}
+            </span>
           </div>
           <div
             className="flex text-gray-300 hover:text-gray-500"
@@ -221,7 +234,12 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
                 clipRule="evenodd"
               />
             </svg>
-            <span className="sm:text-sm  md:text-md flex">Code Editor {!user?.isPremiumMember && <Crown color="yellow" className="ml-2" size={16}/>}</span>
+            <span className="sm:text-sm  md:text-md flex">
+              Code Editor{" "}
+              {!user?.isPremiumMember && (
+                <Crown color="yellow" className="ml-2" size={16} />
+              )}
+            </span>
           </button>
           <button
             className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center  text-xs sm:text-md ${
@@ -277,7 +295,7 @@ const SessionContent: React.FC<{ roomId: string }> = ({ roomId }) => {
             } h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}
           >
             {/* <p className="text-gray-400">Code editor will appear here</p> */}
-            <CodeEditor roomId={roomId }/>
+            <CodeEditor roomId={roomId} />
           </div>
           <div
             className={`${
@@ -460,21 +478,22 @@ const Page: React.FC<PageProps> = ({
 }) => {
   const router = useRouter();
   useEffect(() => {
-    if (!validationRes.status) {
-      toast.error(validationRes.message);
+    console.log(validationRes)
+    if (!validationRes?.status) {
+      toast.error(validationRes?.message);
       router.push("/dashboard/sessions");
     }
   }, [validationRes]);
 
-  if (!validationRes.status) return;
+  if (!validationRes?.status) return;
   return (
     <SocketProvider>
       <VideoCallProvider roomId={sessionCode as string}>
         <ChatProvider>
           <CodeEditorProvider>
-          <WhiteBoardProvider roomId={sessionCode as string}>
-            <SessionContent roomId={sessionCode} />
-          </WhiteBoardProvider>
+            <WhiteBoardProvider roomId={sessionCode as string}>
+              <SessionContent roomId={sessionCode} session={session} />
+            </WhiteBoardProvider>
           </CodeEditorProvider>
         </ChatProvider>
       </VideoCallProvider>

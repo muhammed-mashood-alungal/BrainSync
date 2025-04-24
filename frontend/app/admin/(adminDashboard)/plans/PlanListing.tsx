@@ -3,10 +3,11 @@ import { IPlans } from "@/types/plans.types";
 import React, { useState, useEffect } from "react";
 import CreatePlan from "./createPlan";
 import { Crown } from "lucide-react";
+import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
 interface PlansListingProps {
   plans: IPlans[];
-  onEdit: (planId: string , newData : Omit<IPlans, "_id">) => void;
+  onEdit: (planId: string, newData: Omit<IPlans, "_id">) => void;
   onToggleActive: (planId: string, isActive: boolean) => void;
 }
 
@@ -17,10 +18,11 @@ const PlansListing: React.FC<PlansListingProps> = ({
 }) => {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [initialPlan, setInitialPlan] = useState<any>();
+  const [toggledPlan, setToggledPlan] = useState<any>(null);
 
   const updatePlan = async (newData: Omit<IPlans, "_id">) => {
-    onEdit(selectedPlan, newData)
-    setSelectedPlan('')
+    onEdit(selectedPlan, newData);
+    setSelectedPlan("");
   };
   return (
     <div className="p-6">
@@ -32,7 +34,9 @@ const PlansListing: React.FC<PlansListingProps> = ({
           >
             <div className="bg-purple-600 text-white p-4">
               <div className="flex justify-between items-center">
-                <h2 className="flex text-xl font-bold">{plan.name}  {plan.isHighlighted && <Crown color="yellow"/>}</h2>
+                <h2 className="flex text-xl font-bold">
+                  {plan.name} {plan.isHighlighted && <Crown color="yellow" />}
+                </h2>
                 <span
                   className={`px-2 py-1 rounded-full text-xs ${
                     plan.isActive ? "bg-green-500" : "bg-red-500"
@@ -49,11 +53,13 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   <div className="text-white">
                     {plan.interval === "monthly" ? "Monthly" : "Yearly"}
                   </div>
-                  
+
                   <div className="text-3xl ">
-                  <span className="line-through text-gray-500">{plan.orginalPrice}</span>
+                    <span className="line-through text-gray-500">
+                      {plan.orginalPrice}
+                    </span>
                     <span className="font-bold"> ₹{plan.offerPrice}</span>
-                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -86,9 +92,9 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   Edit
                 </button>
                 <button
-                  onClick={() =>
-                    onToggleActive(plan._id as string, !plan.isActive)
-                  }
+                  onClick={() => {
+                    setToggledPlan(plan);
+                  }}
                   className={`flex-1 py-2 px-4 rounded ${
                     plan.isActive
                       ? "bg-red-500 hover:bg-red-600 text-white"
@@ -113,6 +119,14 @@ const PlansListing: React.FC<PlansListingProps> = ({
           initialPlan={initialPlan}
         />
       </BaseModal>
+      <Confirm
+        isOpen={Boolean(toggledPlan?._id)}
+        onConfirm={() => {
+          onToggleActive(toggledPlan._id, !toggledPlan.isActive);
+          setToggledPlan(null);
+        }}
+        onClose={() => setToggledPlan(null)}
+      />
     </div>
   );
 };

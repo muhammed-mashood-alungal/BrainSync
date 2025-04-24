@@ -20,7 +20,7 @@ export class UserSubscriptionRepository extends BaseRepository<IUserSubscription
         }
         
         const count = await this.model.countDocuments(find)
-        const subscriptions = await this.model.find(find).skip(skip).limit(limit).populate('planId').populate('userId')
+        const subscriptions = await this.model.find(find).skip(skip).limit(limit).populate('planId').populate('userId').sort({createdAt : -1})
        
         return {subscriptions , count}
     }

@@ -31,7 +31,7 @@ export interface ISessionServices {
   validateSession(
     sessionCode: string,
     userId: unknown 
-  ): Promise<{ status: boolean; message: string }>;
+  ): Promise<{ status: boolean; message: string  , sessionDetails : ISessionModal | null}>;
   updateSession(
     sessionData: ISessionModal,
     sessionId: unknown,

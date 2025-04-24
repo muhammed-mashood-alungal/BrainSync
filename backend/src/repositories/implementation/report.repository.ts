@@ -38,7 +38,8 @@ export class ReportRepository
       .populate('reportedBy')
       .populate('sessionId')
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({createdAt : -1});
     const count = await this.model.countDocuments(find);
     return { reports, count };
   }

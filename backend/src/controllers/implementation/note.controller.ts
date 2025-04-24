@@ -39,15 +39,16 @@ export class NoteController implements INoteController {
         return;
       }
 
-      const { pdfFileId } = await this._noteServices.saveNoteService(
+      const { pdfFileId , status} = await this._noteServices.saveNoteService(
         sessionCode,
         userId as string
       );
+    
       const downloadUrl = `${req.protocol}://${req.get('host')}/api/notes/pdf/${pdfFileId}`;
 
       res
         .status(HttpStatus.CREATED)
-        .json(successResponse(HttpResponse.CREATED, { downloadUrl }));
+        .json(successResponse(HttpResponse.CREATED, { downloadUrl  ,  status}));
     } catch (error) {
       next(error);
     }
