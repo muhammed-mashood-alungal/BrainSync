@@ -20,7 +20,7 @@ const AdminPortal = () => {
  
     useEffect(()=>{
        if(user && user.role == 'admin'){
-        router.push('/admin/students')
+        router.push('/admin/dashboard')
        }else if(user){
         router.push('/')
        }

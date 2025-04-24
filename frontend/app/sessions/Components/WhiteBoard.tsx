@@ -2,6 +2,8 @@
 
 import { useWhiteBoard } from "@/Context/whiteBoardContex";
 import { Slide } from "@/types/whiteBoard.types";
+import { faCircle, faPencil, faSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Lock, LockOpen } from "lucide-react";
 
 const WhiteboardWithSlides: React.FC = () => {
@@ -25,7 +27,7 @@ const WhiteboardWithSlides: React.FC = () => {
             className={`px-4 py-2 h-10  border border-gray-300 text-cyan-500 rounded-md cursor-pointer ${currentMode === 'pencil' ? 'bg-gray-200 border-gray-400' : 'bg-white'}`}
             onClick={() => toggleDrawingMode('pencil')}
           >
-            Pencil
+         <FontAwesomeIcon icon={faPencil} />
           </button>
           <button
             className={`px-4 py-2  h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer ${currentMode === 'rectangle' ? 'bg-gray-200 border-gray-400' : 'bg-white'}`}
@@ -36,7 +38,7 @@ const WhiteboardWithSlides: React.FC = () => {
               }
             }}
           >
-            Rectangle
+           <FontAwesomeIcon icon={faSquare} />
           </button>
           <button
             className={`px-4 py-2 h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer ${currentMode === 'circle' ? 'bg-gray-200 border-gray-400' : 'bg-white'}`}
@@ -47,7 +49,7 @@ const WhiteboardWithSlides: React.FC = () => {
               }
             }}
           >
-            Circle
+            <FontAwesomeIcon icon={faCircle} />
           </button>
           <button
             className={`px-4 py-2 h-10 border border-gray-300 text-cyan-500 rounded-md cursor-pointer ${currentMode === 'select' ? 'bg-gray-200 border-gray-400' : 'bg-white'}`}

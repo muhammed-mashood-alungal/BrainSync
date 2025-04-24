@@ -8,9 +8,6 @@ import { toast } from "react-toastify";
 import {
   LineChart,
   Line,
-  PieChart,
-  Pie,
-  Cell,
   ResponsiveContainer,
   XAxis,
   YAxis,
@@ -20,16 +17,6 @@ import {
 } from "recharts";
 
 interface AdminDashboardProps {
-  //   stats: {
-  //     totalUsers: number;
-  //     totalSessions: number;
-  //     totalGroups: number;
-  //     totalStudyHours: number;
-  //   };
-  //   sessionTrends: Array<{
-  //     date: string;
-  //     sessions: number;
-  //   }>;
   userDistribution: {
     free: number;
     paid: number;
@@ -50,14 +37,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     totalStudyTime: 0,
   });
   
-  const { checkAuth , user} = useAuth()
+  const { checkAuth , user , loading} = useAuth()
   const router = useRouter()
 
   useEffect(()=>{
-     if(!user ||  user.role != 'admin'){
+    if(loading) return
+    if(!user && !loading){
+      router.push('/admin/login')
+    }
+     if(user && user?.role != 'admin'){
       router.push('/login')
      }
-  },[user])
+  },[user , loading])
+
   useEffect(() => {
     async function fetchDashboard() {
       let days = 0;
@@ -131,7 +123,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       try {
           await AuthServices.logout()
           checkAuth()
-          router.push('/login')
+          //router.push('/login')
       } catch (err) {
           toast.error("Logout Failed")
       }
@@ -155,10 +147,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h2 className="text-gray-400 font-medium">Total Users</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold">
-                {formatNumber(stats.totalUsers)}
+              <h3 className="text-3xl font-bold text-cyan-500">
+                {formatNumber(stats.totalUsers)}+
               </h3>
-              <span className="text-green-400 ml-2 text-sm">+12%</span>
             </div>
           </div>
 
@@ -168,10 +159,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h2 className="text-gray-400 font-medium">Total Sessions</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold">
-                {formatNumber(stats.totalSessions)}
+              <h3 className="text-3xl font-bold text-cyan-500">
+                {formatNumber(stats.totalSessions)}+
               </h3>
-              <span className="text-green-400 ml-2 text-sm">+8%</span>
             </div>
           </div>
 
@@ -181,10 +171,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h2 className="text-gray-400 font-medium">Total Groups</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold">
-                {formatNumber(stats.totalGroups)}
+              <h3 className="text-3xl font-bold text-cyan-500">
+                {formatNumber(stats.totalGroups)}+
               </h3>
-              <span className="text-green-400 ml-2 text-sm">+15%</span>
             </div>
           </div>
 
@@ -194,11 +183,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <h2 className="text-gray-400 font-medium">Total Study Hours</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold">
+              <h3 className="text-2xl font-bold text-cyan-500">
                 {stats.totalStudyTime}
-                {/* {formatHours(stats.totalStudyHours)} */}
               </h3>
-              <span className="text-green-400 ml-2 text-sm">+23%</span>
             </div>
           </div>
         </div>

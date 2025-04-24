@@ -11,7 +11,6 @@ import { IPlans } from "@/types/plans.types";
 function page() {
   const [plans, setPlans] = useState<IPlans[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [initialPlan, setInitialPlan] = useState();
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -56,7 +55,7 @@ function page() {
   };
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 ml-5">
         <h1 className="text-2xl font-bold">Subscription Plans</h1>
         <button
           className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md"

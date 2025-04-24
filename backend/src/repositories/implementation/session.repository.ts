@@ -161,7 +161,6 @@ export class SessionRepository
     const hours = Math.floor(totalSeconds / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-
     return `${hours}h ${minutes}m ${seconds}s`;
   }
 
@@ -170,7 +169,7 @@ export class SessionRepository
   ): Promise<{ date: string; sessions: number }[]> {
     const today = startOfDay(new Date());
     const startDate = subDays(today, lastXDays - 1);
-
+    today.setHours(23,59,59,999)
     const sessions = await this.model.aggregate([
       {
         $match: {
@@ -200,18 +199,20 @@ export class SessionRepository
     const sessionMap = new Map(
       sessions.map(item => [item.date, item.sessions])
     );
+    console.log(sessionMap)
 
     const result = Array.from({ length: lastXDays }, (_, i) => {
       const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
+      date.setDate(startDate.getDate() + i+1);
       const formatted = date.toISOString().split('T')[0];
 
+      
       return {
         date: formatted,
         sessions: sessionMap.get(formatted) || 0,
       };
     });
-
+    console.log(result)
     return result;
   }
 }
