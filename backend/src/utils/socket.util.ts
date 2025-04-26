@@ -123,21 +123,17 @@ export default function setupSocket(io: Server) {
       }
 
       const data = { slideIndex: slideIndex || 0, canvasData: canvasData };
-      console.log(`Saving data for room ${roomId}, slide ${slideIndex}`);
       whiteBoardRepo
         .saveWhiteboard(roomId, data)
         .then(() => {
-          console.log(`Saved data for room ${roomId}`);
           socket.to(roomId).emit('canvas-data', data);
         })
         .catch(err => {
-          console.error('Error saving whiteboard:', err);
           socket.emit('error', { message: 'Failed to save whiteboard data' });
         });
     });
     socket.on('new-slide', ({ roomId, id, content }) => {
       if (!roomId) {
-        console.error('No roomId provided in canvas-data');
         return socket.emit('error', { message: 'Room ID is required' });
       }
       const data = { id: id, content: content };
@@ -145,7 +141,6 @@ export default function setupSocket(io: Server) {
     });
 
     socket.on('board-locked', ({ roomId, lockedBy }) => {
-      console.log('board locking', roomId, lockedBy);
       socket.to(roomId).emit('board-locked', lockedBy);
     });
 
@@ -171,7 +166,6 @@ export default function setupSocket(io: Server) {
 
     /// Code Editor Listeners
     socket.on('change-language' , ({language})=>{
-      console.log(`[Server] Language changed to: ${language}`);
       socket.to(socket.roomId as string).emit('change-language' , language)
     })
 
@@ -204,15 +198,10 @@ export default function setupSocket(io: Server) {
         rooms[socket.roomId] = rooms[socket.roomId].filter(usr => {
           return usr.userId != socket.id;
         });
-        console.log('After deleting');
-        console.log(rooms[socket.roomId]);
-        console.log(`User with socket ${socket.id} left room ${socket.roomId}`);
-
+      
         socket.to(socket.roomId).emit('user-disconnected', socket.id);
 
-        console.log(
-          `Room ${socket.roomId} now has ${rooms[socket.roomId]?.length} users`
-        );
+       
 
         if (rooms[socket.roomId]?.length === 0) {
           delete rooms[socket.roomId];

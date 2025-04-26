@@ -1,11 +1,12 @@
 import mongoose from 'mongoose';
 import { env } from './env.config';
 import { Db, GridFSBucket } from 'mongodb';
+import { HttpResponse } from '../constants/responseMessage.constants';
 
 const URI = env.MONGO_URI as string;
 
 if (!URI) {
-  throw new Error('MONGO_URI is not defined in the environment variables.');
+  throw new Error(HttpResponse.MONGO_URL_NOT_DEFINED_IN_ENV);
 }
 
 class MongoDBConfig {
@@ -63,7 +64,7 @@ class MongoDBConfig {
 
     if (!this.gfs) {
       throw new Error(
-        'GridFSBucket not initialized. Ensure MongoDB is connected.'
+        HttpResponse.GRIDFS_NOT_INITIATED
       );
     }
     return this.gfs;

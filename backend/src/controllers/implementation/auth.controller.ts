@@ -4,13 +4,10 @@ import { IAuthService } from '../../services/interface/IAuthService';
 import { HttpStatus } from '../../constants/status.constants';
 import { createHttpsError, HttpError } from '../../utils/httpError.utils';
 import { HttpResponse } from '../../constants/responseMessage.constants';
-import { generateAccesToken } from '../../utils/jwt.util';
 import { env } from '../../configs/env.config';
 import { IUserModel } from '../../models/user.model';
 import { IUserService } from '../../services/interface/IUserService';
-import { IUser } from '../../types/user.types';
 import { successResponse } from '../../utils/response';
-import { token } from 'morgan';
 
 export class AuthController implements IAuthController {
   constructor(

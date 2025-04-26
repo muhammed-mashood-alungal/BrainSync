@@ -1,5 +1,3 @@
-import { get } from 'mongoose';
-
 export const env = {
   get PORT() {
     return process.env.PORT;
@@ -49,10 +47,34 @@ export const env = {
   get SHARED_CALENDAR_ID() {
     return process.env.SHARED_CALENDAR_ID;
   },
-  get RAZORPAY_SECRET_KEY(){
-    return process.env.RAZORPAY_SECRET_KEY
+  get RAZORPAY_SECRET_KEY() {
+    return process.env.RAZORPAY_SECRET_KEY;
   },
-  get RAZORPAY_KEY_ID(){
-    return process.env.RAZORPAY_KEY_ID
-  }
+  get RAZORPAY_KEY_ID() {
+    return process.env.RAZORPAY_KEY_ID;
+  },
+  get FIREBASE_API_KEY() {
+    return process.env.FIREBASE_API_KEY;
+  },
+  get FIREBASE_DATABASE_URL() {
+    return process.env.FIREBASE_DATABASE_URL;
+  },
+  get FIREBASE_AUTH_DOMAIN() {
+    return process.env.FIREBASE_AUTH_DOMAIN;
+  },
+  get FIREBASE_PROJECT_ID() {
+    return process.env.FIREBASE_PROJECT_ID;
+  },
+  get FIREBASE_STORAGE_BUCKET() {
+    return process.env.FIREBASE_STORAGE_BUCKET;
+  },
+  get FIREBASE_MESSSAGE_SENDER_ID() {
+    return process.env.FIREBASE_MESSSAGE_SENDER_ID;
+  },
+  get FIREBASE_APP_ID() {
+    return process.env.FIREBASE_APP_ID;
+  },
+  get FIREBASE_MEASUREMENT_ID() {
+    return process.env.FIREBASE_MEASUREMENT_ID;
+  },
 };

@@ -22,7 +22,6 @@ const subscriptionServices = new SubscriptionServices(
 );
 
 cron.schedule('0 9 * * *', async () => {
-  console.log('Running Daily nitification job');
 
   const activeSubscriptions =
     await subscriptionServices.getAllActiveSubscriptions();

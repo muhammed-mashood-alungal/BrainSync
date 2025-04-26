@@ -80,7 +80,6 @@ export class SessionServices implements ISessionServices {
     );
     const groups = myGroups.map(grp => grp._id);
     
-    console.log(startDate , endDate)
     const {sessions , count} = await this._sesionRepository.getGroupsSessions(
       groups as Types.ObjectId[],
       sort as boolean,

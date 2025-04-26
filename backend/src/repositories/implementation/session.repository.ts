@@ -37,15 +37,11 @@ export class SessionRepository
     startDate?: string,
     endDate?: string
   ): Promise<{ sessions: ISessionModal[]; count: number }> {
-    console.log(sort);
     let sortOrder: 1 | -1 = sort == true ? 1 : -1;
     let find: any = {};
     if (subject) {
       find.subject = { $regex: subject, $options: 'i' };
     }
-    console.log('start and end Date');
-    console.log(startDate, endDate);
-    console.log(((startDate as string) + endDate) as string);
 
     if (startDate && endDate && startDate != 'null' && endDate != 'null') {
       const start = new Date(startDate as string);
@@ -62,7 +58,6 @@ export class SessionRepository
     if (searchQuery) {
       find.sessionName = { $regex: searchQuery, $options: 'i' };
     }
-    console.log(sortOrder);
     const count = await this.model.countDocuments({
       ...find,
       groupId: { $in: groups },
@@ -86,10 +81,8 @@ export class SessionRepository
     startDate?: string,
     endDate?: string
   ): Promise<{ sessions: ISessionModal[]; count: number }> {
-    console.log(sort);
     let sortOrder: 1 | -1 = sort == true ? 1 : -1;
     let find: any = {};
-    console.log(subject)
     if (subject) {
       find.subject = { $regex: subject, $options: 'i' };
     }
@@ -117,7 +110,6 @@ export class SessionRepository
       .sort({ date: sortOrder , createdAt : sortOrder })
       .populate('createdBy')
       .populate('groupId');
-     console.log(count)
     return { sessions, count };
   }
   async updateSession(
@@ -199,7 +191,6 @@ export class SessionRepository
     const sessionMap = new Map(
       sessions.map(item => [item.date, item.sessions])
     );
-    console.log(sessionMap)
 
     const result = Array.from({ length: lastXDays }, (_, i) => {
       const date = new Date(startDate);
@@ -212,7 +203,6 @@ export class SessionRepository
         sessions: sessionMap.get(formatted) || 0,
       };
     });
-    console.log(result)
     return result;
   }
 }

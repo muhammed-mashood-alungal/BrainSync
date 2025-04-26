@@ -34,5 +34,7 @@ export const HttpResponse = {
   SESSION_ID_NOT_PROVIDED: 'Invalid Session ID',
   NO_CONTENT_FOR_PDF: 'No Content in Your Pdf',
   PAYMENT_FAILED : 'Payment Transaction Failed',
-  USER_ALREADY_HAVE_AN_ACTIVE_PLAN : 'This is user have already a Active Plan'
+  USER_ALREADY_HAVE_AN_ACTIVE_PLAN : 'This is user have already a Active Plan',
+  MONGO_URL_NOT_DEFINED_IN_ENV:'MONGO_URI is not defined in the environment variables.',
+  GRIDFS_NOT_INITIATED:'GridFSBucket not initialized. Ensure MongoDB is connected.'
 };

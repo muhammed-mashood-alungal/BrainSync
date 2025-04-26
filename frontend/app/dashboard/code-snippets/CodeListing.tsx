@@ -40,7 +40,6 @@ function CodeSnippetListing() {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
-    console.log("asdfasdfasdfasdfasdfasdf");
     URL.revokeObjectURL(link.href);
   };
 
@@ -49,14 +48,11 @@ function CodeSnippetListing() {
     limit: number,
     searchQuery: string
   ) {
-    console.log("fetchign");
     const { snippets, count } = await codeSnippetServices.getMyCodes(
       searchQuery,
       (currentPage - 1) * limit,
       limit
     );
-    console.log("fetched");
-    console.log(snippets, count);
     setTotalCount(count);
     setSnippets(snippets);
   }

@@ -237,7 +237,6 @@ function ProgressChart() {
     const fetchData =async () => {
     
     const result =await UserServices.getUserSessionGraph(selectedFilter)
-    console.log(result)
       if(result){
         setGraphData(
             result?.map(item => ({

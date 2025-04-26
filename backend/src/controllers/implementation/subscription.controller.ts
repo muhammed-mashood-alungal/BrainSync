@@ -14,10 +14,12 @@ export class SubscriptionController implements ISubscriptionController {
     next: NextFunction
   ): Promise<void> {
     try {
-        const userId = req.user
-        console.log(userId)
-      const { subscriptionData , planType } = req.body;
-      await this._subscriptionServices.createSubscription({...subscriptionData,userId} , planType);
+      const userId = req.user;
+      const { subscriptionData, planType } = req.body;
+      await this._subscriptionServices.createSubscription(
+        { ...subscriptionData, userId },
+        planType
+      );
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
       next(error);
@@ -29,14 +31,16 @@ export class SubscriptionController implements ISubscriptionController {
     next: NextFunction
   ): Promise<void> {
     try {
-        const {status , skip , limit} = req.query
-      const {subscriptions , count } =
-        await this._subscriptionServices.getAllSubscription(status as string , skip , limit);
-
-        console.log(subscriptions , count)
+      const { status, skip, limit } = req.query;
+      const { subscriptions, count } =
+        await this._subscriptionServices.getAllSubscription(
+          status as string,
+          skip,
+          limit
+        );
       res
         .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK, { subscriptions , count}));
+        .json(successResponse(HttpResponse.OK, { subscriptions, count }));
     } catch (error) {
       next(error);
     }
@@ -63,11 +67,9 @@ export class SubscriptionController implements ISubscriptionController {
     next: NextFunction
   ): Promise<void> {
     try {
-        const {subscriptionId} = req.params
-      await this._subscriptionServices.cancelSubscription(subscriptionId)
-      res
-        .status(HttpStatus.OK)
-        .json(successResponse(HttpResponse.OK));
+      const { subscriptionId } = req.params;
+      await this._subscriptionServices.cancelSubscription(subscriptionId);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
       next(error);
     }

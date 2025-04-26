@@ -1,4 +1,4 @@
-@import "tailwindcss";
+/* @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
 
 :root {
@@ -30,4 +30,35 @@ body {
 
 html {
   font-family: var(--font-archivo);
+} */
+@import "tailwindcss";
+@import "https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap";
+
+:root {
+  --background: #fff;
+  --foreground: #171717;
+  --font-archivo: "Archivo", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Arial", sans-serif; /* Fallback for undefined font-geist-sans */
+  --font-mono: "Courier New", monospace; /* Fallback for undefined font-geist-mono */
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-archivo);
+}
+
+html {
+  font-family: var(--font-archivo);
+}
+
+/* Removed @theme inline as it’s invalid CSS */

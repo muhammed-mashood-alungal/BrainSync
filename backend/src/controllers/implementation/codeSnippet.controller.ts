@@ -22,11 +22,9 @@ export class CodeSnippetController implements ICodeSnippetController{
 
     async getUserCodeSnippets(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            console.log('Server hit')
             const userId = req.user
             const {searchQuery , skip , limit} = req.query
             const {snippets , count} = await this._codeSnippetServices.getUserCodeSnippets(userId , searchQuery as string , skip , limit)
-            console.log(snippets , count)
             res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {snippets , count}))
         } catch (error) {
             next(error)

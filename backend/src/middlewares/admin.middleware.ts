@@ -4,7 +4,7 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from '../utils/jwt.util';
-import { decode, JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import { HttpStatus } from '../constants/status.constants';
 import { HttpResponse } from '../constants/responseMessage.constants';
 

@@ -5,7 +5,6 @@ export const dynamic = 'force-dynamic';
 export default async function PremiumPage() {
 
     const plans = await getActivePremuimPlans()
-    console.log(plans)
     return (
     <div className="">
       <PremiumPlans plans={plans} />

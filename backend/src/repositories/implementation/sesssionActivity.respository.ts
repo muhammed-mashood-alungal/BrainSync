@@ -117,7 +117,6 @@ export class SessionActivityRepository
         duration: graphMap[label] || 0,
       }));
     }
-    console.log(graphData);
     return { graph: graphData };
   }
   async totalTimeSendByUser(userId: Types.ObjectId): Promise<string> {

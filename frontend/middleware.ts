@@ -20,9 +20,7 @@ export async function middleware(req: NextRequest) {
         if (!token && isProtectedRoute) {
             return NextResponse.redirect(new URL("/login", req.url))
         }
-        console.log('asdfasdf')
         let user = await AuthServices.verifyToken(token as string) as JwtPayload
-        console.log('asdfasdfasdfasdf')
         if(!user){
             user = await AuthServices.refreshToken(refreshToken as string) as JwtPayload
         }

@@ -62,8 +62,6 @@ export class SessionController implements ISessionController {
       const userId = req.user;
       const { searchQuery, subject, startDate, endDate, sort, skip, limit } =
         req.query;
-      console.log('queury');
-      console.log(startDate, endDate);
       const { sessions, count } = await this._sessionServices.getMySessions(
         userId,
         sort,
@@ -92,14 +90,12 @@ export class SessionController implements ISessionController {
       const userId = req.user;
       const { status, message, sessionDetails } =
         await this._sessionServices.validateSession(sessionCode, userId);
-      res
-        .status(HttpStatus.OK)
-        .json(
-          successResponse(HttpResponse.OK, {
-            result: { status, message },
-            sessionDetails: sessionDetails,
-          })
-        );
+      res.status(HttpStatus.OK).json(
+        successResponse(HttpResponse.OK, {
+          result: { status, message },
+          sessionDetails: sessionDetails,
+        })
+      );
     } catch (err) {
       next(err);
     }
@@ -150,7 +146,6 @@ export class SessionController implements ISessionController {
       const userId = req.user;
       const { sessionCode } = req.params;
       const { duration, log } = req.body;
-      console.log(userId, sessionCode, duration, log);
       const response = await this._sessionServices.addTimeSpendOnSession(
         userId,
         sessionCode,

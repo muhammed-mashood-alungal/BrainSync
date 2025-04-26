@@ -39,13 +39,16 @@ export class RazorpayController implements IRazorpayController {
         razorpay_signature
       );
 
-      if(!isVerified){
-       throw createHttpsError(HttpStatus.BAD_REQUEST , HttpResponse.PAYMENT_FAILED)
+      if (!isVerified) {
+        throw createHttpsError(
+          HttpStatus.BAD_REQUEST,
+          HttpResponse.PAYMENT_FAILED
+        );
       }
 
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
-        next(error)
+      next(error);
     }
   }
 }

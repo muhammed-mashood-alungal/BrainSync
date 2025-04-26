@@ -1,0 +1,13 @@
+{
+    "extends": ["stylelint-config-standard"],
+    "rules": {
+      "indentation": 2,
+      "number-leading-zero": "always",
+      "import-notation": "string",
+      "comment-empty-line-before": "always",
+      "color-hex-length": "short",
+      "selector-class-pattern": "^[a-z][a-zA-Z0-9-]+$",
+      "color-function-notation": "modern",
+      "alpha-value-notation": "number"
+    }
+  }

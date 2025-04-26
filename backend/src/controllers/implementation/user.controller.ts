@@ -148,22 +148,30 @@ export class UserController implements IUserController {
     try {
       const userId = req.user;
       const { filterBy } = req.query;
-      const {graph} = await this._userServices.getUserSessionProgress(
+      const { graph } = await this._userServices.getUserSessionProgress(
         userId,
         filterBy as string
       );
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK, {graph}));
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { graph }));
     } catch (error) {
       next(error);
     }
   }
-  async getProfileStats(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getProfileStats(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const userId = req.user
-     const  stats =await this._userServices.getUserOverallStats(userId)
-     res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK , {stats}))
+      const userId = req.user;
+      const stats = await this._userServices.getUserOverallStats(userId);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { stats }));
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 }
