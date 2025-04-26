@@ -1,15 +1,26 @@
 'use client'
 import { notificationServices } from '@/services/client/notification.client';
 import { INotificationTypes } from '@/types/notificationTypes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-interface NotificationPageProps {
-  notifications:INotificationTypes[];
-}
+// interface NotificationPageProps {
+//   notifications:INotificationTypes[];
+// }
 
-const NotificationList: React.FC<NotificationPageProps> = ({ notifications }) => {
-  const [notificationList, setNotificationList] = useState<INotificationTypes[]>(notifications);
+const NotificationList: React.FC= () => {
+  const [notificationList, setNotificationList] = useState<INotificationTypes[]>([]);
 
+  useEffect(()=>{
+   async function fetchNotifications(){
+      try {
+        const notifications = await notificationServices.getMyNotifications()
+        setNotificationList(notifications)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchNotifications()
+  },[])
   // Split notifications into read and unread
   const unreadNotifications = notificationList.filter(notif => !notif.isRead);
   const readNotifications = notificationList.filter(notif => notif.isRead);
@@ -160,7 +171,7 @@ const NotificationList: React.FC<NotificationPageProps> = ({ notifications }) =>
         )}
 
         {/* Empty state */}
-        {notifications.length === 0 && (
+        {notificationList.length === 0 && (
           <div className="text-center py-20">
             <div className="inline-flex bg-gray-800 rounded-full p-6 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -168,7 +179,7 @@ const NotificationList: React.FC<NotificationPageProps> = ({ notifications }) =>
               </svg>
             </div>
             <h3 className="text-xl font-medium mb-2">No notifications yet</h3>
-            <p className="text-gray-400">When you get notifications, they'll show up here</p>
+            <p className="text-gray-400">When you get notifications, they will show up here</p>
           </div>
         )}
       </div>

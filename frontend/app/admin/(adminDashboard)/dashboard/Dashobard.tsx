@@ -24,7 +24,6 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({
-  userDistribution,
 }) => {
   const [timeRange, setTimeRange] = useState<"7days" | "14days" | "30days">(
     "7days"
@@ -98,34 +97,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const filteredTrends = getFilteredTrends();
 
-  // Colors for charts
-  const COLORS = ["#06b6d4", "#4b5563"]; // cyan-500, gray-600
-
+ 
   // Format numbers with commas
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  // Format hours
-  const formatHours = (hours: number): string => {
-    if (hours < 1000) return `${hours}h`;
-    return `${(hours / 1000).toFixed(1)}k h`;
-  };
 
   // Calculate user distribution for pie chart
-  const pieData = [
-    { name: "Paid Users", value: userDistribution.paid },
-    { name: "Free Users", value: userDistribution.free },
-  ];
+  // const pieData = [
+  //   { name: "Paid Users", value: userDistribution.paid },
+  //   { name: "Free Users", value: userDistribution.free },
+  // ];
 
 
    const logout = async () => {
       try {
           await AuthServices.logout()
           checkAuth()
-          //router.push('/login')
-      } catch (err) {
-          toast.error("Logout Failed")
+      } catch (err :unknown) {
+          toast.error((err as Error).message || "Logout Failed")
       }
   }
 

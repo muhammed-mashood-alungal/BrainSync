@@ -6,6 +6,8 @@ import Confirm from '@/Components/ConfirmModal/ConfirmModal'
 import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
 import Table from '@/Components/Table/Table'
+import SimpleStudyLoading from '@/Components/Loading/Loading'
+import Image from 'next/image'
 
 
 function StudentList({ initialStudents  , totalCount : initialCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
@@ -14,7 +16,6 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
     const [selectedStudent, setSelectedStudent] = useState<IUserType | null>(null)
     const [isViewModalOpen, setIsViewModalOpen] = useState(false)
     const [loading , setIsLoading] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
     const [blockingStudent, setblockingStudents] = useState('')
    // const [currentPage, setCurrentPage] = useState(1)
     const limit = 8
@@ -23,7 +24,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
     const [totalCount , setTotalCount] = useState(initialCount)
 
     useEffect(() => {
-        fetchStudents(1,limit,searchQuery)
+        fetchStudents(1,limit,'')
         setIsLoading(false)
     }, [])
 
@@ -50,7 +51,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
 
     const blockOrUnblock = async () => {
         try {
-            let studentId = blockingStudent
+            const studentId = blockingStudent
             await AdminServices.blockOrUnBlockStudent(studentId)
             setStudents(prevStudents =>
                 prevStudents.map(student =>
@@ -73,11 +74,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
         setIsViewModalOpen(true)
     };
 
-    const filteredStudents = students.filter(student =>
-        student.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.email.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-
+   
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -95,7 +92,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
               
             </div>
 
-
+            {loading && <SimpleStudyLoading/>}
             <div className="overflow-x-auto">
                 <Table
                     onPageChange={(page : number , limit : number , searchQuery : string | undefined)=>{
@@ -108,7 +105,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                             label: "User",
                             render: (student: IUserType) => (
                                 <div className="flex items-center">
-                                    <img
+                                    <Image
                                         className="h-10 w-10 rounded-full object-cover"
                                         src={student.profilePicture?.url || "/profilePic.png"}
                                         alt={student.username}

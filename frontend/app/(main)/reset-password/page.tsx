@@ -1,4 +1,4 @@
-import ResetForm from "./ResetForm";
+import ResetForm from "./resetForm";
 
 
 export default function page() {

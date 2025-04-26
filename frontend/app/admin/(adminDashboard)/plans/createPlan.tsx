@@ -261,7 +261,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
               {plan.features.length === 0 && (
                 <div className="text-center py-4 text-gray-500">
-                  No features added yet. Click the "Add Feature" button to add
+                  No features added yet. Click the &quot;Add Feature&quot; button to add
                   one.
                 </div>
               )}

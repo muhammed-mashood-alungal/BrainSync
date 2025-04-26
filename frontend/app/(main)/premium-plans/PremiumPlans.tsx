@@ -5,14 +5,12 @@ import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { useRazorpay } from "react-razorpay";
 import { toast } from "react-toastify";
 interface PremiumPlansProps {
   plans: IPlans[];
 }
 
 const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
-  const Razorpay = useRazorpay();
   const { user } = useAuth();
   const router = useRouter()
   const handleOnlinePayment = (amount: number) => {
@@ -47,7 +45,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                 razorpayPaymentId: response.razorpay_payment_id,
               });
             } catch (err) {
-              reject({ success: false, message: "Payment Failed" });
+              reject({ success: false, message: "Payment Failed" ,err});
             }
           },
           prefill: {
@@ -112,9 +110,11 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
         }
         router.push(`/premium-plans/purchase-success?data=${encodeURIComponent(JSON.stringify(data))}`)
       } else {
-        toast.error("Payment failed");
+        
       }
-    } catch (error) {}
+    } catch (error : unknown) {
+      toast.error((error as Error).message || "Payment failed");
+    }
   };
   return (
     <div className="min-h-screen text-white p-6">

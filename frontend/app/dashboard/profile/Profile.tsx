@@ -4,19 +4,15 @@ import Input from "@/Components/Input/Input";
 import BaseModal from "@/Components/Modal/Modal";
 import { useAuth } from "@/Context/auth.context";
 import { UserServices } from "@/services/client/user.client";
-import { IuserSignUp } from "@/types/userSignUp.types";
 import { validateResetPasswords } from "@/validations";
-import Link from "next/link";
-import { ChangeEvent, use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Trash } from "lucide-react";
-import { AuthServices } from "@/services/client/auth.client";
-import { useRouter } from "next/navigation";
 import UserInNav from "@/Components/UserInNav/UserInNav";
-import { stat } from "fs";
+
 
 function Profile() {
-  const { user, checkAuth } = useAuth();
+  const { user } = useAuth();
   const [userData, setUserData] = useState<{
     username: string;
     email: string;
@@ -61,8 +57,7 @@ function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNameEditOn, setIsNameEdit] = useState(false);
   const [isChangePass, setIsChangePass] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-
+  
   const [newUsername, setNewUsername] = useState("");
   const [pass, setPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
@@ -72,7 +67,6 @@ function Profile() {
     password: "",
     confirmPassword: "",
   });
-  const router = useRouter();
 
   const handleImageDelete = async () => {
     try {
@@ -122,7 +116,7 @@ function Profile() {
     }
   };
   const handleSaveCroppedImage = async (croppedFile: File) => {
-    setIsUploading(true);
+   // setIsUploading(true);
 
     try {
       const reader = new FileReader();
@@ -138,7 +132,7 @@ function Profile() {
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
-      setIsUploading(false);
+    //  setIsUploading(false);
     }
   };
 

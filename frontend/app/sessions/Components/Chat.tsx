@@ -1,8 +1,8 @@
 import Confirm from '@/Components/ConfirmModal/ConfirmModal';
 import { useAuth } from '@/Context/auth.context';
 import { useChat } from '@/Context/chat.context';
-import { Delete, DeleteIcon, Trash } from 'lucide-react';
-import React, { useState, useRef, useEffect, SyntheticEvent, RefObject } from 'react';
+import {  Trash } from 'lucide-react';
+import React, { useState, useRef, useEffect, SyntheticEvent } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
@@ -23,7 +23,7 @@ const ChatComponent = () => {
         setIsOpen(false);
     };
 
-    const handleEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
+    const handleEmojiClick = (emojiData: EmojiClickData) => {
         setNewMessage((prev) => prev + emojiData.emoji);
       };
 

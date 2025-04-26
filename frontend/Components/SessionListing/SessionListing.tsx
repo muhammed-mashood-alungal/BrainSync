@@ -42,7 +42,7 @@ interface GenericListingProps<T> {
   limit?: number;
 }
 
-const GenericListing = <T extends {}>({
+const GenericListing = <T extends object>({
   items,
   setItems,
   renderCard,

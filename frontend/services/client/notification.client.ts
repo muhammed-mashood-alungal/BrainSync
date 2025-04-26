@@ -1,4 +1,5 @@
 import { notificationInstance } from "@/axios/createInstance"
+import { INotificationTypes } from "@/types/notificationTypes"
 
 export const notificationServices = {
     readAllNotifications: async ():Promise<void>=>{
@@ -14,5 +15,14 @@ export const notificationServices = {
         } catch (error) {
             console.log(error)
         }
-    }
+    },
+    getMyNotifications : async () : Promise<INotificationTypes[]> =>{
+      try {
+          const response = await notificationInstance.get('/my-notifications')
+          return response.data?.notifications
+      } catch (error) {
+          console.log(error)
+          throw Error("Something Went Wrong")
+      }
+  }
 }

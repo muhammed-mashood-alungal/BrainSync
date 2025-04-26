@@ -1,8 +1,7 @@
-import { GroupServices } from "@/services/client/group.client";
 import GroupList from "./GroupList";
 import { IGroupType } from "@/types/groupTypes";
 import { getAllGroupsServer } from "@/services/server/group.server";
-
+export const dynamic = 'force-dynamic';
 
 const GroupsPage: React.FC =async () => {
 
@@ -10,6 +9,7 @@ const GroupsPage: React.FC =async () => {
     try {
       return await getAllGroupsServer();
     } catch (err) {
+      console.log(err)
       return [];
     }
   };

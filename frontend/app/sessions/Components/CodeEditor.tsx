@@ -1,4 +1,4 @@
-import React, { useActionState, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 import {
   faGolang,
@@ -8,10 +8,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faC } from "@fortawesome/free-solid-svg-icons";
-import { Langar } from "next/font/google";
-import { Code, Lock } from "lucide-react";
-import { pistonInstances } from "@/axios/createInstance";
-import { codeEditorServices } from "@/services/client/code.client";
+import { Lock } from "lucide-react";
 import { useCodeEditor } from "@/Context/codeEditor.context";
 import BaseModal from "@/Components/Modal/Modal";
 import Input from "@/Components/Input/Input";
@@ -23,17 +20,17 @@ function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,
     isError,
-    isLocked,
-    lockCode,
-    lockedBy,
+   // isLocked,
+   // lockCode,
+   // lockedBy,
     output,
-    setIsError,
+   // setIsError,
     onCodeChange,
-    unLockCode,
-    writer,
-    setOutput,
+  //  unLockCode,
+    //writer,
+   // setOutput,
     value,
-    setValue,
+   // setValue,
     onMount,
     onSelect,
     runCode,
@@ -45,15 +42,7 @@ function CodeEditor({ roomId }: { roomId: string }) {
   const { user } = useAuth();
   type Language = "javascript" | "python" | "java" | "c" | "go";
 
-  const langauges = ["javascript", "python", "java", "c", "go"];
-  const LANGUAGE_VERSIONS = {
-    javascript: "18.15.0",
-    python: "3.10.0",
-    java: "15.0.2",
-    c: "10.2.0",
-    go: "1.16.2",
-  };
-
+ 
   const isValidFileName = (name: string) => {
     const invalidChars = /[\\\/:*?"<>|]/;
     return !invalidChars.test(name.trim()) && name.trim().length > 0;
@@ -66,7 +55,7 @@ function CodeEditor({ roomId }: { roomId: string }) {
       if (!isValidFileName(title)) {
         return setSetTitleError("Please Enter a valid Title");
       }
-      const result = await codeSnippetServices.saveCode({
+      await codeSnippetServices.saveCode({
         title,
         language,
         sourceCode: value,
@@ -200,7 +189,7 @@ function CodeEditor({ roomId }: { roomId: string }) {
                   output.map((line, i) => <p key={i}>{line}</p>)
                 ) : (
                   <p className="text-gray-600">
-                    Click "Run Code" to see the output here
+                    Click &quot;Run Code&quot; to see the output here
                   </p>
                 )}
               </div>

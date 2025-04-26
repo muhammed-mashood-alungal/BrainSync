@@ -1,48 +1,31 @@
 'use client'
-import React, { useEffect, useReducer, useState } from 'react';
-import Image from 'next/image';
+import React, {  useState } from 'react';
 import BaseModal from '@/Components/Modal/Modal'
-import Input from '@/Components/Input/Input';
-import { validateCreateGroup } from '@/validations';
 import { GroupServices } from '@/services/client/group.client';
 import { useAuth } from '@/Context/auth.context';
 import { toast } from 'react-toastify';
-import { UserServices } from '@/services/client/user.client';
-import { IUserType } from '@/types/userTypes';
 import { IGroupType } from '@/types/groupTypes';
 import Confirm from '@/Components/ConfirmModal/ConfirmModal';
-import { group } from 'console';
 import GroupDetails from '../../../../Components/GroupDetails/GroupDetails';
 import EmptyList from '@/Components/EmptyList/EmptyList';
+import Image from 'next/image';
 
 
 function GroupList({inititalGroups } :{inititalGroups :IGroupType[]}) {
     const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [newGroupName, setNewGroupName] = useState('');
-    const [memberEmail, setMemberEmail] = useState('')
     const { user } = useAuth()
-    const [selectedMembers, setSelectedMembers] = useState<IUserType[]>([])
     const [selectedGroup, setSelectedGroup] = useState('')
     const [viewGroup, setViewGroup] = useState<IGroupType>()
 
-    const [err, setErr] = useState({
-        groupName: '',
-        members: ''
-    })
-    // useEffect(() => {
-    //     async function fetchGroups() {
-    //         const res = await GroupServices.getAllGroups()
-    //         setGroups(res)
-    //     }
-    //     fetchGroups()
-    // }, [user])
-
+    // const [err, setErr] = useState({
+    //     groupName: '',
+    //     members: ''
+    // })
 
 
     const handleActivation = async () => {
         try {
-            let groupId = selectedGroup
+            const groupId = selectedGroup
             await GroupServices.deactivate(groupId)
             toast.success("Updated Group Status")
             setGroups((grps) => {
@@ -51,22 +34,22 @@ function GroupList({inititalGroups } :{inititalGroups :IGroupType[]}) {
                 })
             })
         } catch (error: unknown) {
-            if (err instanceof Error) {
-                toast.error(err.message)
+            if (error instanceof Error) {
+                toast.error(error.message)
             } else {
                 toast.error("Unexpected Error Occured")
             }
         } finally {
             setSelectedGroup('')
-            closeModal()
+          //  closeModal()
         }
     }
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setNewGroupName('');
-        setMemberEmail('');
-        setSelectedMembers([]);
-    }
+    // const closeModal = () => {
+    //     setIsModalOpen(false);
+    //     setNewGroupName('');
+    //     setMemberEmail('');
+    //     setSelectedMembers([]);
+    // }
 
 
     return (
@@ -90,7 +73,7 @@ function GroupList({inititalGroups } :{inititalGroups :IGroupType[]}) {
                                             key={member._id}
                                             className="w-8 h-8 rounded-full mr-1 flex items-center justify-center text-xs font-bold"
                                         >
-                                            <img src={member?.profilePicture?.url || "/profilePic.png"} alt="" className='h-8 w-8 rounded-2xl' />
+                                            <Image src={member?.profilePicture?.url || "/profilePic.png"} alt="" className='h-8 w-8 rounded-2xl' />
                                         </div>
                                     ))}
                                     {group.members.length > 5 && (

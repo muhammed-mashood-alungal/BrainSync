@@ -2,9 +2,9 @@
 import Button from '@/Components/Button/Button';
 import Input from '@/Components/Input/Input';
 import { AuthServices } from '@/services/client/auth.client';
-import { validateEmail, validateLoginForm, validateResetPasswords } from '@/validations';
+import { validateResetPasswords } from '@/validations';
 import Link from 'next/link';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
@@ -33,9 +33,9 @@ function ResetForm() {
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         try {
-            let result = validateResetPasswords(password,confirmPass)
+            const result = validateResetPasswords(password,confirmPass)
             if (result.status) {
-                const response = await AuthServices.resetPassword(token  as string, password)
+                await AuthServices.resetPassword(token  as string, password)
                 router.push('/login')
             } else {
                 if(result.err?.password) setPasswordErr(result.err.password)

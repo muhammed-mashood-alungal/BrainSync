@@ -8,7 +8,7 @@ import { Lock, LockOpen } from "lucide-react";
 
 const WhiteboardWithSlides: React.FC = () => {
   const { toggleDrawingMode , currentMode, handleColorChange, clearCurrentSlide, deleteSelected,
-    currentColor, handleBrushSizeChange, brushSize, canvas, canvasRef, createNewSlide,
+    currentColor, handleBrushSizeChange, brushSize,  canvasRef, createNewSlide,
     currentSlideIndex, nextSlide, prevSlide, slides, navigateToSlide ,isLocked ,lockBoard , unlockBoard
   } = useWhiteBoard()
 

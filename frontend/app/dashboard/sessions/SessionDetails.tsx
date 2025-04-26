@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Clock, Link as LinkIcon, Calendar, BookOpen, Tag, Info, Group, UserCheck2 } from 'lucide-react';
+import { Clock, Calendar, BookOpen, Tag, Info, Group, UserCheck2 } from 'lucide-react';
 import { ISessionTypes } from '@/types/sessionTypes';
-import Link from 'next/link';
 import { IGroupType } from '@/types/groupTypes';
 import { IUserType } from '@/types/userTypes';
 import LinkCopyButton from './LinkCopyButton';
@@ -25,10 +24,6 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({ session }) =>
             hour: '2-digit',
             minute: '2-digit'
         })
-    }
-
-    const handleCopy = (link: string) => {
-        navigator.clipboard.writeText(link)
     }
 
     const getStatus = (start: Date | string, end: Date | string) => {

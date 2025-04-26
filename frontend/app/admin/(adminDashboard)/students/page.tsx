@@ -1,9 +1,8 @@
-import { AdminServices } from "@/services/client/admin.client";
 import StudentList from "./StudentList";
 import { IUserType } from "@/types/userTypes";
 import { getAllstudents } from "@/services/server/user.server";
 
-
+export const dynamic = 'force-dynamic';
 
 const StudentListing: React.FC = async () => {
     const {students , count} = await getAllstudents()

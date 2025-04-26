@@ -1,4 +1,3 @@
-// layout.jsx (Dashboard Layout)
 'use client'
 
 import Sidebar from '@/Components/DashboardSidebar/DashboardSidebar';

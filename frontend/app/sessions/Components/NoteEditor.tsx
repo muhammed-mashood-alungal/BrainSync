@@ -28,17 +28,7 @@ import {
 
 const MenuBar = () => {
   const { editor } = useCurrentEditor();
-  const [editorContent, setEditorContent] = useState("");
-
-  const handleUpdate = ({ editor }: { editor: any }) => {
-    // Get content as HTML
-    const html = editor.getHTML();
-    // Get content as JSON (optional)
-    const json = editor.getJSON();
-
-    // Update state with the new content
-    setEditorContent(html);
-  };
+ 
 
   if (!editor) {
     return null;
@@ -300,16 +290,9 @@ const extensions = [
   }),
 ];
 
-// Add some global Tailwind styling for the editor content
-const EditorContent = () => {
-  return (
-    <div className="prose max-w-none p-4">
-      {/* TipTap will inject content here */}
-    </div>
-  );
-};
 
-export default ({ roomId }: { roomId: string }) => {
+
+const NoteEditor= ({ roomId }: { roomId: string }) => {
   const [editorContent, setEditorContent] = useState<string | null>(null);
   const { user } = useAuth();
 
@@ -348,3 +331,4 @@ export default ({ roomId }: { roomId: string }) => {
     </>
   );
 };
+export default NoteEditor

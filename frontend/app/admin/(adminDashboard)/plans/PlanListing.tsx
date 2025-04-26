@@ -1,6 +1,6 @@
 import BaseModal from "@/Components/Modal/Modal";
 import { IPlans } from "@/types/plans.types";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CreatePlan from "./createPlan";
 import { Crown } from "lucide-react";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";

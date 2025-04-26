@@ -4,7 +4,6 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 import Input from '@/Components/Input/Input';
 import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
-import { tree } from 'next/dist/build/templates/app-page';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -13,14 +12,29 @@ import { toast } from 'react-toastify';
 export default function VerifyOtp() {
   const [otp, setOtp] = useState('')
   const [timer, setTimer] = useState(60)
-  const email = sessionStorage.getItem("email")
+ // const email = sessionStorage.getItem("email")
+  const [email, setEmail] = useState<string | null>(null);
   const { user, checkAuth } = useAuth()
   const [loading , setLoading] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    // This will run only on the client
+    if (typeof window !== 'undefined') {
+      const savedEmail = sessionStorage.getItem("email");
+      if (savedEmail) {
+        setEmail(savedEmail);
+      } else {
+        router.push('/signup');
+      }
+    }
+  }, [router]);
+
   useEffect(() => {
     if (user) {
       router.push('/')
     }
-  }, [user])
+  }, [user,router])
 
   useEffect(() => {
     if (!email) {
@@ -37,7 +51,7 @@ export default function VerifyOtp() {
   }, [timer])
 
 
-  const router = useRouter()
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (/^\d*$/.test(value) && value.length <= 6) {

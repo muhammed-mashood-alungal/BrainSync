@@ -6,8 +6,6 @@ import {
   Video,
   VideoOff,
   LogOut,
-  Send,
-  Flashlight,
   Flag,
   Crown,
 } from "lucide-react";
@@ -26,9 +24,7 @@ import ChatComponent from "./Chat";
 import { ChatProvider } from "@/Context/chat.context";
 import NoteEditor from "./NoteEditor";
 import BaseModal from "@/Components/Modal/Modal";
-import Input from "@/Components/Input/Input";
 import { useAuth } from "@/Context/auth.context";
-import { reportInsances } from "@/axios/createInstance";
 import { reportService } from "@/services/client/report.client";
 import Button from "@/Components/Button/Button";
 import CodeEditor from "./CodeEditor";
@@ -41,9 +37,6 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
 }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("video");
-  const [chatOpen, setChatOpen] = useState(true);
-  const [activeChatTab, setActiveChatTab] = useState("chat");
-  const [message, setMessage] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [micEnabled, setMicEnabled] = useState(true);
   const [videoEnabled, setVideoEnabled] = useState(true);
@@ -133,6 +126,7 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
       toast.success("Reported Successfully");
       setConfirmationOn(true);
     } catch (error) {
+      console.log(error)
       toast.error("Something Went Wrong");
     }
   };
@@ -431,8 +425,8 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
           <option value="" disabled selected>
             Select a Reason
           </option>
-          {commonReportReasons.map((reason) => {
-            return <option value={reason}>{reason}</option>;
+          {commonReportReasons.map((reason,idx) => {
+            return <option key={idx} value={reason}>{reason}</option>;
           })}
         </select>
       </BaseModal>

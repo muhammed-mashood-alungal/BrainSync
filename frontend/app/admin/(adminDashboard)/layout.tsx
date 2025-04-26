@@ -1,11 +1,7 @@
-// layout.jsx (Dashboard Layout)
 'use client'
 
 import AdminSidebar from '@/Components/AdminSidebar/AdminSidebar';
-import { useAuth } from '@/Context/auth.context';
-import { useEditor } from '@tiptap/react';
-import { useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 export default function DashboardLayout({ children } : {children : ReactNode}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -1,6 +1,5 @@
 "use client";
-import React, { useEffect, useReducer, useState } from "react";
-import Image from "next/image";
+import React, { useEffect, useState } from "react";
 import BaseModal from "@/Components/Modal/Modal";
 import Input from "@/Components/Input/Input";
 import { validateCreateGroup } from "@/validations";
@@ -12,7 +11,7 @@ import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/Components/GroupDetails/GroupDetails";
 import EmptyList from "@/Components/EmptyList/EmptyList";
-import { ArrowLeftIcon, LogOut, LogOutIcon, Plus, PlusCircle, PlusIcon, PlusSquare, PlusSquareIcon, UserPlus } from "lucide-react";
+import { LogOutIcon, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
@@ -87,8 +86,8 @@ const GroupsPage: React.FC = () => {
         GroupServices.createNewGroup(newGroupName, members, user?.id as string);
         toast.success("Your Group Created Successfully");
       } catch (error: unknown) {
-        if (err instanceof Error) {
-          toast.error(err.message);
+        if (error instanceof Error) {
+          toast.error(error.message);
         } else {
           toast.error("Unexpected Error Occured");
         }
@@ -112,8 +111,8 @@ const GroupsPage: React.FC = () => {
       GroupServices.addToGroup(selectedGroup, members);
       toast.success("Added Member Successfully");
     } catch (error: unknown) {
-      if (err instanceof Error) {
-        toast.error(err.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Unexpected Error Occured");
       }
@@ -128,8 +127,8 @@ const GroupsPage: React.FC = () => {
       toast.success("Leaved Group Successfully");
       checkAuth();
     } catch (error: unknown) {
-      if (err instanceof Error) {
-        toast.error(err.message);
+      if (error instanceof Error) {
+        toast.error(error.message);
       } else {
         toast.error("Unexpected Error Occured");
       }

@@ -4,7 +4,7 @@ import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
 import { validateSignUpForm } from '@/validations';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { use, useEffect, useState } from 'react';
+import {useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Button from '@/Components/Button/Button';
 import Input from '@/Components/Input/Input';
@@ -13,13 +13,13 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 
 
 function SignUpForm() {
-
+  const router = useRouter()
   const { user } = useAuth()
   useEffect(() => {
     if (user) {
       router.push('/')
     }
-  }, [user])
+  }, [user,router])
   const [loading, setLoading] = useState(false)
 
   const searchParams = useSearchParams()
@@ -45,7 +45,7 @@ function SignUpForm() {
     confirmPassword: ''
   })
 
-  const router = useRouter()
+  
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -65,7 +65,7 @@ function SignUpForm() {
     })
     setLoading(true)
     try {
-      let result = validateSignUpForm(formData)
+      const result = validateSignUpForm(formData)
       if (result.status) {
         await AuthServices.registerService(formData)
         sessionStorage.setItem('email', formData.email)

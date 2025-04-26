@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import PlansListing from "./PlanListing";
 import BaseModal from "@/Components/Modal/Modal";
 import CreatePlan from "./createPlan";
-import { AwardIcon } from "lucide-react";
 import { plansServices } from "@/services/client/plans.client";
 import { toast } from "react-toastify";
 import { IPlans } from "@/types/plans.types";
 
-function page() {
+function Page() {
   const [plans, setPlans] = useState<IPlans[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -21,7 +20,7 @@ function page() {
   }, []);
   const onToggle = async (planId: string , state : boolean) => {
     try {
-      const result = await plansServices.toggleActive(planId);
+       await plansServices.toggleActive(planId);
       setPlans((prev) => {
         return prev.map((plan) => {
           return plan._id == planId ? { ...plan, isActive : state } : plan;
@@ -80,4 +79,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

@@ -77,7 +77,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Sessio
         toast.error(error.message || "An UnExpected Error Occured")
       }
     } else {
-      setErr(prev => {
+      setErr(() => {
         return {
           sessionName: result.errors.sessionName as string,
           subject: result.errors.subject as string,
@@ -97,7 +97,7 @@ function CreateSession({ onClose, type, data }: { onClose: (sessionDate?: Sessio
       setMyGroups(groups)
     }
     fetchMyGroups()
-  }, [])
+  }, [user?.id])
 
 
   return (

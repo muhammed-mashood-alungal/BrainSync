@@ -1,6 +1,6 @@
 // components/Navbar.jsx
 'use client'
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
@@ -8,13 +8,14 @@ import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user, loading  ,checkAuth} = useAuth()
+  const { user,checkAuth} = useAuth()
   const logout =async () => {
      try{
       
         await AuthServices.logout()
         checkAuth()
      }catch(err){
+      console.log(err)
         toast.error("Logout Failed")
      }
   }

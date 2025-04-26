@@ -12,7 +12,7 @@ import Table from "@/Components/Table/Table";
 
 function ReportsListing() {
     const [reports, setReports] = useState<IReportTypes[]>([])
-    const [status, setStatus] = useState('All')
+   // const [status, setStatus] = useState('All')
     // const [currentPage, setCurrentPage] = useState(1)
    const limit = 8
     // const [totalPages, setTotalPage] = useState(1 / limit)
@@ -22,7 +22,7 @@ function ReportsListing() {
     }, [])
 
     async function fetchReports(currentPage : number, limit : number) {
-        const {reports , count} = await reportService.getAllReports(status , (currentPage - 1)*limit , limit)
+        const {reports , count} = await reportService.getAllReports('All' , (currentPage - 1)*limit , limit)
         setTotalCount(count)
       //  setTotalPage( Math.ceil(count / limit))
         setReports(reports)

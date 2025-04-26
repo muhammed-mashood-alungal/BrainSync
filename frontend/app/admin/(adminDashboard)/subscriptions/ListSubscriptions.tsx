@@ -11,7 +11,6 @@ import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 function SubscriptionList() {
   const [subscriptions, setSubscribers] = useState<IUserSubscription[]>([]);
   const [ selectedSubscriptionId , setSubscriptionId] = useState('')
-  const [status, setStatus] = useState("All");
   const limit = 8;
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
@@ -35,7 +34,7 @@ function SubscriptionList() {
 
   const cancelSubscribtion = async () => {
     try {
-      const response = await subscriptionServices.cancelSubscription(
+      await subscriptionServices.cancelSubscription(
         selectedSubscriptionId
       );
       setSubscribers((prev) => {

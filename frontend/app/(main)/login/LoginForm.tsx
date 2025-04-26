@@ -9,17 +9,17 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/Context/auth.context';
-import SimpleStudyLoading from '@/Components/Loading/Loading';
 import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 
 
  function LoginForm() {
     const { user, checkAuth } = useAuth()
+    const router = useRouter()
     useEffect(() => {
         if (user) {
             router.push('/')
         }
-    }, [user])
+    }, [user , router])
 
     const [formData, setFormData] = useState({
         email: '',
@@ -33,7 +33,7 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 
     const [loading , setLoading] = useState(false)
 
-    const router = useRouter()
+   
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -47,7 +47,7 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
         setLoading(true)
         setFormDataErr({ email: '', password: '' })
         try {
-            let result = validateLoginForm(formData)
+            const result = validateLoginForm(formData)
             if (result.status) {
                 await AuthServices.loginService(formData)
                 router.push('/')

@@ -3,7 +3,7 @@ import React from 'react'
 import Button from '@/Components/Button/Button';
 import Input from '@/Components/Input/Input';
 import { AuthServices } from '@/services/client/auth.client';
-import { validateEmail, validateLoginForm } from '@/validations';
+import { validateEmail } from '@/validations';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -14,12 +14,12 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
 
 function ForgotForm() {
     const { user } = useAuth()
-
+    const router = useRouter()
     useEffect(() => {
         if (user) {
             router.push('/')
         }
-    }, [user])
+    }, [user , router])
 
     const [loading, setLoading] = useState(false)
 
@@ -27,14 +27,14 @@ function ForgotForm() {
     const [email, setEmail] = useState('')
     const [emailErr, setEmailErr] = useState('')
 
-    const router = useRouter()
+    
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         setEmailErr('')
         setLoading(true)
         try {
-            let result = validateEmail(email)
+            const result = validateEmail(email)
             if (result.status) {
                 const response = await AuthServices.forgotPassword(email)
                 toast.success(response.message)

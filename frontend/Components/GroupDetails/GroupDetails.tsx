@@ -1,12 +1,6 @@
 import { IGroupType } from '@/types/groupTypes';
 import React from 'react';
 
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  profilePicture: string;
-}
 
 interface GroupDetailsProps {
   group:IGroupType | undefined
@@ -16,8 +10,6 @@ interface GroupDetailsProps {
 
 const GroupDetails: React.FC<GroupDetailsProps> = ({ 
   group, 
-  currentUserId, 
-  onRemoveMember 
 }) => {
   return (
     <>

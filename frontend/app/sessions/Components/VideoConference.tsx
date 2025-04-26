@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Peer from 'simple-peer'
 import styles from '../../styles/Room.module.css'
 import { useVideoCall } from '@/Context/videoConference.context'
@@ -98,7 +97,7 @@ export default function Room({ isVideoEnabled, isAudioEnabled }: {
   const { peers, myStream, isMuted, isVideoOff, toggleMute, toggleVideo, speakingUsers, amSpeaking } = useVideoCall();
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const [pinnedUser, setPinnedUser] = useState<string | null>(null);
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+ // const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (myVideoRef.current && myStream) {
@@ -172,7 +171,7 @@ export default function Room({ isVideoEnabled, isAudioEnabled }: {
 
   return (
     <div 
-    ref={setContainerRef}
+   // ref={setContainerRef}
     className={`h-[85vh] grid gap-2 p-2 ${getGridLayout()} auto-rows-fr overflow-hidden`}
   >
       {orderedParticipants.map((participant) => {

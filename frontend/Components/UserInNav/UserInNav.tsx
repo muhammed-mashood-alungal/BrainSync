@@ -14,6 +14,7 @@ function UserInNav() {
                 checkAuth()
                 router.push('/login')
             } catch (err) {
+              console.log(err)
                 toast.error("Logout Failed")
             }
         }

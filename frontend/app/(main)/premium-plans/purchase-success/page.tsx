@@ -1,36 +1,32 @@
 'use client'
 import React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { IPlans } from '@/types/plans.types';
-import { decodeAction } from 'next/dist/server/app-render/entry-base';
 
-interface PurchaseSuccessProps {
-  plan?: IPlans;
-  transactionId?: string;
-  purchaseDate?: string;
-  userEmail?: string;
-}
+// interface PurchaseSuccessProps {
+//  // plan: IPlans;
+//   transactionId: string;
+//   purchaseDate: string;
+//   userEmail: string;
+// }
 
-const PurchaseSuccess: React.FC<PurchaseSuccessProps> = ({ 
-  plan, 
-  transactionId = "TX-" + Math.random().toString(36).substring(2, 10).toUpperCase(),
-  purchaseDate = new Date().toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  }),
-  userEmail = ""
-}) => {
-  const router = useRouter();
+const PurchaseSuccess: React.FC = ({ }) => {
+  
   const searchParams = useSearchParams()
   const dataParam = searchParams.get('data')
 
   const parsedData = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
   // If no plan is passed, try to get info from query params
   const planName = parsedData?.plan?.name
-  const planPrice = parsedData?.plan?.offerPrice
   const planInterval = parsedData?.plan?.interval
+
+  const transactionId = "TX-" + Math.random().toString(36).substring(2, 10).toUpperCase()
+  const purchaseDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
+  const userEmail = parsedData?.email || ''
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
@@ -84,7 +80,7 @@ const PurchaseSuccess: React.FC<PurchaseSuccessProps> = ({
         <div className="text-center mb-8">
           <p className="text-cyan-400 font-medium mb-2">What happens next?</p>
           <p className="text-gray-300">
-            We've sent a confirmation email with your receipt and subscription details.
+            We have sent a confirmation email with your receipt and subscription details.
             Your premium features are now available in your account.
           </p>
         </div>
