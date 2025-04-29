@@ -77,4 +77,14 @@ export const env = {
   get FIREBASE_MEASUREMENT_ID() {
     return process.env.FIREBASE_MEASUREMENT_ID;
   },
+  get REDIS_PORT(){
+    return process.env.REDIS_PORT
+  },
+  get REDIS_USERNAME(){
+    return process.env.REDIS_USERNAME
+  },
+  get REDIS_PASSWORD(){
+    return process.env.REDIS_PASSWORD
+  }
+  
 };

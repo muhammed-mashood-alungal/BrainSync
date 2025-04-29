@@ -36,11 +36,11 @@ export default function VerifyOtp() {
     }
   }, [user,router])
 
-  useEffect(() => {
-    if (!email) {
-      router.push('/signup')
-    }
-  }, [email])
+  // useEffect(() => {
+  //   if (!email) {
+  //     router.push('/signup')
+  //   }
+  // }, [email])
 
   useEffect(() => {
     if (timer > 0) {

@@ -17,7 +17,6 @@ import {
 import { sendOtp, sendResetLink } from '../../utils/sendEmail.utils';
 import { IAuthService } from '../interface/IAuthService';
 import { v4 as uuidv4 } from 'uuid';
-import { assign } from 'nodemailer/lib/shared';
 
 export class AuthService implements IAuthService {
   constructor(private _userRepository: IUserRepository) {}
@@ -28,12 +27,12 @@ export class AuthService implements IAuthService {
     if (isUserExist) {
       throw createHttpsError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
     }
-
+ 
     user.password = await hashPassword(user.password as string);
 
     const otp = generateOtp();
     await sendOtp(user.email, otp);
-
+      console.log('otp send')
     const response = await redisClient.set(
       user.email,
       JSON.stringify({

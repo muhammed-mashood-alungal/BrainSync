@@ -18,13 +18,14 @@ export class AuthController implements IAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const email = await this._authService.signup(req.body);
-
+ 
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
           email: email,
         })
       );
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }
