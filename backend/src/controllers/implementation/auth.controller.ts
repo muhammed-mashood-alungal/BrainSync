@@ -40,6 +40,7 @@ export class AuthController implements IAuthController {
         secure: true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
         sameSite: 'none',
+         domain: '.brainsync.space'
       });
 
       res.cookie('refreshToken', tokens.refreshToken, {
@@ -47,6 +48,7 @@ export class AuthController implements IAuthController {
         secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
         sameSite: 'none',
+         domain: '.brainsync.space'
       });
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {

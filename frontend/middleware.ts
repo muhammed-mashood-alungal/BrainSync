@@ -5,14 +5,14 @@ import { JwtPayload } from 'jsonwebtoken'
 const adminRoutes = ["/admin", "/admin/dashboard", "/admin/users"]
 const protectedRoutes = ["/dashboard", "/profile", "/settings"]
 
-export async function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest ) {
     try {
         const token = req.cookies.get("accessToken")?.value
         const refreshToken = req.cookies.get("refreshToken")?.value
         const isAdminRoute = adminRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
         const isProtectedRoute = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
-      console.log(token)
-      console.log(refreshToken)
+      console.log('token is : ',token)
+      console.log('refresh token : ',refreshToken)
       console.log(isAdminRoute)
       console.log(isProtectedRoute)
       
