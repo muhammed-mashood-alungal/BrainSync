@@ -37,16 +37,16 @@ export class AuthController implements IAuthController {
 
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
 
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
@@ -68,16 +68,16 @@ export class AuthController implements IAuthController {
 
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
 
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
 
       res
@@ -123,9 +123,9 @@ export class AuthController implements IAuthController {
         await this._authService.refreshAccessToken(accessToken);
       res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
       res
         .status(HttpStatus.OK)
@@ -210,16 +210,16 @@ export class AuthController implements IAuthController {
       }
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
 
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'strict',
+        sameSite: 'none',
       });
 
       res.redirect(`${env.CLIENT_ORIGIN}`);

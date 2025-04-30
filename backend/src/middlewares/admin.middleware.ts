@@ -28,9 +28,9 @@ export const adminAuth: RequestHandler = async (req, res, next) => {
         const newAccessToken = await generateAccesToken(decoded);
         res.cookie('accessToken', newAccessToken, {
           httpOnly: true,
-          secure: false,
+          secure: true,
           maxAge: 1 * 24 * 60 * 60 * 1000,
-          sameSite: 'strict',
+          sameSite: 'none',
         });
       }
     }
