@@ -127,7 +127,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {plans.map((plan) => (
+          {plans?.map((plan) => (
             <div
               key={plan._id}
               className={`rounded-lg p-8 ${
@@ -206,7 +206,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                 <div className="mt-6">
                   <h3 className="font-bold mb-2">Features:</h3>
                   <ul className="space-y-2">
-                    {plan.features.map((feature, index) => (
+                    {plan?.features?.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <span className="mr-2">✓</span>
                         <div>
