@@ -11,6 +11,9 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user,checkAuth} = useAuth()
   const router = useRouter()
+  const handleClick = ()=>{
+    
+  }
   const logout =async () => {
      try{
       
