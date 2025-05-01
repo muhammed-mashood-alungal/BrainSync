@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user,checkAuth} = useAuth()
+  const router = useRouter()
   const logout =async () => {
      try{
       
@@ -61,7 +63,7 @@ const Navbar = () => {
               <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
                 Logout
               </button>
-              <Link href="/dashboard" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+              <Link href="" onClick={()=>router.push('/dashboard')} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
                 Go to Dashboard
               </Link>
             </> : <>
