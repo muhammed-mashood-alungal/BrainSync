@@ -52,11 +52,10 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
                 await AuthServices.loginService(formData)
                 // checkAuth()
                 // router.push('/')
-                await checkAuth()
-            
-                await new Promise(resolve => setTimeout(resolve, 100))
+                 checkAuth()
                 
-                router.push('/dashboard') 
+                // router.push('/dashboard') 
+                window.location.href ='/dashboard'
             } else {
                 setFormDataErr(result.err)
             }
