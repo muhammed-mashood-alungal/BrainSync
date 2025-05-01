@@ -54,8 +54,8 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
                 // router.push('/')
                  checkAuth()
                 
-                // router.push('/dashboard') 
-                window.location.href ='/dashboard'
+                router.push('/dashboard') 
+               
             } else {
                 setFormDataErr(result.err)
             }
