@@ -50,9 +50,13 @@ import InPageLoading from '@/Components/InPageLoading/InPageLoading';
             const result = validateLoginForm(formData)
             if (result.status) {
                 await AuthServices.loginService(formData)
-                checkAuth()
-                router.push('/')
+                // checkAuth()
+                // router.push('/')
+                await checkAuth()
+            
+                await new Promise(resolve => setTimeout(resolve, 100))
                 
+                router.push('/dashboard') 
             } else {
                 setFormDataErr(result.err)
             }
