@@ -63,9 +63,9 @@ const Navbar = () => {
               <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
                 Logout
               </button>
-              <Link href="" onClick={()=>router.push('/dashboard')} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+              <button onClick={()=>router.push('/dashboard')} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
                 Go to Dashboard
-              </Link>
+              </button>
             </> : <>
               <Link href="/login" className="text-cyan-400 hover:text-cyan-300" prefetch={false} >
                 Login
