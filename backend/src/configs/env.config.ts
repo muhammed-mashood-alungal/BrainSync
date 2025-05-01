@@ -85,6 +85,9 @@ export const env = {
   },
   get REDIS_PASSWORD(){
     return process.env.REDIS_PASSWORD
+  },
+  get NODE_ENV(){
+    return process.env.NODE_ENV
   }
   
 };

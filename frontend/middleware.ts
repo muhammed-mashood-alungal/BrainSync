@@ -2,10 +2,11 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { AuthServices } from "./services/client/auth.client"
 import { JwtPayload } from 'jsonwebtoken'
+import { NextApiResponse } from "next"
 const adminRoutes = ["/admin", "/admin/dashboard", "/admin/users"]
 const protectedRoutes = ["/dashboard", "/profile", "/settings"]
 
-export async function middleware(req: NextRequest ) {
+export async function middleware(req: NextRequest ,  res:NextApiResponse ) {
     try {
         const token = req.cookies.get("accessToken")?.value
         const refreshToken = req.cookies.get("refreshToken")?.value

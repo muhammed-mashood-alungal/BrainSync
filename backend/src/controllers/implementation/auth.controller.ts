@@ -35,13 +35,24 @@ export class AuthController implements IAuthController {
 
       const tokens = await this._authService.signin(email, password);
 
+
       res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: env.NODE_ENV === 'production',
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-         domain: '.brainsync.space'
+        sameSite: env.NODE_ENV === 'production' ? 'none' : 'strict',
+        domain: '.brainsync.space'
       });
+      
+      
+      
+      // res.cookie('accessToken', tokens.accessToken, {
+      //   httpOnly: true,
+      //   secure: true,
+      //   maxAge: 1 * 24 * 60 * 60 * 1000,
+      //   sameSite: 'None',
+      //    domain: '.brainsync.space'
+      // });
 
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,

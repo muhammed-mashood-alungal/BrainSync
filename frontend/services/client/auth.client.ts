@@ -16,6 +16,7 @@ export const AuthServices = {
     loginService: async (data: IuserLogin): Promise<{ status: number, message: string }> => {
         try {
             const response = await authInstance.post('/signin', data)
+            
             return response.data?.tokens
         } catch (error: unknown) {
             const err = error as AxiosError<{ error: string }>
