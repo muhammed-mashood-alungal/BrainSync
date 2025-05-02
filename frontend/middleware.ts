@@ -7,6 +7,7 @@ const protectedRoutes = ["/dashboard", "/profile", "/settings"]
 
 export async function middleware(req: NextRequest ) {
     try {
+        
         const token = req.cookies.get("accessToken")?.value
         const refreshToken = req.cookies.get("refreshToken")?.value
         const isAdminRoute = adminRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
@@ -22,16 +23,14 @@ export async function middleware(req: NextRequest ) {
         }
 
 
-        
+        if (!token && isProtectedRoute) {
+            console.log('no token and protected router' , token , refreshToken)
+            return NextResponse.redirect(new URL("/login", req.url))
+        }
         let user = await AuthServices.verifyToken(token as string) as JwtPayload
         console.log(user)
         if(!user){
             user = await AuthServices.refreshToken(refreshToken as string) as JwtPayload
-        }
-
-        if (!user && isProtectedRoute) {
-            console.log('no token and protected router' , token , refreshToken)
-            return NextResponse.redirect(new URL("/login", req.url))
         }
         
         if (isAdminRoute && (!user || user.role !== "admin")) {

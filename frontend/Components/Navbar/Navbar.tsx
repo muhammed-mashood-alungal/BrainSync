@@ -22,19 +22,10 @@ const Navbar = () => {
      }
   }
   const handleGoToDashboard =async () => {
-    // Check if the accessToken cookie exists
-    //const accessToken = document?.cookie?.split('; ').find(row => row.startsWith('accessToken='));
-    const response = await fetch("/api/check-cookie"); 
-    const data = await response.json();
-    if (data?.accessToken) {
-      console.log('All okey')
-      // If accessToken exists, redirect to dashboard
-      router.push('/dashboard');
-      
-    } else {
-      // If accessToken doesn't exist, you can handle it differently, maybe show a message or handle login
-      toast.error("You are not logged in.");
-    }
+     console.log(document.cookie)
+    // router.refresh()
+    // router.push('/dashboard')
+    window.location.href = '/dashboard';
   };
 
   return (
