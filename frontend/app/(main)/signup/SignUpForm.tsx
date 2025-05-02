@@ -26,7 +26,7 @@ function SignUpForm() {
 
 
   useEffect(() => {
-    const error = searchParams.get('$error')
+    const error = searchParams?.get('$error')
     if (error) {
       toast.error(error)
     }

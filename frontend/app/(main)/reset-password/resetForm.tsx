@@ -28,7 +28,7 @@ function ResetForm() {
 
     const router = useRouter()
     const searchParams = useSearchParams()
-    const token = searchParams.get('token')
+    const token = searchParams?.get('token')
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
