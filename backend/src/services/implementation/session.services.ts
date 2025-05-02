@@ -13,6 +13,7 @@ import { sendSessionLinktoAttendees } from '../../utils/sendEmail.utils';
 import { IGroupTypes } from '../../types/group.types';
 import { stopRoomSession } from '../../utils/socket.util';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
+import { DateTime } from 'luxon';
 
 export class SessionServices implements ISessionServices {
   constructor(
@@ -35,11 +36,18 @@ export class SessionServices implements ISessionServices {
 
     const sessionDate = data?.date ?? new Date().toISOString().split('T')[0];
 
-    const startTime = new Date(`${sessionDate}T${data.startTime}:00Z`); 
-    const endTime = new Date(`${sessionDate}T${data.endTime}:00Z`);
-    // const startTime = new Date(`${sessionDate}T${data.startTime}:00`);
-    // const endTime = new Date(`${sessionDate}T${data.endTime}:00`);
-
+    // const startTime = new Date(`${sessionDate}T${data.startTime}:00Z`); 
+    // const endTime = new Date(`${sessionDate}T${data.endTime}:00Z`);
+    console.log(data.startTime , data.endTime) 
+    const startTime = DateTime.fromISO(`${sessionDate}T${data.startTime}`, {
+      zone: 'Asia/Kolkata',
+    }).toUTC().toJSDate();
+  
+    const endTime = DateTime.fromISO(`${sessionDate}T${data.endTime}`, {
+      zone: 'Asia/Kolkata',
+    }).toUTC().toJSDate();
+  
+   console.log(startTime , endTime)
     const sessionData = {
       ...data,
       createdBy: userId as Types.ObjectId,
@@ -231,12 +239,21 @@ export class SessionServices implements ISessionServices {
     const sessionDate = sessionData.date
       ? new Date(date).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0];
+   
 
-    // const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00`);
-    // const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00`);
-    const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00Z`); 
-    const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00Z`);
+    console.log(sessionData.startTime , sessionData.endTime) 
+    // const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00Z`); 
+    // const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00Z`);
+    const startTime = DateTime.fromISO(`${sessionDate}T${sessionData.startTime}`, {
+      zone: 'Asia/Kolkata',
+    }).toUTC().toJSDate();
+  
+    const endTime = DateTime.fromISO(`${sessionDate}T${sessionData.endTime}`, {
+      zone: 'Asia/Kolkata',
+    }).toUTC().toJSDate();
 
+    console.log(startTime , endTime)
+    
     if (
       endTime.getTime() < currentDate.getTime() ||
       endTime.getDate() < currentDate.getDate()

@@ -7,6 +7,8 @@ import {
 import { JwtPayload } from 'jsonwebtoken';
 import { HttpStatus } from '../constants/status.constants';
 import { HttpResponse } from '../constants/responseMessage.constants';
+import { env } from '../configs/env.config';
+import { setAccessToken } from '../utils/cookie.util';
 
 export const authMiddleware: RequestHandler = async (req, res, next) => {
   const accessToken = req.cookies.accessToken;
@@ -30,12 +32,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
             const newAccessToken = await generateAccesToken(
               decoded as JwtPayload
             );
-            res.cookie('accessToken', newAccessToken, {
-              httpOnly: true,
-              secure: true,
-              maxAge: 1 * 24 * 60 * 60 * 1000,
-              sameSite: 'none',
-            });
+            setAccessToken(res, newAccessToken);
           }
           next();
           return;
@@ -49,13 +46,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
       req.user = decoded?.id as JwtPayload;
       if (decoded) {
         const newAccessToken = await generateAccesToken(decoded as JwtPayload);
-
-        res.cookie('accessToken', newAccessToken, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 1 * 24 * 60 * 60 * 1000,
-          sameSite: 'none',
-        });
+        setAccessToken(res, newAccessToken);
         next();
         return;
       }

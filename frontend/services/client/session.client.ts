@@ -1,6 +1,6 @@
 import { sessionInstances } from "@/axios/createInstance";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
-import { IUserType } from "@/types/userTypes";
+
 import { AxiosError } from "axios";
 
 export const SessionServices = {

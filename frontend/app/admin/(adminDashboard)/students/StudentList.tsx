@@ -7,7 +7,6 @@ import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
 import Table from '@/Components/Table/Table'
 import SimpleStudyLoading from '@/Components/Loading/Loading'
-import Image from 'next/image'
 
 
 function StudentList({ initialStudents  , totalCount : initialCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
@@ -17,9 +16,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
     const [isViewModalOpen, setIsViewModalOpen] = useState(false)
     const [loading , setIsLoading] = useState(false)
     const [blockingStudent, setblockingStudents] = useState('')
-   // const [currentPage, setCurrentPage] = useState(1)
     const limit = 8
-   // const [totalPages , setTotalPage] = useState(initialCount / limit)
     
     const [totalCount , setTotalCount] = useState(initialCount)
 
@@ -35,7 +32,6 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
             const {students , count} = await AdminServices.getAllStudents((currentPage - 1)*limit ,limit , searchQuery )
             console.log('new count ' + count)
             setTotalCount(count)
-           // setTotalPage(Math.ceil(count / limit))
             setStudents(students)
         } catch (error) {
             if (error instanceof Error) {
@@ -62,7 +58,6 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
             )
             setblockingStudents('')
 
-            // toast.success(`User ${currentStatus ? 'blocked' : 'unblocked'} successfully`);
         } catch (error) {
             console.error('Failed to update user status:', error);
             toast.error('Failed to update user status');
@@ -105,7 +100,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                             label: "User",
                             render: (student: IUserType) => (
                                 <div className="flex items-center">
-                                    <Image
+                                    <img
                                         className="h-10 w-10 rounded-full object-cover"
                                         src={student.profilePicture?.url || "/profilePic.png"}
                                         alt={student.username}

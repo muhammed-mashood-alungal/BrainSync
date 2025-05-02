@@ -52,8 +52,11 @@ export class SessionActivityRepository
         break;
 
       case 'Monthly':
-        dateFormat = '%d'; // Just day of month
-        labels = Array.from({ length: 30 }).map((_, i) => `${i + 1}`);
+        dateFormat = '%Y-%m-%d'; // Just day of month
+        labels = Array.from({ length: 31 }).map((_, i) =>{
+            
+            return `${i + 1}`
+        } );
         break;
 
       case 'Yearly':
@@ -82,15 +85,18 @@ export class SessionActivityRepository
       { $sort: { _id: 1 } },
     ]);
 
+    console.log(stats)
+
     const graphMap: Record<string, number> = {};
 
-    stats.forEach(item => {
+    stats.forEach((item , idx)  => {
       if (filterBy === 'Weekly') {
         const day = format(new Date(item._id), 'EEEE');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Monthly') {
-        const dayNum = parseInt(item._id, 10); // 01 to 30
-        graphMap[dayNum.toString()] = Math.floor(item.totalDuration / 1000);
+       // const dayNum = parseInt(item._id, 10); // 01 to 30
+         const day = format(new Date(now.getMonth()) , 'd')
+        graphMap[String(Number(day)+1)] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Yearly') {
         const monthIndex = parseInt(item._id, 10) - 1;
         const monthLabel = format(
@@ -105,18 +111,26 @@ export class SessionActivityRepository
     });
 
     let graphData: any[] = [];
-
+    
     if (filterBy === 'Daily') {
       graphData = stats.map(item => ({
         name: new Date(item._id).toLocaleDateString(),
         duration: Math.floor(item.totalDuration / 1000),
       }));
-    } else {
+    }  
+    // else if(filterBy == 'Monthly'){
+    //   graphData = stats.map(item => ({
+    //     name: new Date(item._id).toLocaleDateString(),
+    //     duration: Math.floor(item.totalDuration / 1000),
+    //   }));
+    // }
+    else {
       graphData = labels.map(label => ({
         name: label,
         duration: graphMap[label] || 0,
       }));
     }
+    console.log(graphData)
     return { graph: graphData };
   }
   async totalTimeSendByUser(userId: Types.ObjectId): Promise<string> {

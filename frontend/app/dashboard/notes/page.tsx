@@ -9,14 +9,7 @@ export default function Resources() {
             <div className="max-w-7xl mx-auto">
                 {/* Header with search */}
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-2xl font-bold">Resources</h1>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search sessions"
-                            className="bg-transparent border border-gray-600 rounded-full py-2 px-4 w-64 focus:outline-none focus:border-teal-500"
-                        />
-                    </div>
+                    <h1 className="text-2xl font-bold">Notes</h1>
                 </div>
 
                 {/* Filters row */}
@@ -25,4 +18,4 @@ export default function Resources() {
             </div>
         </div>
     );
-}
+} 

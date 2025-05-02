@@ -8,6 +8,7 @@ import { env } from '../../configs/env.config';
 import { IUserModel } from '../../models/user.model';
 import { IUserService } from '../../services/interface/IUserService';
 import { successResponse } from '../../utils/response';
+import { setAccessToken, setRefreshToken } from '../../utils/cookie.util';
 
 export class AuthController implements IAuthController {
   constructor(
@@ -25,7 +26,6 @@ export class AuthController implements IAuthController {
         })
       );
     } catch (error) {
-      console.log(error)
       next(error);
     }
   }
@@ -36,25 +36,9 @@ export class AuthController implements IAuthController {
       const tokens = await this._authService.signin(email, password);
 
 
-      res.cookie('accessToken', tokens.accessToken, {
-        httpOnly: true,
-        secure: env.NODE_ENV === 'production',
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
-        domain: env.NODE_ENV === 'production' ? '.brainsync.space' :undefined,
-        path:'/'
-      });
+      setAccessToken(res , tokens.accessToken)
+      setRefreshToken(res , tokens.refreshToken)
       
-      
-
-
-      res.cookie('refreshToken', tokens.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-         domain: '.brainsync.space'
-      });
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
           tokens: tokens,
@@ -73,19 +57,8 @@ export class AuthController implements IAuthController {
       const { otp, email } = req.body;
       const tokens = await this._authService.verifyOtp(email, otp);
 
-      res.cookie('accessToken', tokens.accessToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-      });
-
-      res.cookie('refreshToken', tokens.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-      });
+      setAccessToken(res,tokens.accessToken)
+      setRefreshToken(res , tokens.refreshToken)
 
       res
         .status(HttpStatus.CREATED)
@@ -121,19 +94,15 @@ export class AuthController implements IAuthController {
         return;
       }
 
-      const accessToken = authHeader.split(' ')[1];
-      if (!accessToken) {
+      const refreshToken = authHeader.split(' ')[1];
+      if (!refreshToken) {
         throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.NO_TOKEN);
       }
 
       const { newAccessToken, payload } =
-        await this._authService.refreshAccessToken(accessToken);
-      res.cookie('accessToken', accessToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-      });
+        await this._authService.refreshAccessToken(refreshToken);
+      
+        setAccessToken(res,newAccessToken)
       res
         .status(HttpStatus.OK)
         .json(
@@ -185,8 +154,21 @@ export class AuthController implements IAuthController {
   }
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
+      res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'production',
+        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain: env.NODE_ENV === 'production' ? '.brainsync.space' : undefined,
+        path: '/',
+      });
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: env.NODE_ENV === 'production',
+        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain: env.NODE_ENV === 'production' ? '.brainsync.space' : undefined,
+        path: '/',
+      });
+  
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT));
     } catch (err) {
       next(err);
@@ -215,26 +197,15 @@ export class AuthController implements IAuthController {
       if (isBlocked) {
         throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
       }
-      res.cookie('accessToken', tokens.accessToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-      });
-
-      res.cookie('refreshToken', tokens.refreshToken, {
-        httpOnly: true,
-        secure: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'none',
-      });
+      setAccessToken(res,tokens.accessToken)
+      setRefreshToken(res, tokens.refreshToken)
 
       res.redirect(`${env.CLIENT_ORIGIN}`);
     } catch (err: unknown) {
       if (err instanceof HttpError) {
         res.redirect(
           `${env.CLIENT_ORIGIN}/signup?$error=${err.message as string}`
-        );
+        ); 
       } else {
         res.redirect(
           `${env.CLIENT_ORIGIN}/signup?$error=${HttpResponse.SERVER_ERROR}`
@@ -243,7 +214,7 @@ export class AuthController implements IAuthController {
     }
   }
   async forgotPassword(
-    req: Request,
+    req: Request, 
     res: Response,
     next: NextFunction
   ): Promise<void> {
