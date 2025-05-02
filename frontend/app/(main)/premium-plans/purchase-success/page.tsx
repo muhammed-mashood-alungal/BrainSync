@@ -13,7 +13,7 @@ import Link from 'next/link';
 const PurchaseSuccess: React.FC = ({ }) => {
   
   const searchParams = useSearchParams()
-  const dataParam = searchParams.get('data')
+  const dataParam = searchParams?.get('data')
 
   const parsedData = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
   // If no plan is passed, try to get info from query params
