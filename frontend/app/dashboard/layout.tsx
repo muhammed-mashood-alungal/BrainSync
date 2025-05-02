@@ -1,11 +1,19 @@
 'use client'
 
 import Sidebar from '@/Components/DashboardSidebar/DashboardSidebar';
-import { ReactNode, useState } from 'react'
+import { useAuth } from '@/Context/auth.context';
+import { useRouter } from 'next/navigation';
+import { ReactNode, useEffect, useState } from 'react'
 
 export default function DashboardLayout({ children } : {children : ReactNode}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+  const {user} = useAuth()
+  const router = useRouter()
+  useEffect(()=>{
+    if(!user){
+      router.push('/login')
+    }
+  },[])
   return (
     <div className="flex h-screen bg-[#1E1E1E]">
         

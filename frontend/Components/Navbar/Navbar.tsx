@@ -23,17 +23,14 @@ const Navbar = () => {
   }
   const handleGoToDashboard =async () => {
     // Check if the accessToken cookie exists
-    console.log('---------------------------------------------------')
     //const accessToken = document?.cookie?.split('; ').find(row => row.startsWith('accessToken='));
     const response = await fetch("/api/check-cookie"); 
-    console.log('-------------------------------------------asdfasdf--------')
     const data = await response.json();
-    console.log('-----------------------------------1234----------------')
-    console.log('heeeeey')
-    console.log(data)
     if (data?.accessToken) {
+      console.log('All okey')
       // If accessToken exists, redirect to dashboard
       router.push('/dashboard');
+      
     } else {
       // If accessToken doesn't exist, you can handle it differently, maybe show a message or handle login
       toast.error("You are not logged in.");

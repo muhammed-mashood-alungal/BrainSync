@@ -2,11 +2,10 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { AuthServices } from "./services/client/auth.client"
 import { JwtPayload } from 'jsonwebtoken'
-import { NextApiResponse } from "next"
 const adminRoutes = ["/admin", "/admin/dashboard", "/admin/users"]
 const protectedRoutes = ["/dashboard", "/profile", "/settings"]
 
-export async function middleware(req: NextRequest ,  res:NextApiResponse ) {
+export async function middleware(req: NextRequest ) {
     try {
         const token = req.cookies.get("accessToken")?.value
         const refreshToken = req.cookies.get("refreshToken")?.value
@@ -23,14 +22,16 @@ export async function middleware(req: NextRequest ,  res:NextApiResponse ) {
         }
 
 
-        if (!token && isProtectedRoute) {
-            console.log('no token and protected router' , token , refreshToken)
-            return NextResponse.redirect(new URL("/login", req.url))
-        }
+        
         let user = await AuthServices.verifyToken(token as string) as JwtPayload
         console.log(user)
         if(!user){
             user = await AuthServices.refreshToken(refreshToken as string) as JwtPayload
+        }
+
+        if ((!user || !token) && isProtectedRoute) {
+            console.log('no token and protected router' , token , refreshToken)
+            return NextResponse.redirect(new URL("/login", req.url))
         }
         
         if (isAdminRoute && (!user || user.role !== "admin")) {
