@@ -11,7 +11,7 @@ import { useAuth } from "@/Context/auth.context";
 import InPageLoading from "@/Components/InPageLoading/InPageLoading";
 
 function LoginForm() {
-  const { user } = useAuth();
+  const { user ,checkAuth} = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (user) {
@@ -48,6 +48,7 @@ function LoginForm() {
       if (result.status) {
         await AuthServices.loginService(formData);
         // Poll for the accessToken cookie
+        await checkAuth()
         router.push('/')
       } else {
         setFormDataErr(result.err);

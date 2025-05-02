@@ -21,11 +21,17 @@ const Navbar = () => {
         toast.error("Logout Failed")
      }
   }
-  const handleGoToDashboard = () => {
+  const handleGoToDashboard =async () => {
     // Check if the accessToken cookie exists
-    const accessToken = document?.cookie?.split('; ').find(row => row.startsWith('accessToken='));
-  
-    if (accessToken) {
+    console.log('---------------------------------------------------')
+    //const accessToken = document?.cookie?.split('; ').find(row => row.startsWith('accessToken='));
+    const response = await fetch("/api/check-cookie"); 
+    console.log('-------------------------------------------asdfasdf--------')
+    const data = await response.json();
+    console.log('-----------------------------------1234----------------')
+    console.log('heeeeey')
+    console.log(data)
+    if (data?.accessToken) {
       // If accessToken exists, redirect to dashboard
       router.push('/dashboard');
     } else {
