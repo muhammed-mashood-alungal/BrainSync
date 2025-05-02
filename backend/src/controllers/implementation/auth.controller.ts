@@ -46,14 +46,7 @@ export class AuthController implements IAuthController {
       });
       
       
-      
-      // res.cookie('accessToken', tokens.accessToken, {
-      //   httpOnly: true,
-      //   secure: true,
-      //   maxAge: 1 * 24 * 60 * 60 * 1000,
-      //   sameSite: 'None',
-      //    domain: '.brainsync.space'
-      // });
+
 
       res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,

@@ -48,17 +48,7 @@ function LoginForm() {
       if (result.status) {
         await AuthServices.loginService(formData);
         // Poll for the accessToken cookie
-        const checkCookie = async () => {
-          const response = await fetch("/api/check-cookie"); 
-          const data = await response.json();
-          if (data.accessToken) {
-            checkAuth();
-            router.push("/dashboard");
-          } else {
-            setTimeout(checkCookie, 100); // Retry after 100ms
-          }
-        };
-        checkCookie();
+        router.push('/')
       } else {
         setFormDataErr(result.err);
       }

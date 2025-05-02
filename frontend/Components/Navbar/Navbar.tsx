@@ -11,9 +11,6 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { user,checkAuth} = useAuth()
   const router = useRouter()
-  const handleClick = ()=>{
-    
-  }
   const logout =async () => {
      try{
       
@@ -24,6 +21,18 @@ const Navbar = () => {
         toast.error("Logout Failed")
      }
   }
+  const handleGoToDashboard = () => {
+    // Check if the accessToken cookie exists
+    const accessToken = document?.cookie?.split('; ').find(row => row.startsWith('accessToken='));
+  
+    if (accessToken) {
+      // If accessToken exists, redirect to dashboard
+      router.push('/dashboard');
+    } else {
+      // If accessToken doesn't exist, you can handle it differently, maybe show a message or handle login
+      toast.error("You are not logged in.");
+    }
+  };
 
   return (
     <nav className="py-4 px-4 md:px-12 bg-black text-white ">
@@ -66,7 +75,7 @@ const Navbar = () => {
               <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
                 Logout
               </button>
-              <button onClick={()=>router.push('/dashboard')} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+              <button onClick={handleGoToDashboard} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
                 Go to Dashboard
               </button>
             </> : <>
