@@ -7,13 +7,13 @@ import { ReactNode, useEffect, useState } from 'react'
 
 export default function DashboardLayout({ children } : {children : ReactNode}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const {user} = useAuth()
+  const {user ,loading} = useAuth()
   const router = useRouter()
   useEffect(()=>{
-    if(!user){
+    if(!user?.email && !loading){
       router.push('/login')
     }
-  },[])
+  },[user])
   return (
     <div className="flex h-screen bg-[#1E1E1E]">
         

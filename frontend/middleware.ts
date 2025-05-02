@@ -27,6 +27,7 @@ export async function middleware(req: NextRequest ) {
             console.log('no token and protected router' , token , refreshToken)
             return NextResponse.redirect(new URL("/login", req.url))
         }
+        
         let user = await AuthServices.verifyToken(token as string) as JwtPayload
         console.log(user)
         if(!user){
