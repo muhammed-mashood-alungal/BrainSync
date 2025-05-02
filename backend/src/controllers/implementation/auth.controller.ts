@@ -40,8 +40,9 @@ export class AuthController implements IAuthController {
         httpOnly: true,
         secure: env.NODE_ENV === 'production',
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        sameSite: env.NODE_ENV === 'production' ? 'none' : 'strict',
-        domain: '.brainsync.space'
+        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+        domain: env.NODE_ENV === 'production' ? '.brainsync.space' :undefined,
+        path:'/'
       });
       
       

@@ -4,7 +4,6 @@ import { IGroupRepository } from '../../repositories/interface/IGroupRepository'
 import { ISessionRepository } from '../../repositories/interface/ISessionRepository';
 import { ISessionServices } from '../interface/ISessionService';
 import { IUser } from '../../types/user.types';
-import { redisClient } from '../../configs/redis.config';
 import { createHttpsError } from '../../utils/httpError.utils';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
@@ -36,8 +35,10 @@ export class SessionServices implements ISessionServices {
 
     const sessionDate = data?.date ?? new Date().toISOString().split('T')[0];
 
-    const startTime = new Date(`${sessionDate}T${data.startTime}:00`);
-    const endTime = new Date(`${sessionDate}T${data.endTime}:00`);
+    const startTime = new Date(`${sessionDate}T${data.startTime}:00Z`); 
+    const endTime = new Date(`${sessionDate}T${data.endTime}:00Z`);
+    // const startTime = new Date(`${sessionDate}T${data.startTime}:00`);
+    // const endTime = new Date(`${sessionDate}T${data.endTime}:00`);
 
     const sessionData = {
       ...data,
@@ -67,61 +68,74 @@ export class SessionServices implements ISessionServices {
 
   async getMySessions(
     userId: unknown,
-    sort : unknown,
-    skip : unknown ,
-    limit : unknown,
-    searchQuery?:unknown ,
-    subject? : unknown,
-    startDate? :unknown,
-    endDate? : unknown,
-  ): Promise<{sessions : ISessionModal[] , count : number}> {
+    sort: unknown,
+    skip: unknown,
+    limit: unknown,
+    searchQuery?: unknown,
+    subject?: unknown,
+    startDate?: unknown,
+    endDate?: unknown
+  ): Promise<{ sessions: ISessionModal[]; count: number }> {
     const myGroups = await this._groupRepository.getMyGroups(
       userId as Types.ObjectId
     );
     const groups = myGroups.map(grp => grp._id);
-    
-    const {sessions , count} = await this._sesionRepository.getGroupsSessions(
+
+    const { sessions, count } = await this._sesionRepository.getGroupsSessions(
       groups as Types.ObjectId[],
       sort as boolean,
       skip as number,
       limit as number,
-      searchQuery ? searchQuery as string : '',
-      subject ? subject as string  : ''  ,
-      startDate ? startDate as string : undefined,
-      endDate? endDate as string : undefined
+      searchQuery ? (searchQuery as string) : '',
+      subject ? (subject as string) : '',
+      startDate ? (startDate as string) : undefined,
+      endDate ? (endDate as string) : undefined
     );
-    return {sessions , count};
+    return { sessions, count };
   }
   async getAllSessions(
-    sort : unknown,
-    skip : unknown ,
-    limit : unknown,
-    searchQuery?:unknown ,
-    subject? : unknown,
-    startDate? :unknown,
-    endDate? : unknown,
-  ): Promise<{sessions : ISessionModal[] , count : number}> {
-    const {sessions , count} = await this._sesionRepository.getAllSessions(
+    sort: unknown,
+    skip: unknown,
+    limit: unknown,
+    searchQuery?: unknown,
+    subject?: unknown,
+    startDate?: unknown,
+    endDate?: unknown
+  ): Promise<{ sessions: ISessionModal[]; count: number }> {
+    const { sessions, count } = await this._sesionRepository.getAllSessions(
       sort as boolean,
       skip as number,
       limit as number,
-      searchQuery ? searchQuery as string : '',
-      subject ? subject as string  : ''  ,
-      startDate ? startDate as string : undefined,
-      endDate? endDate as string : undefined
+      searchQuery ? (searchQuery as string) : '',
+      subject ? (subject as string) : '',
+      startDate ? (startDate as string) : undefined,
+      endDate ? (endDate as string) : undefined
     );
-     
-    return {sessions , count};
+
+    return { sessions, count };
   }
   async validateSession(
     sessionCode: string,
     userId: unknown
-  ): Promise<{ status: boolean; message: string  , sessionDetails : ISessionModal | null}> {
-    if (!sessionCode) return { status: false, message: 'Invalid Session Code'  , sessionDetails : null};
+  ): Promise<{
+    status: boolean;
+    message: string;
+    sessionDetails: ISessionModal | null;
+  }> {
+    if (!sessionCode)
+      return {
+        status: false,
+        message: 'Invalid Session Code',
+        sessionDetails: null,
+      };
 
     const session = await this._sesionRepository.getSessionByCode(sessionCode);
     if (!session)
-      return { status: false, message: 'Session Code is Not Valid', sessionDetails : null };
+      return {
+        status: false,
+        message: 'Session Code is Not Valid',
+        sessionDetails: null,
+      };
     const currentTime = new Date().toISOString();
 
     const startTime =
@@ -134,23 +148,39 @@ export class SessionServices implements ISessionServices {
         : new Date(session.endTime);
 
     if (session.startTime.toISOString() > currentTime) {
-      return { status: false, message: 'Session Time is not reached' , sessionDetails : null};
+      return {
+        status: false,
+        message: 'Session Time is not reached',
+        sessionDetails: null,
+      };
     }
 
     if (session.endTime.toISOString() < currentTime) {
-      return { status: false, message: 'Session Ended', sessionDetails : null };
+      return { status: false, message: 'Session Ended', sessionDetails: null };
     }
     const group = session.groupId as IGroupTypes;
 
     if (!group.isActive) {
-      return { status: false, message: 'Group is Not Active' , sessionDetails : null};
+      return {
+        status: false,
+        message: 'Group is Not Active',
+        sessionDetails: null,
+      };
     }
     const members = group.members as string[];
     if (!members.includes(userId as string)) {
-      return { status: false, message: 'This is Session is Not Yours Group!', sessionDetails : null };
+      return {
+        status: false,
+        message: 'This is Session is Not Yours Group!',
+        sessionDetails: null,
+      };
     }
 
-    return { status: true, message: 'Session is Valid' , sessionDetails : session };
+    return {
+      status: true,
+      message: 'Session is Valid',
+      sessionDetails: session,
+    };
   }
   async updateSession(
     sessionData: ISessionModal,
@@ -202,8 +232,10 @@ export class SessionServices implements ISessionServices {
       ? new Date(date).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0];
 
-    const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00`);
-    const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00`);
+    // const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00`);
+    // const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00`);
+    const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00Z`); 
+    const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00Z`);
 
     if (
       endTime.getTime() < currentDate.getTime() ||
@@ -250,12 +282,14 @@ export class SessionServices implements ISessionServices {
     );
   }
   async totalSessionCount(): Promise<number> {
-    return await this._sesionRepository.getTotalSessionCount()
+    return await this._sesionRepository.getTotalSessionCount();
   }
   async getTotalSessionTime(): Promise<string> {
-    return await this._sesionRepository.getTotalSessionTime()
+    return await this._sesionRepository.getTotalSessionTime();
   }
   async getSessionCreationTrend(lastXDays: unknown): Promise<any> {
-    return await this._sesionRepository.getSessionCreationTrend(lastXDays as number)
+    return await this._sesionRepository.getSessionCreationTrend(
+      lastXDays as number
+    );
   }
 }
