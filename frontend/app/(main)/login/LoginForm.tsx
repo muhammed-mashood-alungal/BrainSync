@@ -11,7 +11,7 @@ import { useAuth } from "@/Context/auth.context";
 import InPageLoading from "@/Components/InPageLoading/InPageLoading";
 
 function LoginForm() {
-  const { user, checkAuth } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (user) {
