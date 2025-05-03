@@ -33,9 +33,7 @@
 - **Real-Time**: Socket.IO + Simple-Peer  
 - **Whiteboard**: Fabric.js  
 - **Video/Audio**: WebRTC  
-- **Charts**: Recharts  
-- **Containerization**: Docker (coming soon)  
-- **Subscriptions**: In progress
+- **Charts**: Recharts 
 
 ---
 
