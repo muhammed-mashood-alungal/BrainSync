@@ -87,12 +87,13 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
               
             </div>
 
-            {loading && <SimpleStudyLoading/>}
+            
             <div className="overflow-x-auto">
                 <Table
                     onPageChange={(page : number , limit : number , searchQuery : string | undefined)=>{
                         fetchStudents(page , limit , searchQuery as string )
                     }}
+                    
                     totalCount={totalCount}
                     columns={[
                         {
@@ -165,6 +166,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                         Next  
                     </button>
                 </div> */}
+                {loading && <SimpleStudyLoading/>}
             </div>
 
 

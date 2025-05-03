@@ -23,8 +23,7 @@ interface AdminDashboardProps {
   };
 }
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({
-}) => {
+const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
   const [timeRange, setTimeRange] = useState<"7days" | "14days" | "30days">(
     "7days"
   );
@@ -35,19 +34,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     totalSessions: 0,
     totalStudyTime: 0,
   });
-  
-  const { checkAuth , user , loading} = useAuth()
-  const router = useRouter()
 
-  useEffect(()=>{
-    if(loading) return
-    if(!user && !loading){
-      router.push('/admin/login')
+  const { checkAuth, user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user && !loading) {
+      router.push("/admin/login");
     }
-     if(user && user?.role != 'admin'){
-      router.push('/login')
-     }
-  },[user , loading])
+    if (user && user?.role != "admin") {
+      router.push("/login");
+    }
+  }, [user, loading]);
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -71,54 +70,78 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     fetchDashboard();
   }, [timeRange]);
   // Filter session trends data based on selected time range
+  // const getFilteredTrends = () => {
+  //   const today = new Date();
+  //   const pastDate = new Date();
+
+  //   switch (timeRange) {
+  //     case "7days":
+  //       pastDate.setDate(today.getDate() - 7);
+  //       break;
+  //     case "14days":
+  //       pastDate.setDate(today.getDate() - 14);
+  //       break;
+  //     case "30days":
+  //       pastDate.setDate(today.getDate() - 30);
+  //       break;
+  //     default:
+  //       pastDate.setDate(today.getDate() - 7);
+  //   }
+
+  //   return sessionTrends?.filter(
+  //     (item: any) => new Date(item.date) >= pastDate
+  //   );
+  // };
   const getFilteredTrends = () => {
-    const today = new Date();
-    const pastDate = new Date();
+    return sessionTrends?.filter((item: any) => {
+      const itemDate = new Date(item.date);
+      const itemDayStart = new Date(
+        itemDate.getFullYear(),
+        itemDate.getMonth(),
+        itemDate.getDate()
+      );
 
-    switch (timeRange) {
-      case "7days":
-        pastDate.setDate(today.getDate() - 7);
-        break;
-      case "14days":
-        pastDate.setDate(today.getDate() - 14);
-        break;
-      case "30days":
-        pastDate.setDate(today.getDate() - 30);
-        break;
-      default:
-        pastDate.setDate(today.getDate() - 7);
-    }
+      const today = new Date();
+      const todayStart = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
 
-    return sessionTrends?.filter(
-      (item: any) => new Date(item.date) >= pastDate
-    );
+      const pastDate = new Date(todayStart); // Copy todayStart to avoid mutation
+      switch (timeRange) {
+        case "7days":
+          pastDate.setDate(todayStart.getDate() - 7);
+          break;
+        case "14days":
+          pastDate.setDate(todayStart.getDate() - 14);
+          break;
+        case "30days":
+          pastDate.setDate(todayStart.getDate() - 30);
+          break;
+        default:
+          pastDate.setDate(todayStart.getDate() - 7);
+      }
+
+      return itemDayStart >= pastDate && itemDayStart <= todayStart;
+    });
   };
-
 
   const filteredTrends = getFilteredTrends();
 
- 
   // Format numbers with commas
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-
-  // Calculate user distribution for pie chart
-  // const pieData = [
-  //   { name: "Paid Users", value: userDistribution.paid },
-  //   { name: "Free Users", value: userDistribution.free },
-  // ];
-
-
-   const logout = async () => {
-      try {
-          await AuthServices.logout()
-          checkAuth()
-      } catch (err :unknown) {
-          toast.error((err as Error).message || "Logout Failed")
-      }
-  }
+  const logout = async () => {
+    try {
+      await AuthServices.logout();
+      checkAuth();
+    } catch (err: unknown) {
+      toast.error((err as Error).message || "Logout Failed");
+    }
+  };
 
   return (
     <div className="min-h-screen text-white p-6">

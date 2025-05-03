@@ -131,6 +131,7 @@ function SubscriptionList() {
         }
         ShowDropDown={true}
         dropDownLists={dropDownList}
+        ShowSearchBar={false}
       />
       <Confirm isOpen={Boolean(selectedSubscriptionId)} onClose={()=>setSubscriptionId('')} onConfirm={cancelSubscribtion}/>
     </>
