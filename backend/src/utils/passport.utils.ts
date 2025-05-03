@@ -3,7 +3,6 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { UserRepository } from '../repositories/implementation/user.repository';
 import { env } from '../configs/env.config';
 import { Types } from 'mongoose';
-import { redisClient } from '../configs/redis.config';
 
 const _userRepository = new UserRepository();
 const clientID = env.CLIENT_ID as string;
@@ -13,7 +12,7 @@ passport.use(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: '/api/auth/google/callback',
+      callbackURL: `${env.API_BASE_URL}/api/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

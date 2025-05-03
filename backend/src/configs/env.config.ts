@@ -88,6 +88,9 @@ export const env = {
   },
   get NODE_ENV(){
     return process.env.NODE_ENV
+  },
+  get API_BASE_URL(){
+    return process.env.API_BASE_URL
   }
   
 };
