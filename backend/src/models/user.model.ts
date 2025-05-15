@@ -23,7 +23,7 @@ const userSchema = new Schema<IUserModel>(
     googleId: {
       type: String,
     },
-    isAcitve: {
+    isActive: {
       type: Boolean,
       default: true,
     },

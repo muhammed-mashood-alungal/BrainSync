@@ -8,7 +8,7 @@ export interface ISessionServices {
     data: Partial<ISessionModal>,
     userId: string
   ): Promise<ISessionModal | null>;
-  createSessionCode(date: Date): string;
+  createSessionCode(): string;
   getMySessions(
     userId: unknown,
     sort : unknown,

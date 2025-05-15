@@ -1,9 +1,12 @@
-import { Types } from "mongoose";
+import { Types } from 'mongoose';
 
-export interface ICodeSnippetTypes{
-        title: string,                 // user-defined name like "My sorting algo"
-        language: string,             // e.g. "javascript"
-        sourceCode: string,           // the actual code
-        createdBy: Types.ObjectId, 
-        sessionId : Types.ObjectId
+export interface ICodeSnippetTypes {
+  title: string;
+  language: string;
+  sourceCode: string;
+  createdBy: Types.ObjectId;
+  sessionId: Types.ObjectId;
 }
+
+
+export type IMapppedCodeSnippet = Omit<ICodeSnippetTypes , 'createdBy'>

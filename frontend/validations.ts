@@ -4,7 +4,7 @@ import { IUserType } from "./types/userTypes"
 import { ISessionTypes } from "./types/sessionTypes"
 import { IPlanError, IPlans } from "./types/plans.types"
 
-export const validateSignUpForm = (formData: IuserSignUp) => {
+export const    validateSignUpForm = (formData: IuserSignUp) => {
     let err: IuserSignUp = { username: '', email: '', password: '', confirmPassword: '' }
     let status = true
     if (formData.username.trim() == "") {

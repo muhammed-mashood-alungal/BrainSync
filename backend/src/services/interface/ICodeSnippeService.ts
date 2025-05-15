@@ -1,4 +1,5 @@
 import { ICodeSnippetModel } from '../../models/codeSnippet.model';
+import { IMapppedCodeSnippet } from '../../types/codeSnippet.types';
 
 export interface ICodeSnippetSercvices {
   saveCodeSnippet(
@@ -9,5 +10,5 @@ export interface ICodeSnippetSercvices {
     query: string,
     skip: unknown,
     limit: unknown
-  ): Promise<{ snippets: ICodeSnippetModel[]; count: number }>;
+  ): Promise<{ snippets: IMapppedCodeSnippet[]; count: number }>;
 }

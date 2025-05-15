@@ -26,7 +26,7 @@ export class SessionServices implements ISessionServices {
     data: Partial<ISessionModal>,
     userId: unknown
   ): Promise<ISessionModal | null> {
-    const code = this.createSessionCode(data.date as Date);
+    const code = this.createSessionCode();
     const sessionLink = `${env.CLIENT_ORIGIN}/sessions/${code}`;
 
     const group = await this._groupRepository.getGroupData(
@@ -36,8 +36,6 @@ export class SessionServices implements ISessionServices {
 
     const sessionDate = data?.date ?? new Date().toISOString().split('T')[0];
 
-    // const startTime = new Date(`${sessionDate}T${data.startTime}:00Z`); 
-    // const endTime = new Date(`${sessionDate}T${data.endTime}:00Z`);
     console.log(data.startTime , data.endTime) 
     const startTime = DateTime.fromISO(`${sessionDate}T${data.startTime}`, {
       zone: 'Asia/Kolkata',
@@ -69,7 +67,7 @@ export class SessionServices implements ISessionServices {
       inserted._id as Types.ObjectId
     );
   }
-  createSessionCode(date: Date): string {
+  createSessionCode(): string {
     const hash = uuidv4();
     return hash.substring(0, 8).toUpperCase();
   }

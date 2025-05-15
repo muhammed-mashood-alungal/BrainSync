@@ -194,6 +194,7 @@ export class AuthController implements IAuthController {
       const isBlocked = await this._userService.isStudentsBlocked(
         userData.id as string
       );
+      console.log('is Blocked----------------------------------------' + isBlocked)
       if (isBlocked) {
         throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
       }

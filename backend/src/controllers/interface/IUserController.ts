@@ -18,7 +18,7 @@ export interface IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
-  searchUserbyEmail(
+  searchUserByEmail(
     req: Request,
     res: Response,
     next: NextFunction

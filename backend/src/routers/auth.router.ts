@@ -44,7 +44,7 @@ authRouter.post(
 authRouter.get(
   '/google',
   passport.authenticate('google', {
-    scope: ['profile', 'email', 'https://www.googleapis.com/auth/calendar'],
+    scope: ['profile', 'email'],
     prompt: 'select_account',
   })
 );

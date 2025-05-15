@@ -14,8 +14,6 @@ export const codeEditorServices = {
         `${process.env.NEXT_PUBLIC_PISTON_API}/runtimes`
       );
       const allRuntimes = response.data;
-
-      // Filter only the runtimes for the languages you care about
       const langRunTime = allRuntimes.find((runtime : any )=> runtime.language === language);
       return langRunTime ? langRunTime.version : null;
     } catch (error) {

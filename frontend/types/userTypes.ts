@@ -6,11 +6,15 @@ export interface IUserType {
     password: string;
     googleId:string;
     role: 'student' | 'admin';
-    isAcitve: Boolean;
+    isActive: Boolean;
     profilePicture?: {
         url :string , 
         publicId : string
     };
+    subscription?: {
+    planId : string,
+    isActive : boolean
+  }
     createdAt: Date | string;
     updatedAt: Date | string;
 } 
@@ -22,3 +26,4 @@ export interface IDecodedUserType{
     isPremiumMember? : boolean
     profileImg? :string
 }
+

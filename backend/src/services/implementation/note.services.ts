@@ -1,13 +1,8 @@
 import mongoose, { Types } from 'mongoose';
-import { HttpResponse } from '../../constants/responseMessage.constants';
-import { HttpStatus } from '../../constants/status.constants';
 import { INoteRepository } from '../../repositories/interface/INoteRepository';
-import { createHttpsError } from '../../utils/httpError.utils';
 import { INoteService } from '../interface/INoteService';
 import { GridFSBucketReadStream } from 'mongodb';
 import { ISessionRepository } from '../../repositories/interface/ISessionRepository';
-import { INoteTypes } from '../../types/note.types';
-import { limitToFirst } from 'firebase/database';
 import { INoteModel } from '../../models/note.model';
 
 export class NoteService implements INoteService {

@@ -5,6 +5,7 @@ import { createHttpsError } from '../../utils/httpError.utils';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { successResponse } from '../../utils/response';
+import { mapUsers } from '../../mappers/user.mappers';
 
 export class UserController implements IUserController {
   constructor(private _userServices: UserServices) {}
@@ -107,7 +108,7 @@ export class UserController implements IUserController {
       next(error);
     }
   }
-  async searchUserbyEmail(
+  async searchUserByEmail(
     req: Request,
     res: Response,
     next: NextFunction
@@ -121,6 +122,7 @@ export class UserController implements IUserController {
 
       const users = await this._userServices.searchUserByEmail(query as string);
       res
+
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { users: users }));
     } catch (error) {

@@ -45,14 +45,14 @@ export class SessionActivityRepository
         break;
 
       case 'Weekly':
-        dateFormat = '%Y-%m-%d'; // Still group by day, but label as Mon, Tue, ...
+        dateFormat = '%Y-%m-%d'; 
         labels = Array.from({ length: 7 }).map((_, i) =>
           format(subDays(startOfToday(), 6 - i), 'EEEE')
         );
         break;
 
       case 'Monthly':
-        dateFormat = '%Y-%m-%d'; // Just day of month
+        dateFormat = '%Y-%m-%d'; 
         labels = Array.from({ length: 31 }).map((_, i) =>{
             
             return `${i + 1}`
@@ -60,14 +60,13 @@ export class SessionActivityRepository
         break;
 
       case 'Yearly':
-        dateFormat = '%m'; // Just month number
+        dateFormat = '%m';
         labels = Array.from({ length: 12 }).map((_, i) =>
           format(new Date(now.getFullYear(), i, 1), 'MMM')
         );
         break;
     }
 
-    // 🔍 Aggregate logs by formatted date
     const stats = await this.model.aggregate([
       { $match: { userId: userIdObj } },
       { $unwind: '$logs' },
@@ -94,7 +93,6 @@ export class SessionActivityRepository
         const day = format(new Date(item._id), 'EEEE');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Monthly') {
-       // const dayNum = parseInt(item._id, 10); // 01 to 30
          const day = format(new Date(now.getMonth()) , 'd')
         graphMap[String(Number(day)+1)] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Yearly') {
@@ -105,7 +103,6 @@ export class SessionActivityRepository
         );
         graphMap[monthLabel] = Math.floor(item.totalDuration / 1000);
       } else {
-        // Daily
         graphMap[item._id] = Math.floor(item.totalDuration / 1000);
       }
     });
@@ -118,12 +115,6 @@ export class SessionActivityRepository
         duration: Math.floor(item.totalDuration / 1000),
       }));
     }  
-    // else if(filterBy == 'Monthly'){
-    //   graphData = stats.map(item => ({
-    //     name: new Date(item._id).toLocaleDateString(),
-    //     duration: Math.floor(item.totalDuration / 1000),
-    //   }));
-    // }
     else {
       graphData = labels.map(label => ({
         name: label,

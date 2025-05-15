@@ -24,7 +24,7 @@ userRouter.put(
 userRouter.get(
   '/search',
   authMiddleware,
-  userController.searchUserbyEmail.bind(userController)
+  userController.searchUserByEmail.bind(userController)
 );
 
 userRouter.get(

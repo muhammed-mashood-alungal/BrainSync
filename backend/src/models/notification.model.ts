@@ -1,5 +1,4 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
-import { ICodeSnippetTypes } from '../types/codeSnippet.types';
 import { INotificationTypes } from '../types/notification.types';
 
 export interface INotificationModel extends Document, INotificationTypes {}

@@ -1,10 +1,10 @@
-import { decode, JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import { redisClient } from '../../configs/redis.config';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { HttpStatus } from '../../constants/status.constants';
 import { IUserModel } from '../../models/user.model';
 import { IUserRepository } from '../../repositories/interface/IUserRepository';
-import { IUser } from '../../types/user.types';
+import { IMappedSessionUserData, IUser } from '../../types/user.types';
 import { comparePassword, hashPassword } from '../../utils/bcrypt.util';
 import generateOtp from '../../utils/generate-otp.util';
 import { createHttpsError } from '../../utils/httpError.utils';
@@ -17,6 +17,7 @@ import {
 import { sendOtp, sendResetLink } from '../../utils/sendEmail.utils';
 import { IAuthService } from '../interface/IAuthService';
 import { v4 as uuidv4 } from 'uuid';
+import { mapUserSessionData } from '../../mappers/user.mappers';
 
 export class AuthService implements IAuthService {
   constructor(private _userRepository: IUserRepository) {}
@@ -27,12 +28,12 @@ export class AuthService implements IAuthService {
     if (isUserExist) {
       throw createHttpsError(HttpStatus.CONFLICT, HttpResponse.USER_EXIST);
     }
- 
+
     user.password = await hashPassword(user.password as string);
 
     const otp = generateOtp();
     await sendOtp(user.email, otp);
-      console.log('otp send')
+    console.log('otp send');
     const response = await redisClient.set(
       user.email,
       JSON.stringify({
@@ -59,7 +60,7 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-    if (!user.isAcitve) {
+    if (!user.isActive) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
@@ -135,7 +136,6 @@ export class AuthService implements IAuthService {
       }),
       { EX: 300 }
     );
-   
 
     if (!response) {
       throw createHttpsError(
@@ -161,7 +161,7 @@ export class AuthService implements IAuthService {
       decoded.email as string
     );
 
-    if (!user?.isAcitve) {
+    if (!user?.isActive) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
@@ -175,7 +175,7 @@ export class AuthService implements IAuthService {
 
     return { newAccessToken, payload };
   }
-  async authMe(token: string): Promise<JwtPayload | string> {
+  async authMe(token: string): Promise<IMappedSessionUserData | undefined> {
     const decoded = verifyAccessToken(token) as JwtPayload;
 
     if (!decoded) {
@@ -188,11 +188,12 @@ export class AuthService implements IAuthService {
     if (!user) {
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.TOKEN_EXPIRED);
     }
-    if (!user.isAcitve) {
+    if (!user.isActive) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
 
-    return {...decoded , isPremiumMember : user?.subscription?.isActive ? true : false , profileImg : user.profilePicture?.url};
+    //  return {...decoded , isPremiumMember : user?.subscription?.isActive ? true : false , profileImg : user.profilePicture?.url};
+    return mapUserSessionData(user);
   }
   generateTokens(user: IUserModel): {
     accessToken: string;

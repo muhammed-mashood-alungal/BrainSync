@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
 import { IGroupTypes } from './group.types';
-import { IGroupModel } from '../models/group.model';
 
 export interface ISessionTypes {
   sessionName: string;
@@ -14,4 +13,5 @@ export interface ISessionTypes {
   createdBy: Types.ObjectId;
   code: string;
   isStopped: boolean;
+  createdAt : Date
 }

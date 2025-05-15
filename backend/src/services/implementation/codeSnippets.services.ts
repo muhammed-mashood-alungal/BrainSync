@@ -5,6 +5,8 @@ import { ICodeSnippetSercvices } from '../interface/ICodeSnippeService';
 import { createHttpsError } from '../../utils/httpError.utils';
 import { HttpStatus } from '../../constants/status.constants';
 import { ISessionRepository } from '../../repositories/interface/ISessionRepository';
+import { IMapppedCodeSnippet } from '../../types/codeSnippet.types';
+import { HttpResponse } from '../../constants/responseMessage.constants';
 
 export class CodeSnippetServices implements ICodeSnippetSercvices {
   constructor(private _codeSnippetRepo: ICodeSnippetRepository , private _sesssionRepo : ISessionRepository) {}
@@ -17,7 +19,7 @@ export class CodeSnippetServices implements ICodeSnippetSercvices {
     if(!sessionData){
         throw createHttpsError(
             HttpStatus.BAD_REQUEST,
-            'Invalid Session COde'
+            HttpResponse.INVALID_SESSION_CODE
           );
     }
     const isExist = await this._codeSnippetRepo.getCodeByTitleandUserId(
@@ -29,7 +31,7 @@ export class CodeSnippetServices implements ICodeSnippetSercvices {
     if (isExist) {
       throw createHttpsError(
         HttpStatus.CONFLICT,
-        'Code Snippet With This Title Already Exist on your Resources.Try Another One'
+        HttpResponse.CODE_TITLE_ALREADY_EXIST
       );
     }
     return this._codeSnippetRepo.saveCodeSnippet({...codeData,sessionId : sessionData?._id as Types.ObjectId});
@@ -39,12 +41,13 @@ export class CodeSnippetServices implements ICodeSnippetSercvices {
     query: string,
     skip: unknown,
     limit: unknown
-  ): Promise<{ snippets: ICodeSnippetModel[]; count: number }> {
-    return this._codeSnippetRepo.getUserCodeSnippets(
+  ): Promise<{ snippets: IMapppedCodeSnippet[]; count: number }> {
+    return await this._codeSnippetRepo.getUserCodeSnippets(
       userId as Types.ObjectId,
       query,
       skip as number,
       limit as number
     );
+    
   }
 }

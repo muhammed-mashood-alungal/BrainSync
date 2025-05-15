@@ -1,6 +1,6 @@
 export const HttpResponse = {
   OK: 'OK',
-  SERVER_ERROR: 'Inter server Error',
+  SERVER_ERROR: 'Internal server Error!',
   USER_EXIST: 'User already exist',
   PAGE_NOT_FOUND: 'Page Not Found',
   USER_NOT_FOUND: 'User Not Found',
@@ -36,5 +36,7 @@ export const HttpResponse = {
   PAYMENT_FAILED : 'Payment Transaction Failed',
   USER_ALREADY_HAVE_AN_ACTIVE_PLAN : 'This is user have already a Active Plan',
   MONGO_URL_NOT_DEFINED_IN_ENV:'MONGO_URI is not defined in the environment variables.',
-  GRIDFS_NOT_INITIATED:'GridFSBucket not initialized. Ensure MongoDB is connected.'
+  GRIDFS_NOT_INITIATED:'GridFSBucket not initialized. Ensure MongoDB is connected.',
+  CODE_TITLE_ALREADY_EXIST:'Code Snippet With This Title Already Exist on your Resources.Try Another One',
+  INVALID_SESSION_CODE:'Invalid Session COde'
 };

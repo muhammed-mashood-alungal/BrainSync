@@ -14,7 +14,7 @@ import { env } from './configs/env.config';
 //import { connectDB } from './configs/mongo.config'
 import mongoDBConfig from './configs/mongo.config';
 import { errorHandler } from './middlewares/error.middleware';
-import { pageNotFound } from './middlewares/notFound.middleware';
+import { pageNotFound } from './middlewares/notFound.middleware'; 
 import { connectRedis } from './configs/redis.config';
 
 mongoDBConfig.connectDB();

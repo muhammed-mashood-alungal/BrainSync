@@ -4,13 +4,14 @@ import { IUserService } from '../interface/IUserService';
 import { deleteImage, handleUpload } from '../../utils/imageUpload.util';
 import { Mongoose, Types, Unpacked } from 'mongoose';
 import { createHttpsError, HttpError } from '../../utils/httpError.utils';
-import { IUser } from '../../types/user.types';
+import { IMappedUser, IUser } from '../../types/user.types';
 import { comparePassword, hashPassword } from '../../utils/bcrypt.util';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 import { IUserModel } from '../../models/user.model';
 import { IGroupRepository } from '../../repositories/interface/IGroupRepository';
+import { mapUsers } from '../../mappers/user.mappers';
 export class UserServices implements IUserService {
   constructor(
     private _userRepository: UserRepository,
@@ -30,18 +31,23 @@ export class UserServices implements IUserService {
 
     return true;
   }
-  async getUserData(userId: unknown): Promise<Omit<IUser, 'password'> | null> {
+  async getUserData(userId: unknown): Promise<IMappedUser> {
     const userData = await this._userRepository.findById(
       userId as Types.ObjectId
     );
-    return userData;
+    if(!userData){
+      throw createHttpsError(HttpStatus.BAD_REQUEST , HttpResponse.USER_NOT_FOUND)
+    }
+    return mapUsers(userData);
   }
+
   async editUsername(userId: unknown, newName: string): Promise<Boolean> {
     await this._userRepository.findByIdAndUpdate(userId as Types.ObjectId, {
       $set: { username: newName },
     });
     return true;
   }
+
   async updatePassword(
     userId: unknown,
     oldPass: string,
@@ -69,33 +75,40 @@ export class UserServices implements IUserService {
     skip: unknown,
     limit: unknown,
     searchQuery: string
-  ): Promise<{ students: IUser[]; count: number }> {
+  ): Promise<{ students: IMappedUser[]; count: number }> {
+
     const sk = (skip as number) ?? 0;
     const lim = (limit as number) ?? 100;
 
-    const [count, students] = await Promise.all([
+    const [count, students] : [number , IUserModel[]]= await Promise.all([
       this._userRepository.countStudents(searchQuery),
       this._userRepository.findAllStudents(sk, lim, searchQuery),
     ]);
-    return { students, count };
+
+    return { students : students.map(mapUsers) , count };
   }
+
+
   async blockOrUnblockUser(id: unknown): Promise<boolean> {
     const stud = await this._userRepository.findById(id as Types.ObjectId);
     if (!stud)
       throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
-    stud.isAcitve = !stud?.isAcitve;
+    stud.isActive = !stud?.isActive;
     stud.save();
     return true;
   }
+
   async isStudentsBlocked(id: unknown): Promise<boolean> {
     const stud = await this._userRepository.findById(id as Types.ObjectId);
-    return stud?.isAcitve == false;
+    return stud?.isActive == false;
   }
+
   async searchUserByEmail(
     query: string
   ): Promise<{ email: string; _id: Types.ObjectId }[]> {
     return await this._userRepository.searchUserByEmail(query);
   }
+  
   async deleteProfilePic(userId: unknown): Promise<Boolean> {
     const publicId = await this._userRepository.deleteAvatar(
       userId as Types.ObjectId
@@ -122,9 +135,11 @@ export class UserServices implements IUserService {
     );
   }
 
-  async getAllPremiumUsers(): Promise<IUserModel[]> {
-    return await this._userRepository.getAllPremiumUsers();
+  async getAllPremiumUsers(): Promise<IMappedUser[]> {
+    const students= await this._userRepository.getAllPremiumUsers();
+    return students.map(mapUsers)
   }
+
   async getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>{
     const totalGroups =await this._groupRepo?.totalGroupsofUser(userId as Types.ObjectId) as  number
     const totalTimeSpend =await this._sessionActiviesRepo.totalTimeSendByUser(userId as Types.ObjectId)

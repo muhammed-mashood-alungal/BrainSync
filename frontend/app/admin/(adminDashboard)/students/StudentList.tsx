@@ -52,7 +52,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
             setStudents(prevStudents =>
                 prevStudents.map(student =>
                     student._id === studentId
-                        ? { ...student, isAcitve: !student.isAcitve }
+                        ? { ...student, isActive: !student.isActive }
                         : student
                 )
             )
@@ -117,15 +117,15 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                             render: (student: IUserType) => new Date(student.createdAt).toLocaleDateString(),
                         },
                         {
-                            key: "isAcitve",
+                            key: "isActive",
                             label: "Status",
                             render: (student: IUserType) => (
                                 <span
 
-                                    className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isAcitve ? "bg-green-900 text-green-300" : "bg-red-900 text-red-300"
+                                    className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.isActive ? "bg-green-900 text-green-300" : "bg-red-900 text-red-300"
                                         }`}
                                 >
-                                    {student.isAcitve ? "Active" : "Blocked"}
+                                    {student.isActive ? "Active" : "Blocked"}
                                 </span>
                             ),
                         },
@@ -140,10 +140,10 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                                 onClick={() => {
                                     setblockingStudents(student._id)
                                 }}
-                                className={`transition-colors ${student.isAcitve ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"
+                                className={`transition-colors ${student.isActive ? "text-red-400 hover:text-red-300" : "text-green-400 hover:text-green-300"
                                     }`}
                             >
-                                {student.isAcitve ? "Block" : "Unblock"}
+                                {student.isActive ? "Block" : "Unblock"}
                             </button>
                         </>
 
@@ -190,9 +190,9 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <div className="bg-gray-800 p-4 rounded-lg">
                                 <p className="text-gray-400 text-sm mb-1">Status</p>
-                                <div className={`text-base font-medium ${selectedStudent.isAcitve ? 'text-green-400' : 'text-red-400'
+                                <div className={`text-base font-medium ${selectedStudent.isActive ? 'text-green-400' : 'text-red-400'
                                     }`}>
-                                    {selectedStudent.isAcitve ? 'Active' : 'Blocked'}
+                                    {selectedStudent.isActive ? 'Active' : 'Blocked'}
                                 </div>
                             </div>
 
@@ -227,12 +227,12 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                                     setIsViewModalOpen(false)
                                     setblockingStudents(selectedStudent._id)
                                 }}
-                                className={`px-4 py-2 rounded-lg transition-colors ${selectedStudent.isAcitve
+                                className={`px-4 py-2 rounded-lg transition-colors ${selectedStudent.isActive
                                     ? 'bg-red-700 hover:bg-red-600 text-white'
                                     : 'bg-green-700 hover:bg-green-600 text-white'
                                     }`}
                             >
-                                {selectedStudent.isAcitve ? 'Block User' : 'Unblock User'}
+                                {selectedStudent.isActive ? 'Block User' : 'Unblock User'}
                             </button>
                         </div>
                     </div>

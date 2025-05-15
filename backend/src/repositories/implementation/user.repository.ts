@@ -42,6 +42,7 @@ export class UserRepository
         googleId: profile.id,
         email: profile.emails?.[0].value,
         username: profile.displayName,
+        role:'student'
       });
     }
 
@@ -67,7 +68,7 @@ export class UserRepository
   ): Promise<{ email: string; _id: Types.ObjectId }[]> {
     return await this.find({
       email: { $regex: query, $options: 'i' },
-      isAcitve: true,
+      isActive: true,
       role: 'student',
     });
   }

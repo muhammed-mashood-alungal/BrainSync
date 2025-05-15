@@ -1,5 +1,5 @@
 import { Types } from 'mongoose';
-import { IUser } from '../../types/user.types';
+import { IMappedUser, IUser } from '../../types/user.types';
 import { IUserModel } from '../../models/user.model';
 
 export interface IUserService {
@@ -8,7 +8,7 @@ export interface IUserService {
     fileUrl: Express.Multer.File
   ): Promise<Boolean>;
 
-  getUserData(userId: unknown): Promise<Omit<IUser, 'password'> | null>;
+  getUserData(userId: unknown): Promise<IMappedUser>;
 
   editUsername(userId: unknown, newName: string): Promise<Boolean>;
 
@@ -22,19 +22,14 @@ export interface IUserService {
     skip: unknown,
     limit: unknown,
     searchQuery: string
-  ): Promise<{ students: IUser[]; count: number }>;
+  ): Promise<{ students: IMappedUser[]; count: number }>;
 
   blockOrUnblockUser(id: unknown): Promise<boolean>;
 
   isStudentsBlocked(id: unknown): Promise<boolean>;
-
-  searchUserByEmail(
-    query: string
-  ): Promise<{ email: string; _id: Types.ObjectId }[]>;
-
   deleteProfilePic(userId: unknown): Promise<Boolean>;
   getUserSessionProgress(userId : unknown , filterBy : string) : Promise<{graph : any[]}>
-  getAllPremiumUsers():Promise<IUserModel[]>
+  getAllPremiumUsers():Promise<IMappedUser[]>
   getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>
   totalUsersCount(): Promise<number>
 }
