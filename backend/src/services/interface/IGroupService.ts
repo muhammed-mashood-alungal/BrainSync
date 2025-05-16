@@ -11,4 +11,5 @@ export interface IGroupService {
   groupData(id: unknown): Promise<IMappedGroupTypes>;
   handleGroupActivation(groupId: unknown): Promise<Boolean>;
   totalGroupCount():Promise<number>
+  deleteGroup(groupId : unknown) : Promise<void>
 }

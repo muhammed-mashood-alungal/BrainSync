@@ -12,4 +12,5 @@ export interface IGroupController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  deleteGroup(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -14,4 +14,5 @@ export interface IGroupRepository {
   handleGroupActivation(groupId: Types.ObjectId): Promise<Boolean>;
   totalGroupsofUser(userId :unknown) :Promise<number>
   getTotalGroupCount() :Promise<number>
+  deleteGroup(groupId : Types.ObjectId) : Promise<void>
 }

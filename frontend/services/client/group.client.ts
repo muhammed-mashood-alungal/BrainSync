@@ -53,8 +53,18 @@ export const GroupServices = {
             return response.data
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
-            const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."
+            const errorMessage = err.response?.data?.error || "Group Activation failed. Please try again."
             throw new Error(errorMessage)
         }
-    }
+    },
+    deleteGroup: async (groupId : string): Promise<void> => {
+        try {
+            const response = await groupInstance.put(`/${groupId}/delete-group`)
+            return response.data
+        } catch (error) {
+            const err = error as AxiosError<{ error: string }>
+            const errorMessage = err.response?.data?.error || "Group Deletion failed. Please try again."
+            throw new Error(errorMessage)
+        }
+    },
 }

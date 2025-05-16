@@ -23,6 +23,10 @@ const groupSchema = new Schema<IGroupModel>(
       type: Boolean,
       default: true,
     },
+    isDeleted : {
+      type : Boolean,
+      default : false
+    }
   },
   {
     timestamps: true,

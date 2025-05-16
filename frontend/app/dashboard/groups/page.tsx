@@ -11,7 +11,7 @@ import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/Components/GroupDetails/GroupDetails";
 import EmptyList from "@/Components/EmptyList/EmptyList";
-import { LogOutIcon, UserPlus } from "lucide-react";
+import { LogOutIcon, Trash, UserPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
@@ -26,6 +26,7 @@ const GroupsPage: React.FC = () => {
   const [selectedGroup, setSelectedGroup] = useState("");
   const [viewGroup, setViewGroup] = useState<IGroupType>();
   const [leavingGroupId ,setLeavingGroupId] = useState('')
+  const [deletingGroup , setDeletingGroupId] = useState('')
   const router = useRouter()
 
   useEffect(()=>{
@@ -72,6 +73,20 @@ const GroupsPage: React.FC = () => {
       selectedMembers.filter((member) => member._id !== email)
     );
   };
+
+  const deleteGroup =async ()=>{
+        if(!deletingGroup) return 
+
+        try {
+          const response = await GroupServices.deleteGroup(deletingGroup)
+          setGroups((grps)=>{
+            return grps.filter((g)=> g._id != deletingGroup)
+          })
+          setDeletingGroupId('')
+        } catch (error) {
+          console.log(error)
+        }
+  }
 
   const createGroup =async () => {
     setErr({ groupName: "", members: "" });
@@ -174,12 +189,24 @@ const GroupsPage: React.FC = () => {
               <h2 className="text-xl font-semibold text-white">{group.name}</h2>
               <div>
                 {group.createdBy?._id == user?.id ? (
-                  <button
+                  <span>
+                    <button
                     className="hover:cursor-pointer text-white py-1 px-4 rounded-md text-sm transition duration-200"
                     onClick={() => setSelectedGroup(group._id)}
                   >
                    <UserPlus/>
                   </button>
+                  <button>
+                    <button
+                    className="hover:cursor-pointer text-white py-1 px-4 rounded-md text-sm transition duration-200"
+                    onClick={() => setDeletingGroupId(group._id)}
+                  >
+                   <Trash/>
+                  </button>
+                  </button>
+
+                  </span>
+                  
                 ) : (
                   <button
                     className=" text-white py-1 px-4 rounded-md text-sm transition duration-200"
@@ -415,6 +442,7 @@ const GroupsPage: React.FC = () => {
         />
       </BaseModal>
       <Confirm isOpen={Boolean(leavingGroupId)} onClose={()=>setLeavingGroupId('')} onConfirm={leaveGroup} />
+        <Confirm isOpen={Boolean(deletingGroup)} onClose={()=>setDeletingGroupId('')} onConfirm={deleteGroup} />
     </div>
   );
 };

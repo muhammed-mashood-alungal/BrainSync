@@ -6,6 +6,7 @@ export interface IGroupTypes {
   createdBy: Types.ObjectId | IUser;
   members: Types.ObjectId[] | IUser[] | string[];
   isActive: boolean;
+  isDeleted : boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -16,5 +17,6 @@ export interface IMappedGroupTypes {
   createdBy: Types.ObjectId | IMappedUser;
   members: Types.ObjectId[] | IMappedUser[];
   isActive: boolean;
+  isDeleted : boolean
   createdAt?: Date;
 }

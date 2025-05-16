@@ -36,7 +36,7 @@ export class GroupRepository
 
   async getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]> {
     return await this.model
-      .find({ members: userId, isActive: true })
+      .find({ members: userId, isActive: true , isDeleted : false })
       .populate('createdBy')
       .populate('members')
       .sort({ createdAt: -1 });
@@ -57,5 +57,12 @@ export class GroupRepository
   }
   async getTotalGroupCount(): Promise<number> {
     return await this.model.countDocuments({});
+  }
+  async deleteGroup(groupId: Types.ObjectId): Promise<void> {
+     await this.model.findByIdAndUpdate(groupId , {
+      $set :{
+        isDeleted : true
+      }
+     })
   }
 }

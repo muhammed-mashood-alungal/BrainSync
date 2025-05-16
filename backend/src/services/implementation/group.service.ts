@@ -66,4 +66,7 @@ export class GroupServices implements IGroupService {
   async totalGroupCount(): Promise<number> {
     return await this._groupRepository.getTotalGroupCount()
   }
+  async deleteGroup(groupId: unknown): Promise<void> {
+    await this._groupRepository.deleteGroup(groupId as Types.ObjectId)
+  }
 }

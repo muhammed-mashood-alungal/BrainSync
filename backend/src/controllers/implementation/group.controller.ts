@@ -117,4 +117,14 @@ export class GroupController implements IGroupController {
       next(error);
     }
   }
+  async deleteGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {groupId} = req.params;
+      console.log(groupId)
+      await this._groupServices.deleteGroup(groupId)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+    } catch (error) {
+      next(error)
+    }
+  }
 }

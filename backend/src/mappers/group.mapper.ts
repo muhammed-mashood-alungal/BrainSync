@@ -9,6 +9,7 @@ export const groupMapper = (group : IGroupModel) =>{
         createdBy : mapUsers(group.createdBy as IUserModel),
         members : (group.members as IUserModel[]).map(mapUsers),
         isActive : group.isActive,
+        isDeleted : group.isDeleted,
         createdAt : group.createdAt
     }
 }

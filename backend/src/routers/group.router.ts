@@ -47,5 +47,10 @@ groupRouter.put(
   adminAuth,
   groupController.handleGroupActivation.bind(groupController)
 );
+groupRouter.put(
+  '/:groupId/delete-group',
+  authMiddleware,
+  groupController.deleteGroup.bind(groupController)
+);
 
 export default groupRouter;

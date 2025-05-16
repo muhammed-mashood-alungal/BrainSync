@@ -38,4 +38,5 @@ export interface IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  
 }
