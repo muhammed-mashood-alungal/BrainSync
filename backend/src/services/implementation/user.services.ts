@@ -23,6 +23,7 @@ export class UserServices implements IUserService {
     userId: unknown,
     file: Express.Multer.File
   ): Promise<Boolean> {
+    console.log(file)
     const response = await handleUpload(file);
 
     await this._userRepository.findByIdAndUpdate(userId as Types.ObjectId, {
@@ -123,6 +124,16 @@ export class UserServices implements IUserService {
     }
 
     return true;
+  }
+
+  async getProfilePhoto(userId: unknown): Promise<any> {
+    const url =await this._userRepository.getUserProfilePhotoUrl(userId as  Types.ObjectId)
+    if(!url){
+      return undefined
+    }console.log(url)
+
+    const imageRes = await fetch(url)
+     return imageRes
   }
 
   async getUserSessionProgress(

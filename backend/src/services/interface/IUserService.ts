@@ -32,4 +32,5 @@ export interface IUserService {
   getAllPremiumUsers():Promise<IMappedUser[]>
   getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>
   totalUsersCount(): Promise<number>
+  getProfilePhoto(userId : unknown ): Promise<any>
 }

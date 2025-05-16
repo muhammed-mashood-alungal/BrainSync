@@ -5,7 +5,7 @@ import { createHttpsError } from '../../utils/httpError.utils';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { successResponse } from '../../utils/response';
-import { mapUsers } from '../../mappers/user.mappers';
+import { Readable } from 'stream';
 
 export class UserController implements IUserController {
   constructor(private _userServices: UserServices) {}
@@ -128,6 +128,22 @@ export class UserController implements IUserController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async getProfilePhoto(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    console.log("HITTT")
+    const { userId } = req.params;
+    const imageRes = await this._userServices.getProfilePhoto(userId);
+    console.log(imageRes)
+    const contentType = imageRes.headers.get('content-type');
+
+    res.setHeader('Content-Type', contentType);
+    const nodeReadable = Readable.from(imageRes.body as any);
+nodeReadable.pipe(res);
   }
   async deleteAvatar(
     req: Request,

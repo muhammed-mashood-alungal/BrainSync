@@ -49,6 +49,13 @@ userRouter.put(
   authMiddleware,
   userController.changePassword.bind(userController)
 );
+
+userRouter.get(
+  '/profile-photo/:userId',
+  authMiddleware,
+  userController.getProfilePhoto.bind(userController)
+);
+
 userRouter.delete(
   '/delete-profile-photo/:userId',
   authMiddleware,

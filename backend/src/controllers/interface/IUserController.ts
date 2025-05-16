@@ -33,4 +33,9 @@ export interface IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getProfilePhoto(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
 }

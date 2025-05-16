@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config(); 
+
 export const env = {
   get PORT() {
     return process.env.PORT;
@@ -91,6 +94,8 @@ export const env = {
   },
   get API_BASE_URL(){
     return process.env.API_BASE_URL
-  }
-  
+  },
+  get PROFILE_IMAGE_URL(){
+    return process.env.PROFILE_IMAGE_URL
+  } 
 };

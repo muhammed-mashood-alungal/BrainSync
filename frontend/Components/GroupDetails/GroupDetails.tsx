@@ -36,7 +36,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
         <div className="flex items-center px-4 py-3 bg-[#252527] rounded-md">
           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
             <img 
-              src={group?.createdBy?.profilePicture?.url  || 'ProfilePic.png'} 
+              src={group?.createdBy?.profilePicture  || '/ProfilePic.png'} 
               alt={group?.createdBy?.username} 
               className="w-full h-full object-cover"
             />
@@ -63,7 +63,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-700 flex-shrink-0">
                   <img 
-                    src={member?.profilePicture?.url || '/ProfilePic.png'} 
+                    src={member?.profilePicture || "/profilePic.png"} 
                     alt={member?.username} 
                     className="w-full h-full object-cover"
                   />

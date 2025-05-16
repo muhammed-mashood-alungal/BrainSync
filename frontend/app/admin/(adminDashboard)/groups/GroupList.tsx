@@ -72,7 +72,7 @@ function GroupList({inititalGroups } :{inititalGroups :IGroupType[]}) {
                                             key={member._id}
                                             className="w-8 h-8 rounded-full mr-1 flex items-center justify-center text-xs font-bold"
                                         >
-                                            <img src={member?.profilePicture?.url || "/profilePic.png"} alt="" className='h-8 w-8 rounded-2xl' />
+                                            <img src={member?.profilePicture || "/profilePic.png"} alt="" className='h-8 w-8 rounded-2xl' />
                                         </div>
                                     ))}
                                     {group.members.length > 5 && (

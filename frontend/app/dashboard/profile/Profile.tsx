@@ -37,7 +37,7 @@ function Profile() {
         const data = await UserServices.getUserData(user.id);
         setUserData(data);
         if (data.profilePicture) {
-          setPreview(data.profilePicture?.url);
+          setPreview(data.profilePicture);
         }
         setNewUsername(data.username);
       }

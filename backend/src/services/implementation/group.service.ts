@@ -6,6 +6,8 @@ import { createHttpsError } from '../../utils/httpError.utils';
 import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { IUserRepository } from '../../repositories/interface/IUserRepository';
+import { groupMapper } from '../../mappers/group.mapper';
+import { IMappedGroupTypes } from '../../types/group.types';
 
 export class GroupServices implements IGroupService {
   constructor(
@@ -31,15 +33,17 @@ export class GroupServices implements IGroupService {
     );
   }
 
-  async allGroups(): Promise<IGroupModel[]> {
-    return await this._groupRepository.getAllGroups();
+  async allGroups(): Promise<IMappedGroupTypes[]> {
+    const groups =  await this._groupRepository.getAllGroups();
+    return groups.map(groupMapper)
   }
 
-  async myGroups(userId: unknown): Promise<IGroupModel[]> {
-    return await this._groupRepository.getMyGroups(userId as Types.ObjectId);
+  async myGroups(userId: unknown): Promise<IMappedGroupTypes[]> {
+    const groups = await this._groupRepository.getMyGroups(userId as Types.ObjectId);
+    return groups.map(groupMapper)
   }
 
-  async groupData(id: unknown): Promise<IGroupModel | null> {
+  async groupData(id: unknown): Promise<IMappedGroupTypes> {
     const result = await this._groupRepository.getGroupData(
       id as Types.ObjectId
     );
@@ -49,7 +53,7 @@ export class GroupServices implements IGroupService {
         HttpResponse.RESOURCE_NOT_FOUND
       );
     }
-    return result;
+    return groupMapper(result);
   }
 
   async handleGroupActivation(groupId: unknown): Promise<Boolean> {

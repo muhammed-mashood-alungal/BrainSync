@@ -1,4 +1,5 @@
 
+import { env } from '../configs/env.config';
 import { IUserModel } from '../models/user.model';
 import { IMappedSessionUserData, IMappedUser } from '../types/user.types';
 
@@ -10,7 +11,7 @@ export const mapUsers = (user: IUserModel) : IMappedUser => {
     isActive: user.isActive ? true : false,
     role: user.role,
     createdAt: user.createdAt,
-    profilePicture: user.profilePicture,
+    profilePicture: user.profilePicture?.url ? `${env.PROFILE_IMAGE_URL}/${user._id}` : '',
     subscription: user.subscription,
     googleId: user.googleId
   };

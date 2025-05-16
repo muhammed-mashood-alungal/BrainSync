@@ -6,12 +6,12 @@ export const handleUpload = async (
   try {
     const b64 = Buffer.from(file.buffer).toString('base64');
     const dataURI = `data:${file.mimetype};base64,${b64}`;
-
     const res = await cloudinary.uploader.upload(dataURI, {
       resource_type: 'auto',
     });
     return { url: res.secure_url, publicId: res.public_id };
   } catch (error) {
+    console.log(error)
     throw new Error(`Failed to upload file: ${error}`);
   }
 };

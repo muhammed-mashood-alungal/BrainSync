@@ -208,7 +208,7 @@ const GroupsPage: React.FC = () => {
                       className="w-8 h-8 rounded-full mr-1 flex items-center justify-center text-xs font-bold"
                     >
                       <img
-                        src={member?.profilePicture?.url || "/profilePic.png"}
+                        src={member?.profilePicture || "/profilePic.png"}
                         alt=""
                         className="h-8 w-8 rounded-2xl"
                       />

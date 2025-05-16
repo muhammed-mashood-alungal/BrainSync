@@ -5,6 +5,7 @@ import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { createHttpsError } from '../../utils/httpError.utils';
 import { successResponse } from '../../utils/response';
+import { groupMapper } from '../../mappers/group.mapper';
 
 export class GroupController implements IGroupController {
   constructor(private _groupServices: IGroupService) {}

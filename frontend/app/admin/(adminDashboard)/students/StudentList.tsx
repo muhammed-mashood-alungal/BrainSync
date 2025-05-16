@@ -103,7 +103,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                                 <div className="flex items-center">
                                     <img
                                         className="h-10 w-10 rounded-full object-cover"
-                                        src={student.profilePicture?.url || "/profilePic.png"}
+                                        src={student.profilePicture || "/profilePic.png"}
                                         alt={student.username}
                                     />
                                     <div className="ml-4 text-sm font-medium text-white">{student.username}</div>
@@ -179,7 +179,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                     <div className="text-white">
                         <div className="flex flex-col items-center mb-6">
                             <img
-                                src={selectedStudent.profilePicture?.url || '/profilePic.png'}
+                                src={selectedStudent.profilePicture || '/profilePic.png'}
                                 alt={selectedStudent.username}
                                 className="h-24 w-24 rounded-full object-cover mb-4"
                             />

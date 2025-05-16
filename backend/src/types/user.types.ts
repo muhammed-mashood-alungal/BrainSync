@@ -28,10 +28,7 @@ export interface IMappedUser {
   role: string;
   createdAt: Date;
   googleId?: string;
-  profilePicture?: {
-    url: string;
-    publicId: string;
-  };
+  profilePicture?:string;
   subscription: {
     planId: Types.ObjectId;
     isActive: boolean;

@@ -38,5 +38,6 @@ export const HttpResponse = {
   MONGO_URL_NOT_DEFINED_IN_ENV:'MONGO_URI is not defined in the environment variables.',
   GRIDFS_NOT_INITIATED:'GridFSBucket not initialized. Ensure MongoDB is connected.',
   CODE_TITLE_ALREADY_EXIST:'Code Snippet With This Title Already Exist on your Resources.Try Another One',
-  INVALID_SESSION_CODE:'Invalid Session COde'
+  INVALID_SESSION_CODE:'Invalid Session Code',
+  NO_IMAGE :'No Profile Picture'
 };

@@ -7,10 +7,7 @@ export interface IUserType {
     googleId:string;
     role: 'student' | 'admin';
     isActive: Boolean;
-    profilePicture?: {
-        url :string , 
-        publicId : string
-    };
+    profilePicture?: string;
     subscription?: {
     planId : string,
     isActive : boolean

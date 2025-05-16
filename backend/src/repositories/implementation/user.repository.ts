@@ -42,7 +42,7 @@ export class UserRepository
         googleId: profile.id,
         email: profile.emails?.[0].value,
         username: profile.displayName,
-        role:'student'
+        role: 'student',
       });
     }
 
@@ -72,6 +72,15 @@ export class UserRepository
       role: 'student',
     });
   }
+
+  async getUserProfilePhotoUrl(userId: Types.ObjectId): Promise<string | undefined> {
+    if (!userId) {
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
+    }
+    const user = await this.findById(userId);
+    return user?.profilePicture?.url;
+  }
+
   async deleteAvatar(userId: Types.ObjectId): Promise<string | undefined> {
     const user = await this.findById(userId);
     const publicId = user?.profilePicture?.publicId;
@@ -102,40 +111,46 @@ export class UserRepository
     }
     return this.model.countDocuments(find);
   }
-  async setSubscription(userId: Types.ObjectId, planId: Types.ObjectId): Promise<void> {
-    const user = await this.findById(userId)
-    if(!user){
-      throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
+  async setSubscription(
+    userId: Types.ObjectId,
+    planId: Types.ObjectId
+  ): Promise<void> {
+    const user = await this.findById(userId);
+    if (!user) {
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
-    if(user.subscription.isActive){
-      throw createHttpsError(HttpStatus.BAD_REQUEST , HttpResponse.USER_ALREADY_HAVE_AN_ACTIVE_PLAN)
+    if (user.subscription.isActive) {
+      throw createHttpsError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.USER_ALREADY_HAVE_AN_ACTIVE_PLAN
+      );
     }
-    user.subscription ={
-       planId : planId,
-       isActive : true
-    }
+    user.subscription = {
+      planId: planId,
+      isActive: true,
+    };
 
-    user.save()
+    user.save();
   }
-  async cancelUserSubscription(userId : Types.ObjectId ) : Promise<void>{
-    const user = await this.model.findById(userId)
-    if(!user){
-      throw createHttpsError(HttpStatus.NOT_FOUND , HttpResponse.USER_NOT_FOUND)
+  async cancelUserSubscription(userId: Types.ObjectId): Promise<void> {
+    const user = await this.model.findById(userId);
+    if (!user) {
+      throw createHttpsError(HttpStatus.NOT_FOUND, HttpResponse.USER_NOT_FOUND);
     }
 
-    user.subscription.isActive = false
-    const newUser = await user.save()
+    user.subscription.isActive = false;
+    const newUser = await user.save();
   }
 
-  async getAllPremiumUsers() : Promise<IUserModel[]>{
-    return await this.find({'subscription.isActive' : true})
+  async getAllPremiumUsers(): Promise<IUserModel[]> {
+    return await this.find({ 'subscription.isActive': true });
   }
   async userSubscriptionExpired(userId: Types.ObjectId): Promise<void> {
-     await this.findByIdAndUpdate(userId , {
-      $set:{subscription : {isActive : false }}
-     })
-   }
-   async getTotalUsersCount(): Promise<number> {
-     return await this.model.countDocuments({})
-   }
+    await this.findByIdAndUpdate(userId, {
+      $set: { subscription: { isActive: false } },
+    });
+  }
+  async getTotalUsersCount(): Promise<number> {
+    return await this.model.countDocuments({});
+  }
 }
