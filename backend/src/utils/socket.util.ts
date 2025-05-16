@@ -147,14 +147,7 @@ export default function setupSocket(io: Server) {
     socket.on('board-unlocked', ({ roomId }) => {
       socket.to(roomId).emit('board-unlocked');
     });
-    // socket.on('slide-change',({roomId , slideIndex , initiator} )=>{
-    //   if (!roomId) {
-    //     console.error('No roomId provided in canvas-data');
-    //     return socket.emit('error', { message: 'Room ID is required' });
-    //   }
-    //   const data = { slideIndex: slideIndex ,initiator: initiator };
-    //   socket.to(roomId).emit('slide-change' , data )
-    // })
+   
 
     socket.on('send-message', message => {
       socket.to(socket.roomId as string).emit('message', message);

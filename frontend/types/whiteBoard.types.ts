@@ -13,6 +13,7 @@ export interface CanvasData {
 export interface SlideChangeData {
     slideIndex: number;
     initiator: string;
+    content : string;
 }
 
 export interface NewSlideData {

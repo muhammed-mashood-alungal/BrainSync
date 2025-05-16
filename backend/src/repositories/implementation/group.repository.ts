@@ -38,7 +38,8 @@ export class GroupRepository
     return await this.model
       .find({ members: userId, isActive: true })
       .populate('createdBy')
-      .populate('members');
+      .populate('members')
+      .sort({ createdAt: -1 });
   }
   async getAllGroups(): Promise<IGroupModel[]> {
     return await this.model.find().populate('createdBy').populate('members');
@@ -52,9 +53,9 @@ export class GroupRepository
     return true;
   }
   async totalGroupsofUser(userId: unknown): Promise<number> {
-    return this.model.countDocuments({members:userId , isActive : true})
+    return this.model.countDocuments({ members: userId, isActive: true });
   }
   async getTotalGroupCount(): Promise<number> {
-    return await this.model.countDocuments({})
+    return await this.model.countDocuments({});
   }
 }

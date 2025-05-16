@@ -472,7 +472,6 @@ const Page: React.FC<PageProps> = ({
 }) => {
   const router = useRouter();
   useEffect(() => {
-    console.log(validationRes)
     if (!validationRes?.status) {
       toast.error(validationRes?.message);
       router.push("/dashboard/sessions");

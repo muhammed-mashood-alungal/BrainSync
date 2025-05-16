@@ -7,10 +7,10 @@ import { AxiosError } from "axios";
 
 
 export const GroupServices = {
-     createNewGroup: async (groupName: string, members: string[], userId: string): Promise<void> => {
+     createNewGroup: async (groupName: string, members: string[], userId: string): Promise<IGroupType> => {
         try {
             const response = await groupInstance.post('/', { name :groupName, members , createdBy : userId})
-            return response.data
+            return response.data.newGroup
         } catch (error) {
             const err = error as AxiosError<{ error: string }>
             const errorMessage = err.response?.data?.error || "Group Creation failed. Please try again."

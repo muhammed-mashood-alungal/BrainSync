@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
 const GroupsPage: React.FC = () => {
-  const [groups, setGroups] = useState<IGroupType[]>();
+  const [groups, setGroups] = useState<IGroupType[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
@@ -73,7 +73,7 @@ const GroupsPage: React.FC = () => {
     );
   };
 
-  const createGroup = () => {
+  const createGroup =async () => {
     setErr({ groupName: "", members: "" });
 
     const res = validateCreateGroup(newGroupName, selectedMembers);
@@ -83,7 +83,10 @@ const GroupsPage: React.FC = () => {
           ...selectedMembers.map((user) => user._id),
           user?.id as string,
         ];
-        GroupServices.createNewGroup(newGroupName, members, user?.id as string);
+        const newGroup = await GroupServices.createNewGroup(newGroupName, members, user?.id as string);
+        setGroups((prevGroups)=>{
+          return [newGroup , ...prevGroups]
+        })
         toast.success("Your Group Created Successfully");
       } catch (error: unknown) {
         if (error instanceof Error) {

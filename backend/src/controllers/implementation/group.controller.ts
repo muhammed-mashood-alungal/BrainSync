@@ -5,7 +5,6 @@ import { HttpStatus } from '../../constants/status.constants';
 import { HttpResponse } from '../../constants/responseMessage.constants';
 import { createHttpsError } from '../../utils/httpError.utils';
 import { successResponse } from '../../utils/response';
-import { groupMapper } from '../../mappers/group.mapper';
 
 export class GroupController implements IGroupController {
   constructor(private _groupServices: IGroupService) {}
@@ -17,8 +16,8 @@ export class GroupController implements IGroupController {
   ): Promise<void> {
     try {
       const data = req.body;
-      await this._groupServices.createGroup(data);
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED));
+       const newGroup  = await this._groupServices.createGroup(data);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED , {newGroup : newGroup}));
     } catch (err) {
       next(err);
     }

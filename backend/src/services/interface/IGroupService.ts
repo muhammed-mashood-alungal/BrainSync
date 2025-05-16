@@ -3,7 +3,7 @@ import { IGroupModel } from '../../models/group.model';
 import { IMappedGroupTypes } from '../../types/group.types';
 
 export interface IGroupService {
-  createGroup(data: Partial<IGroupModel>): Promise<IGroupModel>;
+  createGroup(data: Partial<IGroupModel>): Promise<IMappedGroupTypes>;
   addToGroup(groupId: unknown, members: unknown[]): Promise<void>;
   leftFromGroup(groupId: unknown, userId: unknown): Promise<void>;
   allGroups(): Promise<IMappedGroupTypes[]>;

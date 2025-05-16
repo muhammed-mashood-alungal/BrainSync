@@ -15,8 +15,9 @@ export class GroupServices implements IGroupService {
     private _userRepository: IUserRepository
   ) {}
 
-  async createGroup(data: Partial<IGroupModel>): Promise<IGroupModel> {
-    return this._groupRepository.createGroup(data);
+  async createGroup(data: Partial<IGroupModel>): Promise<IMappedGroupTypes> {
+    const newGroup =  await this._groupRepository.createGroup(data);
+    return groupMapper(newGroup)
   }
 
   async addToGroup(groupId: unknown, members: unknown[]): Promise<void> {
