@@ -23,8 +23,8 @@ export class UserController implements IUserController {
           HttpResponse.IMAGE_NOT_PROVIDED
         );
       }
-      await this._userServices.changeProfilePic(userId, Image);
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED));
+      const imageUrl = await this._userServices.changeProfilePic(userId, Image);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED , {imageUrl}));
     } catch (error) {
       next(error);
     }
@@ -135,15 +135,13 @@ export class UserController implements IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    console.log("HITTT")
     const { userId } = req.params;
     const imageRes = await this._userServices.getProfilePhoto(userId);
-    console.log(imageRes)
     const contentType = imageRes.headers.get('content-type');
 
     res.setHeader('Content-Type', contentType);
     const nodeReadable = Readable.from(imageRes.body as any);
-nodeReadable.pipe(res);
+    nodeReadable.pipe(res);
   }
   async deleteAvatar(
     req: Request,

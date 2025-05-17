@@ -25,7 +25,7 @@ export class UserSubscriptionRepository extends BaseRepository<IUserSubscription
         return {subscriptions , count}
     }
     async getUserSubscription(userId: Types.ObjectId): Promise<IUserSubscriptionModel[]> {
-        return await this.find({userId : userId})
+        return await this.model.find({userId : userId}).populate("planId")
     }
     async cancelSubscription(subscriptionId: Types.ObjectId): Promise<Types.ObjectId> {
         const subscription = await this.model.findById(subscriptionId)

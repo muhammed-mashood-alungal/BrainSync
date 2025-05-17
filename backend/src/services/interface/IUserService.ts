@@ -6,7 +6,7 @@ export interface IUserService {
   changeProfilePic(
     userId: unknown,
     fileUrl: Express.Multer.File
-  ): Promise<Boolean>;
+  ): Promise<string>;
 
   getUserData(userId: unknown): Promise<IMappedUser>;
 

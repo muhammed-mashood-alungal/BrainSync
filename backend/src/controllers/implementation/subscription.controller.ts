@@ -53,7 +53,8 @@ export class SubscriptionController implements ISubscriptionController {
     try {
       const userId = req.user;
       const subscriptions =
-        await this._subscriptionServices.getUserSubscription(userId);
+        await this._subscriptionServices.userSubscribtionHistory(userId);
+   
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { subscriptions }));

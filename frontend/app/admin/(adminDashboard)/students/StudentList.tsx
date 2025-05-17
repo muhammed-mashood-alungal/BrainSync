@@ -7,6 +7,7 @@ import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
 import Table from '@/Components/Table/Table'
 import SimpleStudyLoading from '@/Components/Loading/Loading'
+import AdminSideTable from '@/Components/AdminSideTable/AdminSideTable'
 
 
 function StudentList({ initialStudents  , totalCount : initialCount}: { initialStudents: IUserType[]  ,totalCount : number}) {
@@ -89,7 +90,7 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
 
             
             <div className="overflow-x-auto">
-                <Table
+                <AdminSideTable
                     onPageChange={(page : number , limit : number , searchQuery : string | undefined)=>{
                         fetchStudents(page , limit , searchQuery as string )
                     }}
@@ -149,23 +150,6 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
 
                     )}
                 />
-                {/* <div className="flex justify-center items-center my-3">
-                    <button
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <span className="text-gray-300 mx-5">Page {currentPage} of {totalPages}</span>
-                    <button
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
-                    >
-                        Next  
-                    </button>
-                </div> */}
                 {loading && <SimpleStudyLoading/>}
             </div>
 

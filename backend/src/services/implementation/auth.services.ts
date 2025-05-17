@@ -33,7 +33,6 @@ export class AuthService implements IAuthService {
 
     const otp = generateOtp();
     await sendOtp(user.email, otp);
-    console.log('otp send');
     const response = await redisClient.set(
       user.email,
       JSON.stringify({

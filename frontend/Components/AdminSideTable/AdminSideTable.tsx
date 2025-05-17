@@ -24,7 +24,7 @@ interface TableProps<T> {
   dropDownLists?: { value: string; label: string }[];
 }
 
-const Table = <T,>({
+const AdminSideTable = <T,>({
   columns,
   data,
   actions,
@@ -68,7 +68,7 @@ const Table = <T,>({
                 onChange={(e) => {
                   setSelectValue(e.target.value);
                 }}
-                className="w-full h-10  p-2 border border-gray-300 bg-gray-900 rounded-md focus:ring-2 focus:ring-[#00D2D9] focus:border-transparent"
+                className="w-full h-10  p-2 border border-gray-300 bg-gray-900 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               >
                 <option value="All">All</option>
                 {dropDownLists.map((item, index) => {
@@ -88,7 +88,7 @@ const Table = <T,>({
                 placeholder="Search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full md:w-64 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#00D2D9]"
+                className="w-full md:w-64 px-4 py-2 pl-10 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8979FF]"
               />
               <svg
                 className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"
@@ -107,23 +107,23 @@ const Table = <T,>({
           )}
         </div>
       </div>
-      <div className="overflow-x-auto  rounded-lg shadow-xl">
-        <table className="min-w-full divide-y divide-gray-900">
-          <thead className="bg-[#00D2D9] text-black">
+      <div className="overflow-x-auto bg-gray-800 rounded-lg shadow-xl">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead className="bg-gray-900">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key as string}
-                  className="px-6 py-4 text-left text-xs font-medium  uppercase tracking-wider"
+                  className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider"
                   scope="col"
                 >
                   {col.label}
                 </th>
               ))}
-              {actions && <th className="font-thin text-xs">ACTIONS</th>}
+              {actions && <th>Actions</th>}
             </tr>
           </thead>
-          <tbody className="bg-gray divide-y divide-cyan-900 ">
+          <tbody className="bg-gray-800 divide-y divide-gray-700">
             {data?.length > 0 ? (
               data?.map((item, index) => (
                 <tr key={index} className="hover:bg-gray-750">
@@ -184,4 +184,4 @@ const Table = <T,>({
   );
 };
 
-export default Table;
+export default AdminSideTable;

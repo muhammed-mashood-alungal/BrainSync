@@ -33,10 +33,11 @@ export const subscriptionServices = {
       throw new Error(errorMessage);
     }
   },
-  getUserSubscription: async (): Promise<IUserSubscription[] | undefined> => {
+  getUserSubscription: async (userId : string): Promise<IUserSubscription[]> => {
     try {
-      const response = await subscriptionInstances.get("/user-subscription");
-      return response.data.subscribtions;
+      const response = await subscriptionInstances.get("/user-subscriptions");
+    
+      return response.data.subscriptions;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =

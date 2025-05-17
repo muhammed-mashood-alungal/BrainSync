@@ -2,13 +2,13 @@ import { userInstances } from "@/axios/createInstance";
 import { AxiosError } from "axios";
 
 export const UserServices = {
-  changeProfilePic: async (data: FormData, userId: string) => {
+  changeProfilePic: async (data: FormData, userId: string)  : Promise<string>=> {
     try {
       const response = await userInstances.put(
         `/change-profile-photo/${userId}`,
         data
       );
-      return response.data;
+      return response.data.imageUrl;
     } catch (error: unknown) {
       const err = error as AxiosError<{ error: string }>;
       const errorMessage =

@@ -9,10 +9,11 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Trash } from "lucide-react";
 import UserInNav from "@/Components/UserInNav/UserInNav";
+import SubscriptionHistory from "./SubscriptionHistory";
 
 
 function Profile() {
-  const { user } = useAuth();
+  const { user , setUser } = useAuth();
   const [userData, setUserData] = useState<{
     username: string;
     email: string;
@@ -126,8 +127,8 @@ function Profile() {
       reader.readAsDataURL(croppedFile);
       const formData = new FormData();
       formData.append("image", croppedFile);
-      await UserServices.changeProfilePic(formData, user?.id as string);
-
+       await UserServices.changeProfilePic(formData, user?.id as string);
+      
       toast.success("Profile Picture Changed Successfully");
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -257,9 +258,11 @@ function Profile() {
             </div>
           </div>
         </div>
-
-        {/* Progress Chart */}
+       <hr  className="my-5"/>
+      <SubscriptionHistory/>
       </div>
+
+      
       <ImageCropModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

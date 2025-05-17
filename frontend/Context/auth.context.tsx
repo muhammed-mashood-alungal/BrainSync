@@ -16,10 +16,11 @@ interface AuthContextType {
   user: User | null
   loading: boolean,
   checkAuth : Function,
+  setUser : Function
 }
 
 
-const AuthContext = createContext<AuthContextType>({user : null , loading : false , checkAuth :Function})
+const AuthContext = createContext<AuthContextType>({user : null , loading : false , checkAuth :Function , setUser : Function})
 
 
 interface AuthProviderProps {
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ user, loading  ,checkAuth }}>
+    <AuthContext.Provider value={{ user, loading  ,checkAuth  , setUser}}>
       {children}
     </AuthContext.Provider>
   );
