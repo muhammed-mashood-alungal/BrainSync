@@ -7,12 +7,15 @@ import { Types } from 'mongoose';
 const _userRepository = new UserRepository();
 const clientID = env.CLIENT_ID as string;
 const clientSecret = env.CLIENT_SECRET as string;
+const apiBaseUrl = env.API_BASE_URL as string
+console.log(env.API_BASE_URL)
 passport.use(
   new GoogleStrategy(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-      callbackURL: `${env.API_BASE_URL}/api/auth/google/callback`,
+     // callbackURL: `${apiBaseUrl}/api/auth/google/callback`,
+     callbackURL:`https://api.brainsync.space/api/auth/google/callback`
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

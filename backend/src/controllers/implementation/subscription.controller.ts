@@ -74,4 +74,17 @@ export class SubscriptionController implements ISubscriptionController {
       next(error);
     }
   }
+  async userSubscribtionHistory(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { userId } = req.params;
+      const subscriptions = await this._subscriptionServices.userSubscribtionHistory(userId);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
+    } catch (error) {
+      next(error);
+    }
+  }
 }

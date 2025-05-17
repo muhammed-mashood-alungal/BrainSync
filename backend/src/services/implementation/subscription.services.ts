@@ -3,6 +3,8 @@ import { IUserSubscriptionModel } from '../../models/userSubscription.model';
 import { IUserSubscriptionRepository } from '../../repositories/interface/IUserSubscriptionRepository';
 import { ISubscriptionServices } from '../interface/ISubscription';
 import { IUserRepository } from '../../repositories/interface/IUserRepository';
+import { IMapppedSubscription } from '../../types/userSubscription.type';
+import { subscriptionMapper } from '../../mappers/subscription.mapper';
 
 export class SubscriptionServices implements ISubscriptionServices {
   constructor(
@@ -60,5 +62,9 @@ export class SubscriptionServices implements ISubscriptionServices {
   async subscriptionExpired(subscriptionId : unknown , userId  : unknown): Promise<void> {
      await this._subscriptionRepo.subscriptionExpired(subscriptionId as Types.ObjectId)
      await this._userRepo.userSubscriptionExpired(userId as Types.ObjectId)
+  }
+  async userSubscribtionHistory(userId: unknown): Promise<IMapppedSubscription[]> {
+    const subscriptions = await this._subscriptionRepo.getUserSubscription(userId as Types.ObjectId)
+    return subscriptions.map(subscriptionMapper)
   }
 }
