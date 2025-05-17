@@ -27,7 +27,7 @@ function UserInNav() {
           </button>
           <div className="w-10 h-10 rounded-full overflow-hidden">
             <img
-              src={user?.profileImg ? user.profileImg : "/profilePic.png"}
+              src={user?.profilePicture ? user.profilePicture : "/profilePic.png"}
               alt="Profile"
               className="w-full h-full object-cover"
             />

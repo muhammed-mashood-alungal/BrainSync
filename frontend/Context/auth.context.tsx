@@ -9,7 +9,7 @@ interface User {
    role: string;
    email: string;
    isPremiumMember : boolean;
-   profileImg : string
+   profilePicture : string
 }
 
 interface AuthContextType {

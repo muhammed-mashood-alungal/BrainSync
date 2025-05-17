@@ -44,7 +44,7 @@ export const AuthServices = {
             throw new Error(errorMessage)
         }
     },
-    authMe: async (): Promise<{ id: string, email: string, role: string , isPremiumMember : boolean , profileImg : string}> => {
+    authMe: async (): Promise<{ id: string, email: string, role: string , isPremiumMember : boolean , profilePicture : string}> => {
         try {
             const response = await authInstance.post('/me')
             return response.data?.user
