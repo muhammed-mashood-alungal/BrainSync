@@ -78,7 +78,7 @@ const GroupsPage: React.FC = () => {
         if(!deletingGroup) return 
 
         try {
-          const response = await GroupServices.deleteGroup(deletingGroup)
+          await GroupServices.deleteGroup(deletingGroup)
           setGroups((grps)=>{
             return grps.filter((g)=> g._id != deletingGroup)
           })
