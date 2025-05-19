@@ -5,7 +5,6 @@ import { useAuth } from "@/Context/auth.context";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
 import { IUserSubscription } from "@/types/subscriptionTypes";
-import { IUserType } from "@/types/userTypes";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 

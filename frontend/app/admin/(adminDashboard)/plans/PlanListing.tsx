@@ -2,7 +2,7 @@ import BaseModal from "@/Components/Modal/Modal";
 import { IPlans } from "@/types/plans.types";
 import React, { useState } from "react";
 import CreatePlan from "./createPlan";
-import { Check, Crown, Edit2, Power, Star } from "lucide-react";
+import {  Crown, Edit2, Power } from "lucide-react";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
 interface PlansListingProps {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 import {
   faGolang,
@@ -16,7 +16,6 @@ import { toast } from "react-toastify";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { useAuth } from "@/Context/auth.context";
 import Link from "next/link";
-import { write } from "fs";
 function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,

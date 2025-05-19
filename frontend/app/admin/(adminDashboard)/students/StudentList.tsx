@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast'
 import Confirm from '@/Components/ConfirmModal/ConfirmModal'
 import { AdminServices } from '@/services/client/admin.client'
 import { IUserType } from '@/types/userTypes'
-import Table from '@/Components/Table/Table'
 import SimpleStudyLoading from '@/Components/Loading/Loading'
 import AdminSideTable from '@/Components/AdminSideTable/AdminSideTable'
 

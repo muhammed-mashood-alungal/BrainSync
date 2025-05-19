@@ -15,10 +15,7 @@ function AddMember({
   const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([]);
   const { user } = useAuth();
 
-  const [err, setErr] = useState({
-    groupName: "",
-    members: "",
-  });
+ 
 
   const handleMemberEmailChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -61,8 +58,6 @@ function AddMember({
             placeholder="Enter email address"
           />
         </div>
-        <span className="text-red-600 ml-1"> {err?.members}</span>
-
         {searchedUsers.length > 0 && (
           <div className="absolute z-10 mt-1 w-max bg-zinc-800 border border-zinc-700 rounded-md shadow-lg">
             <ul>

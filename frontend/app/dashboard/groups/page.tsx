@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/Components/GroupDetails/GroupDetails";
-import EmptyList from "@/Components/EmptyList/EmptyList";
 import { Calendar, LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
@@ -50,6 +49,7 @@ const GroupsPage: React.FC = () => {
       });
       setDeletingGroupId("");
     } catch (error) {
+      console.log(error)
       toast.error("Something Went Wrong While Deleting Group. Please Try Again Later")
     }
   };

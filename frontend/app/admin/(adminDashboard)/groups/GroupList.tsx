@@ -7,8 +7,7 @@ import { toast } from "react-toastify";
 import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 import GroupDetails from "../../../../Components/GroupDetails/GroupDetails";
-import EmptyList from "@/Components/EmptyList/EmptyList";
-import { Calendar, Power, UserPlus, Users } from "lucide-react";
+import { Calendar, Power, Users } from "lucide-react";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);

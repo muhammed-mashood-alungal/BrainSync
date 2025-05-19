@@ -13,7 +13,7 @@ import SubscriptionHistory from "./SubscriptionHistory";
 
 
 function Profile() {
-  const { user , setUser } = useAuth();
+  const { user  } = useAuth();
   const [userData, setUserData] = useState<{
     username: string;
     email: string;
