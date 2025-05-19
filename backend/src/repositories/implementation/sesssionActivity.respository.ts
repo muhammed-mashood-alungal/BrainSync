@@ -38,6 +38,7 @@ export class SessionActivityRepository
     const now = new Date();
     let dateFormat = '';
     let labels: string[] = [];
+    let matchCondition: any = { userId: userIdObj };
 
     switch (filterBy) {
       case 'Daily':
@@ -45,18 +46,43 @@ export class SessionActivityRepository
         break;
 
       case 'Weekly':
-        dateFormat = '%Y-%m-%d'; 
+        dateFormat = '%Y-%m-%d';
         labels = Array.from({ length: 7 }).map((_, i) =>
           format(subDays(startOfToday(), 6 - i), 'EEEE')
         );
+
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        matchCondition = {
+          userId: userIdObj,
+          'logs.joinTime': { $gte: oneWeekAgo },
+        };
         break;
 
       case 'Monthly':
-        dateFormat = '%Y-%m-%d'; 
-        labels = Array.from({ length: 31 }).map((_, i) =>{
-            
-            return `${i + 1}`
-        } );
+        dateFormat = '%Y-%m-%d';
+        const daysInMonth = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0
+        ).getDate();
+        labels = Array.from({ length: daysInMonth }).map((_, i) => `${i + 1}`);
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        const endOfMonth = new Date(
+          now.getFullYear(),
+          now.getMonth() + 1,
+          0,
+          23,
+          59,
+          59
+        );
+        matchCondition = {
+          userId: userIdObj,
+          'logs.joinTime': {
+            $gte: startOfMonth,
+            $lte: endOfMonth,
+          },
+        };
         break;
 
       case 'Yearly':
@@ -64,11 +90,22 @@ export class SessionActivityRepository
         labels = Array.from({ length: 12 }).map((_, i) =>
           format(new Date(now.getFullYear(), i, 1), 'MMM')
         );
+
+       
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
+        matchCondition = {
+          userId: userIdObj,
+          'logs.joinTime': {
+            $gte: startOfYear,
+            $lte: endOfYear,
+          },
+        };
         break;
     }
 
     const stats = await this.model.aggregate([
-      { $match: { userId: userIdObj } },
+      { $match: matchCondition },
       { $unwind: '$logs' },
       {
         $group: {
@@ -84,17 +121,18 @@ export class SessionActivityRepository
       { $sort: { _id: 1 } },
     ]);
 
-    console.log(stats)
+    console.log(stats);
 
     const graphMap: Record<string, number> = {};
 
-    stats.forEach((item , idx)  => {
+    stats.forEach(item => {
       if (filterBy === 'Weekly') {
         const day = format(new Date(item._id), 'EEEE');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Monthly') {
-         const day = format(new Date(now.getMonth()) , 'd')
-        graphMap[String(Number(day)+1)] = Math.floor(item.totalDuration / 1000);
+        
+        const day = format(new Date(item._id), 'd');
+        graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Yearly') {
         const monthIndex = parseInt(item._id, 10) - 1;
         const monthLabel = format(
@@ -108,22 +146,22 @@ export class SessionActivityRepository
     });
 
     let graphData: any[] = [];
-    
+
     if (filterBy === 'Daily') {
       graphData = stats.map(item => ({
         name: new Date(item._id).toLocaleDateString(),
         duration: Math.floor(item.totalDuration / 1000),
       }));
-    }  
-    else {
+    } else {
       graphData = labels.map(label => ({
         name: label,
         duration: graphMap[label] || 0,
       }));
     }
-    console.log(graphData)
+    console.log(graphData);
     return { graph: graphData };
   }
+
   async totalTimeSendByUser(userId: Types.ObjectId): Promise<string> {
     const userIdObj = new mongoose.Types.ObjectId(userId);
     const result = await this.model.aggregate([
