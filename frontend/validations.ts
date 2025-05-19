@@ -49,13 +49,10 @@ export const validateLoginForm = (formData: IuserLogin) => {
     status = false;
   }
 
-  const passReg =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  if (formData.password.trim() == "" || !passReg.test(formData.password)) {
-    err.password =
-      "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&).";
-    status = false;
+  
+  if (formData.password.trim() == "" ) {
+    err.password = "Please Enter Your Password"
+      status = false;
   }
   return { status, err };
 };
