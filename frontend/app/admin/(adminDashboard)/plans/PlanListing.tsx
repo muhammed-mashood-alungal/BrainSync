@@ -2,7 +2,7 @@ import BaseModal from "@/Components/Modal/Modal";
 import { IPlans } from "@/types/plans.types";
 import React, { useState } from "react";
 import CreatePlan from "./createPlan";
-import { Crown } from "lucide-react";
+import { Check, Crown, Edit2, Power, Star } from "lucide-react";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 
 interface PlansListingProps {
@@ -26,16 +26,21 @@ const PlansListing: React.FC<PlansListingProps> = ({
   };
   return (
     <div className="p-6">
+    
+      <div className="px-4 py-6">
+
+      {/* Plans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-white">
         {plans.map((plan) => (
           <div
             key={plan._id}
-            className={`rounded-lg shadow-md overflow-hidden `}
+            className="bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-purple-500/10 hover:translate-y-[-2px] transition-all duration-300"
           >
-            <div className="bg-purple-600 text-white p-4">
+            {/* Plan Header - Keeping the exact same classes for functionality */}
+            <div className={`bg-gradient-to-r from-purple-700 to-purple-500 text-white p-4 relative`}>
               <div className="flex justify-between items-center">
                 <h2 className="flex text-xl font-bold">
-                  {plan.name} {plan.isHighlighted && <Crown color="yellow" />}
+                  {plan.name} {plan.isHighlighted && <Crown color="yellow" className="ml-2" />}
                 </h2>
                 <span
                   className={`px-2 py-1 rounded-full text-xs ${
@@ -47,14 +52,16 @@ const PlansListing: React.FC<PlansListingProps> = ({
               </div>
             </div>
 
-            <div className="p-6 border-3 rounded-b-2xl border-purple-600">
+            {/* Plan Content */}
+            <div className="p-6 border-t-0 border-purple-600 bg-gray-900">
+              {/* Price Section */}
               <div className="mb-4">
                 <div className="flex justify-between items-center">
                   <div className="text-white">
                     {plan.interval === "monthly" ? "Monthly" : "Yearly"}
                   </div>
 
-                  <div className="text-3xl ">
+                  <div className="text-3xl">
                     <span className="line-through text-gray-500">
                       {plan.orginalPrice}
                     </span>
@@ -63,6 +70,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                 </div>
               </div>
 
+              {/* Features Section - Keeping the exact same structure */}
               <div className="mb-6">
                 <h3 className="font-semibold mb-2">Features:</h3>
                 <ul className="space-y-2">
@@ -81,33 +89,38 @@ const PlansListing: React.FC<PlansListingProps> = ({
                 </ul>
               </div>
 
+              {/* Actions - Using exact same onClick handlers */}
               <div className="flex space-x-2">
                 <button
                   onClick={() => {
                     setInitialPlan(plan);
                     setSelectedPlan(plan._id);
                   }}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded"
+                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
                 >
-                  Edit
+                  <Edit2 size={16} />
+                  <span>Edit</span>
                 </button>
                 <button
                   onClick={() => {
                     setToggledPlan(plan);
                   }}
-                  className={`flex-1 py-2 px-4 rounded ${
+                  className={`flex-1 py-2 px-4 rounded flex items-center justify-center gap-2 ${
                     plan.isActive
                       ? "bg-red-500 hover:bg-red-600 text-white"
                       : "bg-green-500 hover:bg-green-600 text-white"
                   }`}
                 >
-                  {plan.isActive ? "Deactivate" : "Activate"}
+                  <Power size={16} />
+                  <span>{plan.isActive ? "Deactivate" : "Activate"}</span>
                 </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+    </div>
+      
       <BaseModal
         isOpen={Boolean(selectedPlan)}
         onClose={() => setSelectedPlan("")}

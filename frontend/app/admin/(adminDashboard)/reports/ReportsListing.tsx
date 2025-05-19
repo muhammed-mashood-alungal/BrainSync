@@ -5,6 +5,7 @@ import { IReportTypes } from "@/types/report.types";
 import { useEffect, useState } from "react";
 import { format } from 'date-fns'
 import Table from "@/Components/Table/Table";
+import AdminSideTable from "@/Components/AdminSideTable/AdminSideTable";
 
 
 
@@ -95,7 +96,7 @@ function ReportsListing() {
 
     return (
         <>
-            <Table data={reports} columns={columns} actions={actions} totalCount={totalCount} 
+            <AdminSideTable data={reports} columns={columns} actions={actions} totalCount={totalCount} 
             onPageChange={(page : number  , limit : number)=>fetchReports(page , limit)} ShowSearchBar={false}
             />
         </>

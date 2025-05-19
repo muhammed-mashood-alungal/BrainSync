@@ -7,6 +7,7 @@ import { IUserType } from "@/types/userTypes";
 import { IPlans } from "@/types/plans.types";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
+import AdminSideTable from "@/Components/AdminSideTable/AdminSideTable";
 
 function SubscriptionList() {
   const [subscriptions, setSubscribers] = useState<IUserSubscription[]>([]);
@@ -121,7 +122,7 @@ function SubscriptionList() {
 
   return (
     <>
-      <Table
+      <AdminSideTable
         data={subscriptions}
         columns={columns}
         actions={actions}

@@ -94,7 +94,6 @@ function StudentList({ initialStudents  , totalCount : initialCount}: { initialS
                     onPageChange={(page : number , limit : number , searchQuery : string | undefined)=>{
                         fetchStudents(page , limit , searchQuery as string )
                     }}
-                    
                     totalCount={totalCount}
                     columns={[
                         {
