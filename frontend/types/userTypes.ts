@@ -23,5 +23,6 @@ export interface IDecodedUserType{
     role : string,
     isPremiumMember? : boolean
     profileImg? :string
+    profilePicture?:string
 }
 
