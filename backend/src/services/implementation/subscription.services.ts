@@ -39,13 +39,6 @@ export class SubscriptionServices implements ISubscriptionServices {
     const {subscriptions , count}= await this._subscriptionRepo.getAllSubscription(status , skip as number , limit as number);
     return {subscriptions , count}
   }
-  async getUserSubscription(
-    userId: unknown
-  ): Promise<IUserSubscriptionModel[]> {
-    return await this._subscriptionRepo.getUserSubscription(
-      userId as Types.ObjectId
-    );
-  }
   async cancelSubscription(
     subscriptionId : unknown
   ):Promise<void> {

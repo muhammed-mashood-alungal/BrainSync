@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Editor from "@monaco-editor/react";
 import {
   faGolang,
@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faC } from "@fortawesome/free-solid-svg-icons";
-import { Lock } from "lucide-react";
+import { Lock, LockIcon, LockOpen } from "lucide-react";
 import { useCodeEditor } from "@/Context/codeEditor.context";
 import BaseModal from "@/Components/Modal/Modal";
 import Input from "@/Components/Input/Input";
@@ -16,21 +16,22 @@ import { toast } from "react-toastify";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { useAuth } from "@/Context/auth.context";
 import Link from "next/link";
+import { write } from "fs";
 function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,
     isError,
-   // isLocked,
-   // lockCode,
-   // lockedBy,
+    isLocked,
+    lockCode,
+    lockedBy,
     output,
-   // setIsError,
+    // setIsError,
     onCodeChange,
-  //  unLockCode,
-    //writer,
-   // setOutput,
+    unLockCode,
+    writer,
+    // setOutput,
     value,
-   // setValue,
+    // setValue,
     onMount,
     onSelect,
     runCode,
@@ -42,7 +43,6 @@ function CodeEditor({ roomId }: { roomId: string }) {
   const { user } = useAuth();
   type Language = "javascript" | "python" | "java" | "c" | "go";
 
- 
   const isValidFileName = (name: string) => {
     const invalidChars = /[\\\/:*?"<>|]/;
     return !invalidChars.test(name.trim()) && name.trim().length > 0;
@@ -144,8 +144,13 @@ function CodeEditor({ roomId }: { roomId: string }) {
                 defaultValue={CODE_SNIPPETS[language as Language]}
                 theme="vs-dark"
                 value={value}
-                onChange={(value) => onCodeChange(value as string)}
+                onChange={(value) =>
+                  onCodeChange(value as string, user.username as string)
+                }
                 language={language}
+                options={{
+                  readOnly: isLocked && user?.id !== lockedBy,
+                }}
               />
             </div>
 
@@ -159,7 +164,20 @@ function CodeEditor({ roomId }: { roomId: string }) {
                 >
                   Run
                 </button>
+                <div>{writer && <p>{writer} is writing</p>}</div>
+
                 <div>
+                  <button
+                    className="px-4 py-1 m-2 text-gray-400
+            hover:cursor-pointer hover:text-gray-600
+            "
+                  >
+                    {isLocked ? (
+                      <LockIcon onClick={() => unLockCode(user.id)} />
+                    ) : (
+                      <LockOpen onClick={() => lockCode(user.id)} />
+                    )}
+                  </button>
                   <button
                     className="px-4 py-2 m-2 border-2 rounded-4xl border-gray-400 text-gray-400
             hover:cursor-pointer hover:text-gray-600
@@ -215,10 +233,11 @@ function CodeEditor({ roomId }: { roomId: string }) {
         </>
       ) : (
         <div className="flex flex-col items-center ">
-          <Lock/>
+          <Lock />
           <div className="align-middle text-center">
-          Please purchase a subscription to unlock the Code Editor. <br />
-          Collaborate in real-time, write and share code snippets with your group—right inside the app.
+            Please purchase a subscription to unlock the Code Editor. <br />
+            Collaborate in real-time, write and share code snippets with your
+            group—right inside the app.
           </div>
           <Link href="/premium-plans" className="flex-1">
             <button className=" bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-md transition duration-300">

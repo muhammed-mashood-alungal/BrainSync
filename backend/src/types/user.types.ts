@@ -38,6 +38,7 @@ export interface IMappedUser {
 export interface IMappedSessionUserData {
   id: Types.ObjectId;
   email: string;
+  username : string
   role: string;
   isPremiumMember: boolean;
   profilePicture?: string;

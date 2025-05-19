@@ -13,5 +13,4 @@ export interface IUserSubscriptionRepository {
   getAllActiveSubscriptions():Promise<IUserSubscriptionModel[]>
   getAllExpiredSubscriptions(): Promise<IUserSubscriptionModel[]>
   subscriptionExpired(subscriptionId : Types.ObjectId): Promise<void> 
-  
 }

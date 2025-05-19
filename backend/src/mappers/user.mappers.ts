@@ -24,6 +24,7 @@ export const mapUserSessionData = (
   return {
     id: user._id,
     role: user.role,
+    username : user.username,
     email: user.email,
     isPremiumMember: user?.subscription?.isActive ? true : false,
     profilePicture: user.profilePicture?.url

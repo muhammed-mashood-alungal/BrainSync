@@ -169,8 +169,8 @@ export default function setupSocket(io: Server) {
     socket.on('output', ({output , isError})=>{
       socket.to(socket.roomId as string).emit('output' , output , isError)
     })
-    socket.on('source-code',({code})=>{
-      socket.to(socket.roomId as string).emit('source-code' , code)
+    socket.on('source-code',({code , writer})=>{
+      socket.to(socket.roomId as string).emit('source-code' , code , writer)
     })
 
     socket.on('code-locked' , ({lockedby})=>{

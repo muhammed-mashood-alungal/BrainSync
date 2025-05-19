@@ -2,15 +2,10 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { AuthServices } from "@/services/client/auth.client";
+import { IDecodedUserType } from "@/types/userTypes";
 
 
-interface User {
-   id: string;
-   role: string;
-   email: string;
-   isPremiumMember : boolean;
-   profilePicture : string
-}
+interface User  extends IDecodedUserType{}
 
 interface AuthContextType {
   user: User | null

@@ -7,9 +7,6 @@ export interface ISubscriptionServices {
         planType : string
       ): Promise<IUserSubscriptionModel>;
       getAllSubscription(status : string , skip : unknown , limit : unknown): Promise<{subscriptions : IUserSubscriptionModel[] , count : number}>
-      getUserSubscription(
-        userId:unknown
-      ): Promise<IUserSubscriptionModel[]>;
       cancelSubscription(
         subscriptionId : unknown
       ):Promise<void> 

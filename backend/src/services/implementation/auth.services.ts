@@ -190,8 +190,6 @@ export class AuthService implements IAuthService {
     if (!user.isActive) {
       throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
     }
-
-    //  return {...decoded , isPremiumMember : user?.subscription?.isActive ? true : false , profileImg : user.profilePicture?.url};
     return mapUserSessionData(user);
   }
   generateTokens(user: IUserModel): {
