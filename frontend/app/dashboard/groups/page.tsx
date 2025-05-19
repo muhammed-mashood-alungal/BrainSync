@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/app/dashboard/groups/GroupDetails";
-import { Calendar, LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
+import {  LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 import CreateGroup from "./CreateGroup";
