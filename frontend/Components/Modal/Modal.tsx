@@ -9,7 +9,7 @@ interface BaseModalProps {
   title: string;
   submitText?: string;
   children: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | 'full';
 }
 
 export default function BaseModal({
@@ -62,13 +62,23 @@ export default function BaseModal({
   if (!isOpen) return null;
 
   // Modal size classes
-  const sizeClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
-    xl: 'max-w-xl'
-  };
+  // const sizeClasses = {
+  //   sm: 'max-w-sm',
+  //   md: 'max-w-md',
+  //   lg: 'max-w-lg',
+  //   xl: 'max-w-xl',
+  // };
 
+   const sizeClasses = {
+    sm: 'max-w-sm', // 384px
+    md: 'max-w-md', // 448px
+    lg: 'max-w-lg', // 512px
+    xl: 'max-w-xl', // 576px
+    '2xl': 'max-w-2xl', // 672px
+    '3xl': 'max-w-3xl', // 768px
+    '4xl': 'max-w-4xl', // 896px
+    'full': 'max-w-[90%]', // 90% of viewport width
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center  bg-[rgba(0,0,0,0.46)]">
       <div 

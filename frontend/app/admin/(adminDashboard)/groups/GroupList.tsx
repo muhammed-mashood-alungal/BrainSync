@@ -6,7 +6,7 @@ import { useAuth } from "@/Context/auth.context";
 import { toast } from "react-toastify";
 import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
-import GroupDetails from "../../../../Components/GroupDetails/GroupDetails";
+import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
@@ -41,8 +41,6 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   return (
     <>
       <div className="px-4 py-6">
-        
-
         {/* Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups?.length === 0 ? (
@@ -207,12 +205,14 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
       <BaseModal
         isOpen={Boolean(viewGroup?._id)}
         onClose={() => setViewGroup(undefined)}
-        title={viewGroup?.name as string}
+        title={viewGroup?.name as string} 
+        size='4xl'
       >
         <GroupDetails
           currentUserId={user?.id as string}
-          group={viewGroup}
+          groupData={viewGroup}
           onRemoveMember={() => console.log("removing")}
+         
         />
       </BaseModal>
     </>

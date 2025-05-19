@@ -12,4 +12,6 @@ export interface IGroupService {
   handleGroupActivation(groupId: unknown): Promise<Boolean>;
   totalGroupCount():Promise<number>
   deleteGroup(groupId : unknown) : Promise<void>
+  removeMember(groupId : unknown , adminId : unknown , memberId : unknown) : Promise<void>
+  editGroupName(groupId : unknown ,adminId : unknown, newName : unknown  ) : Promise<void>
 }

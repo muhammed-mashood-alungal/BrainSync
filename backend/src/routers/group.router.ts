@@ -52,5 +52,15 @@ groupRouter.put(
   authMiddleware,
   groupController.deleteGroup.bind(groupController)
 );
+groupRouter.put(
+  '/:groupId/remove-member',
+  authMiddleware,
+  groupController.removeMember.bind(groupController)
+);
+groupRouter.put(
+  '/:groupId/edit-name',
+  authMiddleware,
+  groupController.editGroupName.bind(groupController)
+);
 
 export default groupRouter;

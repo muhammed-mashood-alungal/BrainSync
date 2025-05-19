@@ -120,11 +120,32 @@ export class GroupController implements IGroupController {
   async deleteGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const {groupId} = req.params;
-      console.log(groupId)
       await this._groupServices.deleteGroup(groupId)
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
     } catch (error) {
       next(error)
     }
   }
+
+  async removeMember(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {groupId} = req.params
+      const {  adminId , memberId} = req.body
+      await this._groupServices.removeMember(groupId , adminId , memberId)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async editGroupName(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { groupId} = req.params
+      const {  newName , adminId } = req.body
+      await this._groupServices.editGroupName(groupId , adminId ,newName)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+    } catch (error) {
+      next(error)
+    }
+  } 
 }

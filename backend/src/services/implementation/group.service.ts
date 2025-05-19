@@ -16,8 +16,8 @@ export class GroupServices implements IGroupService {
   ) {}
 
   async createGroup(data: Partial<IGroupModel>): Promise<IMappedGroupTypes> {
-    const newGroup =  await this._groupRepository.createGroup(data);
-    return groupMapper(newGroup)
+    const newGroup = await this._groupRepository.createGroup(data);
+    return groupMapper(newGroup);
   }
 
   async addToGroup(groupId: unknown, members: unknown[]): Promise<void> {
@@ -35,13 +35,15 @@ export class GroupServices implements IGroupService {
   }
 
   async allGroups(): Promise<IMappedGroupTypes[]> {
-    const groups =  await this._groupRepository.getAllGroups();
-    return groups.map(groupMapper)
+    const groups = await this._groupRepository.getAllGroups();
+    return groups.map(groupMapper);
   }
 
   async myGroups(userId: unknown): Promise<IMappedGroupTypes[]> {
-    const groups = await this._groupRepository.getMyGroups(userId as Types.ObjectId);
-    return groups.map(groupMapper)
+    const groups = await this._groupRepository.getMyGroups(
+      userId as Types.ObjectId
+    );
+    return groups.map(groupMapper);
   }
 
   async groupData(id: unknown): Promise<IMappedGroupTypes> {
@@ -64,9 +66,43 @@ export class GroupServices implements IGroupService {
     return result;
   }
   async totalGroupCount(): Promise<number> {
-    return await this._groupRepository.getTotalGroupCount()
+    return await this._groupRepository.getTotalGroupCount();
   }
   async deleteGroup(groupId: unknown): Promise<void> {
-    await this._groupRepository.deleteGroup(groupId as Types.ObjectId)
+    await this._groupRepository.deleteGroup(groupId as Types.ObjectId);
+  }
+  async removeMember(
+    groupId: unknown,
+    adminId: unknown,
+    memberId: unknown
+  ): Promise<void> {
+    const isAdmin = await this._groupRepository.isAdminOfGroup(
+      groupId as Types.ObjectId,
+      adminId as Types.ObjectId
+    );
+    if (!isAdmin)
+      throw createHttpsError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.UNAUTHORIZED
+      );
+    await this._groupRepository.removeMember(
+      groupId as Types.ObjectId,
+      memberId as Types.ObjectId
+    );
+  }
+  async editGroupName(groupId: unknown,adminId : unknown ,  newName: unknown): Promise<void> {
+     const isAdmin = await this._groupRepository.isAdminOfGroup(
+      groupId as Types.ObjectId,
+      adminId as Types.ObjectId
+    );
+    if (!isAdmin)
+      throw createHttpsError(
+        HttpStatus.UNAUTHORIZED,
+        HttpResponse.UNAUTHORIZED
+      );
+    await this._groupRepository.editGroupName(
+      groupId as Types.ObjectId,
+      newName as string
+    );
   }
 }

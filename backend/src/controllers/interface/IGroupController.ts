@@ -13,4 +13,6 @@ export interface IGroupController {
     next: NextFunction
   ): Promise<void>;
   deleteGroup(req: Request, res: Response, next: NextFunction): Promise<void>;
+  removeMember(req: Request, res: Response, next: NextFunction): Promise<void>;
+  editGroupName(req: Request, res: Response, next: NextFunction): Promise<void>;
 }

@@ -6,7 +6,7 @@ import { useAuth } from "@/Context/auth.context";
 import { toast } from "react-toastify";
 import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
-import GroupDetails from "@/Components/GroupDetails/GroupDetails";
+import GroupDetails from "@/app/dashboard/groups/GroupDetails";
 import { Calendar, LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
@@ -49,8 +49,10 @@ const GroupsPage: React.FC = () => {
       });
       setDeletingGroupId("");
     } catch (error) {
-      console.log(error)
-      toast.error("Something Went Wrong While Deleting Group. Please Try Again Later")
+      console.log(error);
+      toast.error(
+        "Something Went Wrong While Deleting Group. Please Try Again Later"
+      );
     }
   };
 
@@ -93,6 +95,34 @@ const GroupsPage: React.FC = () => {
     }
   };
 
+  const updateGroupName =async( groupId :string , newName :string )=>{
+    try {
+      await GroupServices.editGroupName(groupId ,user?.id as string ,  newName)
+      setGroups((grps)=>{
+        return grps.map((g)=>{
+          return g._id == groupId ? {...g , name : newName} : g
+        })
+      })
+      toast.success("Group Named Updated")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const removeMember = async(groupId : string , memberId : string) =>{
+    try {
+      await GroupServices.removeMemberfromGroup(groupId , user?.id as string , memberId)
+      setGroups((grps)=>{
+        return grps.map((g)=>{
+          return g._id == groupId ? {...g , members : g.members.filter((m)=>m._id != memberId) } : g
+        })
+      })
+      toast.success("Removed User Successfully")
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedMembers([]);
@@ -101,7 +131,7 @@ const GroupsPage: React.FC = () => {
   return (
     <div className="flex-1 min-h-screen bg-[#1E1E1E] text-white p-6 ml-1">
       <div className="flex justify-between items-center mb-8">
-       <h1 className="text-3xl font-bold text-white">My Groups</h1>
+        <h1 className="text-3xl font-bold text-white">My Groups</h1>
         <button
           onClick={() => {
             setIsModalOpen(true);
@@ -113,208 +143,132 @@ const GroupsPage: React.FC = () => {
           <UserPlus size={18} />
         </button>
       </div>
-       <div className="px-4 py-6">
-      {/* Header with Create Group Button */}
+      <div className="px-4 py-6">
+        {/* Header with Create Group Button */}
 
-      {/* Groups Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {groups?.length === 0 ? (
-          <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed border-cyan-500/40 rounded-xl">
-            <Users size={48} className="text-cyan-500/70 mb-4" />
-            <h3 className="text-xl font-medium text-gray-300">No Groups Found</h3>
-            <p className="text-gray-400 mt-2 text-center">Create a new group to get started or join an existing one.</p>
-          </div>
-        ) : (
-          groups?.map((group) => (
-            <div
-              key={group._id}
-              className="bg-zinc-900/70 border border-cyan-500/30 hover:border-cyan-500/70 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-cyan-500/20 hover:translate-y-[-2px]"
-            >
-              {/* Group Header */}
-              <div className="bg-gradient-to-r from-cyan-500 to-cyan-400 px-4 py-3 flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-white truncate">{group.name}</h2>
-                <div className="flex gap-1">
-                  {group.createdBy?._id === user?.id ? (
-                    <>
+        {/* Groups Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {groups?.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed border-cyan-500/40 rounded-xl">
+              <Users size={48} className="text-cyan-500/70 mb-4" />
+              <h3 className="text-xl font-medium text-gray-300">
+                No Groups Found
+              </h3>
+              <p className="text-gray-400 mt-2 text-center">
+                Create a new group to get started or join an existing one.
+              </p>
+            </div>
+          ) : (
+            groups?.map((group) => (
+              <div
+                key={group._id}
+                className="bg-zinc-900/70 border border-cyan-500/30 hover:border-cyan-500/70 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-cyan-500/20 hover:translate-y-[-2px]"
+              >
+                {/* Group Header */}
+                <div className="bg-gradient-to-r from-cyan-500 to-cyan-400 px-4 py-3 flex justify-between items-center">
+                  <h2 className="text-xl font-semibold text-white truncate">
+                    {group.name}
+                  </h2>
+                  <div className="flex gap-1">
+                    {group.createdBy?._id === user?.id ? (
+                      <>
+                        <button
+                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                          onClick={() => setSelectedGroup(group._id)}
+                          title="Add Members"
+                        >
+                          <UserPlus size={18} />
+                        </button>
+                        <button
+                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                          onClick={() => setDeletingGroupId(group._id)}
+                          title="Delete Group"
+                        >
+                          <Trash size={18} />
+                        </button>
+                      </>
+                    ) : (
                       <button
                         className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
-                        onClick={() => setSelectedGroup(group._id)}
-                        title="Add Members"
+                        onClick={() => setLeavingGroupId(group._id)}
+                        title="Leave Group"
                       >
-                        <UserPlus size={18} />
-                      </button>
-                      <button
-                        className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
-                        onClick={() => setDeletingGroupId(group._id)}
-                        title="Delete Group"
-                      >
-                        <Trash size={18} />
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
-                      onClick={() => setLeavingGroupId(group._id)}
-                      title="Leave Group"
-                    >
-                      <LogOutIcon size={18} style={{ transform: "scaleX(-1)" }} />
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Group Content */}
-              <div className="p-5">
-                {/* Members Section */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <Users size={16} className="text-cyan-400" />
-                      <span className="text-gray-300 font-medium">
-                        {group.members.length} {group.members.length === 1 ? "Member" : "Members"}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => setViewGroup(group)}
-                      className="text-cyan-400 text-sm hover:text-cyan-300 hover:underline transition-colors"
-                    >
-                      view all
-                    </button>
-                  </div>
-                  
-                  {/* Member Avatars */}
-                  <div className="flex items-center">
-                    {group.members.slice(0, 4).map((member) => (
-                      <div
-                        key={member._id}
-                        className="w-10 h-10 -ml-1 first:ml-0 border-2 border-zinc-900 rounded-full overflow-hidden"
-                      >
-                        <img
-                          src={member?.profilePicture || "/profilePic.png"}
-                          alt=""
-                          className="h-full w-full object-cover"
+                        <LogOutIcon
+                          size={18}
+                          style={{ transform: "scaleX(-1)" }}
                         />
-                      </div>
-                    ))}
-                    {group.members.length > 4 && (
-                      <div className="w-10 h-10 -ml-1 bg-zinc-800 border-2 border-zinc-900 rounded-full flex items-center justify-center text-xs font-medium text-cyan-300">
-                        +{group.members.length - 4}
-                      </div>
+                      </button>
                     )}
                   </div>
                 </div>
 
-                {/* Group Info */}
-                <div className="space-y-2 pt-2 border-t border-zinc-800">
-                  <div className="flex items-center text-sm text-gray-300">
-                    <span className="min-w-20 text-gray-400">Admin</span>
-                    <span className="text-cyan-400 font-medium">
-                      {group.createdBy?.username}
-                      {group.createdBy?._id === user?.id && " (You)"}
-                    </span>
-                  </div>
-                  <div className="flex items-center text-sm text-gray-300">
-                    <span className="min-w-20 text-gray-400">Next Session</span>
-                    <span className="flex items-center gap-1">
-                      <Calendar size={14} className="text-gray-400" />
-                      Not Assigned
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {groups?.length == 0 && <EmptyList />}
-        {groups?.map((group) => (
-          <div
-            key={group._id}
-            className="bg-zinc-900 border border-cyan-500 text-cyan-500 rounded-lg overflow-hidden"
-          >
-            <div className="bg-cyan-500 px-2 py-1 text-center flex justify-between">
-              <h2 className="text-xl font-semibold text-white">{group.name}</h2>
-              <div>
-                {group.createdBy?._id == user?.id ? (
-                  <span>
-                    <button
-                      className="hover:cursor-pointer text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                      onClick={() => setSelectedGroup(group._id)}
-                    >
-                      <UserPlus />
-                    </button>
-                    <button>
+                {/* Group Content */}
+                <div className="p-5">
+                  {/* Members Section */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Users size={16} className="text-cyan-400" />
+                        <span className="text-gray-300 font-medium">
+                          {group.members.length}{" "}
+                          {group.members.length === 1 ? "Member" : "Members"}
+                        </span>
+                      </div>
                       <button
-                        className="hover:cursor-pointer text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                        onClick={() => setDeletingGroupId(group._id)}
+                        onClick={() => setViewGroup(group)}
+                        className="text-cyan-400 text-sm hover:text-cyan-300 hover:underline transition-colors"
                       >
-                        <Trash />
+                        view all
                       </button>
-                    </button>
-                  </span>
-                ) : (
-                  <button
-                    className=" text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                    onClick={() => setLeavingGroupId(group._id)}
-                  >
-                    <LogOutIcon style={{ transform: "scaleX(-1)" }} />
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="p-4">
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-300 text-sm">
-                    {group.members.length} Members
-                  </span>
-                  <a
-                    onClick={() => setViewGroup(group)}
-                    className="text-[#00D2D9] text-xs hover:cursor-pointer"
-                  >
-                    view all
-                  </a>
-                </div>
-                <div className="flex items-center">
-                  {group.members.slice(0, 5).map((member) => (
-                    <div
-                      key={member._id}
-                      className="w-8 h-8 rounded-full mr-1 flex items-center justify-center text-xs font-bold"
-                    >
-                      <img
-                        src={member?.profilePicture || "/profilePic.png"}
-                        alt=""
-                        className="h-8 w-8 rounded-2xl"
-                      />
                     </div>
-                  ))}
-                  {group.members.length > 5 && (
-                    <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs">
-                      +{group.members.length - 5}
+
+                    {/* Member Avatars */}
+                    <div className="flex items-center">
+                      {group.members.slice(0, 4).map((member) => (
+                        <div
+                          key={member._id}
+                          className="w-10 h-10 -ml-1 first:ml-0 border-2 border-zinc-900 rounded-full overflow-hidden"
+                        >
+                          <img
+                            src={member?.profilePicture || "/profilePic.png"}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      ))}
+                      {group.members.length > 4 && (
+                        <div className="w-10 h-10 -ml-1 bg-zinc-800 border-2 border-zinc-900 rounded-full flex items-center justify-center text-xs font-medium text-cyan-300">
+                          +{group.members.length - 4}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+
+                  {/* Group Info */}
+                  <div className="space-y-2 pt-2 border-t border-zinc-800">
+                    <div className="flex items-center text-sm text-gray-300">
+                      <span className="min-w-20 text-gray-400">Admin</span>
+                      <span className="text-cyan-400 font-medium">
+                        {group.createdBy?.username}
+                        {group.createdBy?._id === user?.id && " (You)"}
+                      </span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-300">
+                      <span className="min-w-20 text-gray-400">
+                        Next Session
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Calendar size={14} className="text-gray-400" />
+                        Not Assigned
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div className="text-sm text-gray-300 mb-2">
-                Admin :{" "}
-                <span className="text-[#00D2D9]">
-                  {" "}
-                  {group.createdBy?.username}{" "}
-                </span>{" "}
-                {group.createdBy?._id == user?.id && "(You)"}
-              </div>
-              <div className="text-sm text-gray-300 mb-4">
-                Next Session: {"Not Assigned"}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div> */}
+            ))
+          )}
+        </div>
+      </div>
 
       <BaseModal
         title="Create New Group"
@@ -339,12 +293,14 @@ const GroupsPage: React.FC = () => {
       <BaseModal
         isOpen={Boolean(viewGroup?._id)}
         onClose={() => setViewGroup(undefined)}
-        title={viewGroup?.name as string}
+        title="Group Details"
+        size="4xl"
       >
         <GroupDetails
           currentUserId={user?.id as string}
-          group={viewGroup}
-          onRemoveMember={() => console.log("removing")}
+          groupData={viewGroup}
+          onRemoveMember={removeMember}
+          onUpdateGroupName={updateGroupName}
         />
       </BaseModal>
 

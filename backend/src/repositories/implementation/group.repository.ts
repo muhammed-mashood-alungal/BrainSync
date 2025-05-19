@@ -65,4 +65,21 @@ export class GroupRepository
       }
      })
   }
+  async removeMember(groupId: Types.ObjectId, memberId: Types.ObjectId): Promise<void> {
+    await this.findByIdAndUpdate(groupId,{
+      $pull : {members : memberId}
+    })
+  }
+
+  async editGroupName(groupId: Types.ObjectId, newName: string): Promise<void> {
+    await this.findByIdAndUpdate(groupId  ,{
+      $set : {
+        name : newName
+      }
+    })
+  }
+  async isAdminOfGroup(groupId: Types.ObjectId , userId :Types.ObjectId): Promise<boolean> {
+    const group = await this.findById(groupId)
+    return group?.createdBy == userId
+  }
 }

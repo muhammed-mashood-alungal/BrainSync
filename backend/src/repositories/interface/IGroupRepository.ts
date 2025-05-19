@@ -15,4 +15,7 @@ export interface IGroupRepository {
   totalGroupsofUser(userId :unknown) :Promise<number>
   getTotalGroupCount() :Promise<number>
   deleteGroup(groupId : Types.ObjectId) : Promise<void>
+  isAdminOfGroup(groupId :Types.ObjectId , userId : Types.ObjectId) :Promise<boolean>
+  removeMember(groupId : Types.ObjectId , memberId : Types.ObjectId) : Promise<void>
+  editGroupName(groupId : Types.ObjectId , newName : string) : Promise<void>
 }
