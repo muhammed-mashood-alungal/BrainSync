@@ -5,7 +5,7 @@ import { UserServices } from "@/services/client/user.client";
 import { IUserType } from "@/types/userTypes";
 import { validateCreateGroup } from "@/validations";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 
 function CreateGroup({

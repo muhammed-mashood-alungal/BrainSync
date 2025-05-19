@@ -6,7 +6,7 @@ import { validateLoginForm } from "@/validations";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { useAuth } from "@/Context/auth.context";
 import InPageLoading from "@/Components/InPageLoading/InPageLoading";
 

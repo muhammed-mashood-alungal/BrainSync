@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import BaseModal from "@/Components/Modal/Modal";
 import { GroupServices } from "@/services/client/group.client";
 import { useAuth } from "@/Context/auth.context";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 import GroupDetails from "../../../dashboard/groups/GroupDetails";

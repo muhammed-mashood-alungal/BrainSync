@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import {  Archivo } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "../Context/auth.context";
 import ToastProvider from "@/Components/Toast/Toast";
@@ -41,7 +41,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${archivo.variable} antialiased`}>
-        <ToastProvider />
+       <ToastProvider/>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

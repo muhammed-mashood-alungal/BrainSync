@@ -11,7 +11,7 @@ import {
 import { useSocket } from "./socket.context";
 import { codeEditorServices } from "@/services/client/code.client";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { useAuth } from "./auth.context";
 
 export type Language = "javascript" | "python" | "java" | "c" | "go";

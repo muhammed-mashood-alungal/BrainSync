@@ -3,7 +3,7 @@ import { useAuth } from "@/Context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 
 function UserInNav() {
     const {checkAuth , user} = useAuth()

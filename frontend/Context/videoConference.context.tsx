@@ -12,9 +12,8 @@ import Peer from "simple-peer";
 import { useAuth } from "./auth.context";
 import { useSocket } from "./socket.context";
 import { noteServices } from "@/services/client/note.client";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { useRouter } from "next/navigation";
-import { UserServices } from "@/services/client/user.client";
 import { SessionServices } from "@/services/client/session.client";
 
 interface PeerData {

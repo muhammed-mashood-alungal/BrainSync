@@ -12,7 +12,7 @@ import { Lock, LockIcon, LockOpen } from "lucide-react";
 import { useCodeEditor } from "@/Context/codeEditor.context";
 import BaseModal from "@/Components/Modal/Modal";
 import Input from "@/Components/Input/Input";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { useAuth } from "@/Context/auth.context";
 import Link from "next/link";

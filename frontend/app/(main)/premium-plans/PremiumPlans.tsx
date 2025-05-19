@@ -5,7 +5,7 @@ import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 interface PremiumPlansProps {
   plans: IPlans[];
 }

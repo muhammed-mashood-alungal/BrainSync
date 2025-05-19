@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import BaseModal from "@/Components/Modal/Modal";
 import { GroupServices } from "@/services/client/group.client";
 import { useAuth } from "@/Context/auth.context";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/app/dashboard/groups/GroupDetails";
@@ -253,7 +253,7 @@ const GroupsPage: React.FC = () => {
                         {group.createdBy?._id === user?.id && " (You)"}
                       </span>
                     </div>
-                    <div className="flex items-center text-sm text-gray-300">
+                    {/* <div className="flex items-center text-sm text-gray-300">
                       <span className="min-w-20 text-gray-400">
                         Next Session
                       </span>
@@ -261,7 +261,7 @@ const GroupsPage: React.FC = () => {
                         <Calendar size={14} className="text-gray-400" />
                         Not Assigned
                       </span>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

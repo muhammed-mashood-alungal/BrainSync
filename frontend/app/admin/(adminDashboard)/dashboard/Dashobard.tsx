@@ -4,7 +4,7 @@ import { AdminServices } from "@/services/client/admin.client";
 import { AuthServices } from "@/services/client/auth.client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import {
   LineChart,
   Line,

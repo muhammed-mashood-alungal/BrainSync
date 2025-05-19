@@ -6,7 +6,7 @@ import { useAuth } from "@/Context/auth.context";
 import { UserServices } from "@/services/client/user.client";
 import { validateResetPasswords } from "@/validations";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { Trash } from "lucide-react";
 import UserInNav from "@/Components/UserInNav/UserInNav";
 import SubscriptionHistory from "./SubscriptionHistory";

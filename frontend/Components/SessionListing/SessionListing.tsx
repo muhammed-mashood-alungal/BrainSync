@@ -8,7 +8,7 @@ import {
   faClose,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import SimpleStudyLoading from "@/Components/Loading/Loading";
 import EmptyList from "@/Components/EmptyList/EmptyList";
 

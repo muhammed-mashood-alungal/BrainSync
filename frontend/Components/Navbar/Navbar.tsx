@@ -4,7 +4,7 @@ import {  useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/Context/auth.context';
 import { AuthServices } from '@/services/client/auth.client';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 const Navbar = () => {

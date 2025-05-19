@@ -15,7 +15,7 @@ import {
   useVideoCall,
   VideoCallProvider,
 } from "@/Context/videoConference.context";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 import WhiteBoard from "./WhiteBoard";
 import { WhiteBoardProvider } from "@/Context/whiteBoardContex";

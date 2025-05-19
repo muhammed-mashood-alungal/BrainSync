@@ -2,7 +2,7 @@
 import { AuthServices } from '@/services/client/auth.client';
 import { validateLoginForm } from '@/validations';
 import React, { SyntheticEvent, useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/Context/auth.context';
 

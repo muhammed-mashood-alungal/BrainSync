@@ -4,7 +4,7 @@ import PlansListing from "./PlanListing";
 import BaseModal from "@/Components/Modal/Modal";
 import CreatePlan from "./createPlan";
 import { plansServices } from "@/services/client/plans.client";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 import { IPlans } from "@/types/plans.types";
 
 function Page() {

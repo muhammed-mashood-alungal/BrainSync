@@ -7,7 +7,7 @@ import { AuthServices } from '@/services/client/auth.client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState('')

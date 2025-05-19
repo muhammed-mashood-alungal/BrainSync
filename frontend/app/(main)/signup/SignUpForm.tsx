@@ -5,7 +5,7 @@ import { AuthServices } from '@/services/client/auth.client';
 import { validateSignUpForm } from '@/validations';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 import Button from '@/Components/Button/Button';
 import Input from '@/Components/Input/Input';
 import Link from 'next/link';

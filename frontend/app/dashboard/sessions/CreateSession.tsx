@@ -11,7 +11,7 @@ import { validateSessionForm } from "@/validations";
 import { AxiosError } from "axios";
 import { ChevronDown } from "lucide-react";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from 'react-hot-toast';
 
 function CreateSession({
   onClose,
