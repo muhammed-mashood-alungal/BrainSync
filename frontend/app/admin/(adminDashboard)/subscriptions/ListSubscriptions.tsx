@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import Table from "@/Components/Table/Table";
 import { IUserSubscription } from "@/types/subscriptionTypes";
 import { IUserType } from "@/types/userTypes";
 import { IPlans } from "@/types/plans.types";
