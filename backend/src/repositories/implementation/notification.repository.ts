@@ -21,6 +21,6 @@ export class NotificationRepository extends BaseRepository<INotificationModel> i
         })
     }
     async getUserNotifications(userId :Types.ObjectId) :Promise<INotificationModel[]> {
-        return await this.find({userId : userId  , isRead:false})
+        return ((await this.model.find({userId : userId  , isRead:false}).sort({createdAt : -1})))
     }
 }

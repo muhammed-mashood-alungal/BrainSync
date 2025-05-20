@@ -14,12 +14,14 @@ import { IGroupTypes } from '../../types/group.types';
 import { stopRoomSession } from '../../utils/socket.util';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 import { DateTime } from 'luxon';
+import { INotificationservices } from '../interface/INotificationServices';
 
 export class SessionServices implements ISessionServices {
   constructor(
     private _sesionRepository: ISessionRepository,
     private _groupRepository: IGroupRepository,
-    private _sessionActivityRepo: ISessionActivityRepository
+    private _sessionActivityRepo: ISessionActivityRepository,
+    private _notificationService: INotificationservices
   ) {}
 
   async createSession(
@@ -36,16 +38,19 @@ export class SessionServices implements ISessionServices {
 
     const sessionDate = data?.date ?? new Date().toISOString().split('T')[0];
 
-    console.log(data.startTime , data.endTime) 
+    console.log(data.startTime, data.endTime);
     const startTime = DateTime.fromISO(`${sessionDate}T${data.startTime}`, {
       zone: 'Asia/Kolkata',
-    }).toUTC().toJSDate();
-  
+    })
+      .toUTC()
+      .toJSDate();
+
     const endTime = DateTime.fromISO(`${sessionDate}T${data.endTime}`, {
       zone: 'Asia/Kolkata',
-    }).toUTC().toJSDate();
-  
-   console.log(startTime , endTime)
+    })
+      .toUTC()
+      .toJSDate();
+
     const sessionData = {
       ...data,
       createdBy: userId as Types.ObjectId,
@@ -63,6 +68,16 @@ export class SessionServices implements ISessionServices {
     );
 
     const inserted = await this._sesionRepository.createSession(sessionData);
+
+    await this._notificationService.createGroupNotification(
+      {
+        type: 'INFO',
+        title: 'Session Scheduled',
+        message: `You have a Session Scheduled on ${data?.date} from ${startTime} to ${endTime}. Please be Available`,
+      },
+      group?.members as Types.ObjectId[]
+    );
+
     return await this._sesionRepository.findBySessionId(
       inserted._id as Types.ObjectId
     );
@@ -237,21 +252,23 @@ export class SessionServices implements ISessionServices {
     const sessionDate = sessionData.date
       ? new Date(date).toISOString().split('T')[0]
       : new Date().toISOString().split('T')[0];
-   
 
-    console.log(sessionData.startTime , sessionData.endTime) 
-    // const startTime = new Date(`${sessionDate}T${sessionData.startTime}:00Z`); 
-    // const endTime = new Date(`${sessionDate}T${sessionData.endTime}:00Z`);
-    const startTime = DateTime.fromISO(`${sessionDate}T${sessionData.startTime}`, {
-      zone: 'Asia/Kolkata',
-    }).toUTC().toJSDate();
-  
+    console.log(sessionData.startTime, sessionData.endTime);
+    const startTime = DateTime.fromISO(
+      `${sessionDate}T${sessionData.startTime}`,
+      {
+        zone: 'Asia/Kolkata',
+      }
+    )
+      .toUTC()
+      .toJSDate();
+
     const endTime = DateTime.fromISO(`${sessionDate}T${sessionData.endTime}`, {
       zone: 'Asia/Kolkata',
-    }).toUTC().toJSDate();
+    })
+      .toUTC()
+      .toJSDate();
 
-    console.log(startTime , endTime)
-    
     if (
       endTime.getTime() < currentDate.getTime() ||
       endTime.getDate() < currentDate.getDate()
@@ -270,6 +287,15 @@ export class SessionServices implements ISessionServices {
     sessionData.startTime = startTime;
     sessionData.endTime = endTime;
     sessionData.date = sessionDate;
+
+    await this._notificationService.createGroupNotification(
+      {
+        type: 'INFO',
+        title: 'Session Updated ',
+        message: `The Session Schedule for Session ${sessionData.sessionName} is Updated. Please Check new Details and Schedule`,
+      },
+      group?.members as Types.ObjectId[]
+    );
 
     return await this._sesionRepository.updateSession(
       sessionData,

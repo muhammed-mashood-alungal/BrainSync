@@ -8,12 +8,16 @@ import { SubscriptionController } from '../controllers/implementation/subscripti
 import { SubscriptionServices } from '../services/implementation/subscription.services';
 import { UserSubscriptionRepository } from '../repositories/implementation/subscription.repository';
 import { adminAuth } from '../middlewares/admin.middleware';
+import { NotificationRepository } from '../repositories/implementation/notification.repository';
+import { NotificationServices } from '../services/implementation/notification.services';
 
 const subscriptionRouter = Router();
 
 const subscriptionRepo = new UserSubscriptionRepository();
 const userRepo = new UserRepository()
-const subscriptionServices = new SubscriptionServices(subscriptionRepo,userRepo);
+const notificationRepo  = new NotificationRepository()
+const notificationServices = new NotificationServices(notificationRepo)
+const subscriptionServices = new SubscriptionServices(subscriptionRepo,userRepo ,notificationServices);
 const subscriptionController = new SubscriptionController(subscriptionServices);
 subscriptionRouter.post(
   '/buy',

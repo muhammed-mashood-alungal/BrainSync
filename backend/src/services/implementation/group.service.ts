@@ -8,30 +8,58 @@ import { HttpResponse } from '../../constants/responseMessage.constants';
 import { IUserRepository } from '../../repositories/interface/IUserRepository';
 import { groupMapper } from '../../mappers/group.mapper';
 import { IMappedGroupTypes } from '../../types/group.types';
+import { INotificationservices } from '../interface/INotificationServices';
 
 export class GroupServices implements IGroupService {
   constructor(
     private _groupRepository: IGroupRepository,
-    private _userRepository: IUserRepository
+    private _userRepository: IUserRepository,
+    private _notificationService: INotificationservices
   ) {}
 
   async createGroup(data: Partial<IGroupModel>): Promise<IMappedGroupTypes> {
     const newGroup = await this._groupRepository.createGroup(data);
+    await this._notificationService.createGroupNotification(
+      {
+        title: 'New Group Created and Your were Added',
+        message: `You are now a part of Group ${newGroup?.name}`,
+        type: 'SUCCESS',
+      },
+      data.members?.filter((u: any) => u != data.createdBy) as Types.ObjectId[]
+    );
     return groupMapper(newGroup);
   }
 
   async addToGroup(groupId: unknown, members: unknown[]): Promise<void> {
-    await this._groupRepository.addToGroup(
+    const group = await this._groupRepository.addToGroup(
       groupId as Types.ObjectId,
+      members as Types.ObjectId[]
+    );
+
+    await this._notificationService.createGroupNotification(
+      {
+        title: 'Added You',
+        message: `You are now a part of Group ${group?.name}`,
+        type: 'SUCCESS',
+      },
       members as Types.ObjectId[]
     );
   }
 
   async leftFromGroup(groupId: unknown, userId: unknown): Promise<void> {
-    await this._groupRepository.leftGroup(
+    const group = await this._groupRepository.leftGroup(
       groupId as Types.ObjectId,
       userId as Types.ObjectId
     );
+    const userDetails = await this._userRepository.findByUserId(
+      userId as Types.ObjectId
+    );
+    await this._notificationService.createNotification({
+      title: 'Left From the Group',
+      message: `${userDetails?.username} left from ${group?.name}`,
+      type: 'WARNING',
+      userId: group?.createdBy as Types.ObjectId,
+    });
   }
 
   async allGroups(): Promise<IMappedGroupTypes[]> {
@@ -69,7 +97,17 @@ export class GroupServices implements IGroupService {
     return await this._groupRepository.getTotalGroupCount();
   }
   async deleteGroup(groupId: unknown): Promise<void> {
-    await this._groupRepository.deleteGroup(groupId as Types.ObjectId);
+    const group = await this._groupRepository.deleteGroup(
+      groupId as Types.ObjectId
+    );
+    await this._notificationService.createGroupNotification(
+      {
+        title: 'Group Deleted',
+        message: `${group?.name} is Deleted by its Admin`,
+        type: 'INFO',
+      },
+      group?.members as Types.ObjectId[]
+    );
   }
   async removeMember(
     groupId: unknown,
@@ -85,13 +123,24 @@ export class GroupServices implements IGroupService {
         HttpStatus.UNAUTHORIZED,
         HttpResponse.UNAUTHORIZED
       );
-    await this._groupRepository.removeMember(
+    const group = await this._groupRepository.removeMember(
       groupId as Types.ObjectId,
       memberId as Types.ObjectId
     );
+
+    await this._notificationService.createNotification({
+      userId: memberId as Types.ObjectId,
+      title: 'Removed From Group',
+      message: `You have removed from ${group?.name} by Admin `,
+      type: 'INFO',
+    });
   }
-  async editGroupName(groupId: unknown,adminId : unknown ,  newName: unknown): Promise<void> {
-     const isAdmin = await this._groupRepository.isAdminOfGroup(
+  async editGroupName(
+    groupId: unknown,
+    adminId: unknown,
+    newName: unknown
+  ): Promise<void> {
+    const isAdmin = await this._groupRepository.isAdminOfGroup(
       groupId as Types.ObjectId,
       adminId as Types.ObjectId
     );

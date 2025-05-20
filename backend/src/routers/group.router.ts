@@ -5,12 +5,16 @@ import { GroupController } from '../controllers/implementation/group.controller'
 import { UserRepository } from '../repositories/implementation/user.repository';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { adminAuth } from '../middlewares/admin.middleware';
+import { NotificationRepository } from '../repositories/implementation/notification.repository';
+import { NotificationServices } from '../services/implementation/notification.services';
 
 const groupRouter = Router();
 
 const groupRepo = new GroupRepository();
 const userRepo = new UserRepository();
-const groupServices = new GroupServices(groupRepo, userRepo);
+const notificationRepo = new NotificationRepository()
+const notificationService = new NotificationServices(notificationRepo)
+const groupServices = new GroupServices(groupRepo, userRepo,notificationService);
 const groupController = new GroupController(groupServices);
 
 groupRouter.post(

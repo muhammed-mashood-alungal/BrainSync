@@ -62,8 +62,7 @@ const GroupsPage: React.FC = () => {
     if (!selectedGroup) return toast.error("Please Select Group For Add");
     try {
       const members = [
-        ...selectedMembers.map((user) => user._id),
-        user?.id as string,
+        ...selectedMembers.map((user) => user._id)
       ];
       GroupServices.addToGroup(selectedGroup, members);
       toast.success("Added Member Successfully");

@@ -11,6 +11,8 @@ import { GroupServices } from '../services/implementation/group.service';
 import { GroupRepository } from '../repositories/implementation/group.repository';
 import { SessionServices } from '../services/implementation/session.services';
 import { SessionRepository } from '../repositories/implementation/session.repository';
+import { NotificationServices } from '../services/implementation/notification.services';
+import { NotificationRepository } from '../repositories/implementation/notification.repository';
 
 const adminRouter = Router();
 
@@ -18,11 +20,14 @@ const userRepo = new UserRepository();
 const sessionActivityRepo = new SessionActivityRepository()
 const userServices = new UserServices(userRepo , sessionActivityRepo);
 const userController = new UserController(userServices);
-
+const notificationRepo = new NotificationRepository()
 const groupRepo = new GroupRepository()
-const groupServices = new GroupServices(groupRepo, userRepo)
+
+
+const notificationService = new NotificationServices(notificationRepo)
+const groupServices = new GroupServices(groupRepo, userRepo,notificationService)
 const sessionRepo = new SessionRepository()
-const sessionServices = new SessionServices(sessionRepo,groupRepo,sessionActivityRepo)
+const sessionServices = new SessionServices(sessionRepo,groupRepo,sessionActivityRepo,notificationService)
 
 const adminController = new AdminController(userServices,groupServices , sessionServices)
 

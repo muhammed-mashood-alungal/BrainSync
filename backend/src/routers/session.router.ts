@@ -6,16 +6,21 @@ import { GroupRepository } from '../repositories/implementation/group.repository
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { adminAuth } from '../middlewares/admin.middleware';
 import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
+import { NotificationRepository } from '../repositories/implementation/notification.repository';
+import { NotificationServices } from '../services/implementation/notification.services';
 
 const sessionRouter = Router();
 
 const sessionRepo = new SessionRepository();
 const groupRepo = new GroupRepository();
+const notificationRepo = new NotificationRepository()
+const notificationService = new NotificationServices(notificationRepo)
 const sessionActivityRepo = new SessionActivityRepository();
 const sessionServices = new SessionServices(
   sessionRepo,
   groupRepo,
-  sessionActivityRepo
+  sessionActivityRepo,
+  notificationService
 );
 const sessionController = new SessionController(sessionServices);
 

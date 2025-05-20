@@ -2,9 +2,6 @@ import cron from 'node-cron';
 import { NotificationRepository } from '../repositories/implementation/notification.repository';
 import { NotificationServices } from '../services/implementation/notification.services';
 import { UserRepository } from '../repositories/implementation/user.repository';
-import { UserServices } from '../services/implementation/user.services';
-import { SessionRepository } from '../repositories/implementation/session.repository';
-import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 import { UserSubscriptionRepository } from '../repositories/implementation/subscription.repository';
 import { SubscriptionServices } from '../services/implementation/subscription.services';
 
@@ -12,13 +9,11 @@ const notificationRepo = new NotificationRepository();
 const notificationServices = new NotificationServices(notificationRepo);
 
 const userRepo = new UserRepository();
-const sessionActivityRepo = new SessionActivityRepository();
-const userServices = new UserServices(userRepo, sessionActivityRepo);
-
 const subscriptionRepo = new UserSubscriptionRepository();
 const subscriptionServices = new SubscriptionServices(
   subscriptionRepo,
-  userRepo
+  userRepo,
+  notificationServices
 );
 
 cron.schedule('0 9 * * *', async () => {
