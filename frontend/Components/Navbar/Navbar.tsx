@@ -61,9 +61,7 @@ const Navbar = () => {
           <Link href="/premium-plans" className="hover:text-gray-300">
             Premium
           </Link>
-          <Link href="/about" className="hover:text-gray-300">
-            About Us
-          </Link>
+          
           {
             user ? <>
               <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
@@ -95,9 +93,7 @@ const Navbar = () => {
           <Link href="/features" className="block hover:text-gray-300 py-2">
             Features
           </Link>
-          <Link href="/about" className="block hover:text-gray-300 py-2">
-            About Us
-          </Link>
+          
           <div className="flex flex-col space-y-3 pt-2">
             <Link href="/login" className="text-cyan-400 hover:text-cyan-300 py-2">
               Login
