@@ -157,4 +157,23 @@ export class SessionController implements ISessionController {
       next(error);
     }
   }
+  async sessionReport(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      console.log('Gello')
+      const { sessionId } = req.params;
+      const pdfBuffer = await this._sessionServices.generateReport(sessionId);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=report-${sessionId}.pdf`);
+      res.setHeader('Content-Length', pdfBuffer.length);
+
+      res.status(HttpStatus.OK).send(pdfBuffer);
+    } catch (error) {
+      next(error)
+    }
+  }
 }

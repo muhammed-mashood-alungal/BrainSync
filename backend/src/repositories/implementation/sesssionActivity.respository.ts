@@ -91,7 +91,6 @@ export class SessionActivityRepository
           format(new Date(now.getFullYear(), i, 1), 'MMM')
         );
 
-       
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
         matchCondition = {
@@ -121,8 +120,6 @@ export class SessionActivityRepository
       { $sort: { _id: 1 } },
     ]);
 
-    console.log(stats);
-
     const graphMap: Record<string, number> = {};
 
     stats.forEach(item => {
@@ -130,7 +127,6 @@ export class SessionActivityRepository
         const day = format(new Date(item._id), 'EEEE');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Monthly') {
-        
         const day = format(new Date(item._id), 'd');
         graphMap[day] = Math.floor(item.totalDuration / 1000);
       } else if (filterBy === 'Yearly') {
@@ -185,5 +181,12 @@ export class SessionActivityRepository
   }
   async totalSessionAttendedByUser(userId: Types.ObjectId): Promise<number> {
     return await this.model.countDocuments({ userId: userId });
+  }
+  async getSessionActivities(
+    sessionCode: string
+  ): Promise<ISessionActivityModel[]> {
+    return await this.model
+      .find({ sessionCode: sessionCode })
+      .populate('userId', 'username email');
   }
 }

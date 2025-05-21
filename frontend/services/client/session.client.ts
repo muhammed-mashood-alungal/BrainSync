@@ -2,6 +2,7 @@ import { sessionInstances } from "@/axios/createInstance";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 
 import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 export const SessionServices = {
   async createSession(formData: Partial<ISessionTypes>): Promise<Session> {
@@ -51,9 +52,9 @@ export const SessionServices = {
     startDate: string | null,
     endDate: string | null,
     sort: number,
-    skip : number,
-    limit : number
-  ): Promise<{sessions :Session[] , count : number}> {
+    skip: number,
+    limit: number
+  ): Promise<{ sessions: Session[]; count: number }> {
     try {
       const response = await sessionInstances.get(
         `/my-sessions/?searchQuery=${searchQuery}&subject=${subject}&startDate=${startDate}&endDate=${endDate}&sort=${sort}&skip=${skip}&limit=${limit}`
@@ -72,9 +73,9 @@ export const SessionServices = {
     startDate: string | null,
     endDate: string | null,
     sort: number,
-    skip : number,
-    limit : number
-  ): Promise<{sessions :Session[] , count : number}> {
+    skip: number,
+    limit: number
+  ): Promise<{ sessions: Session[]; count: number }> {
     try {
       const response = await sessionInstances.get(
         `/?searchQuery=${searchQuery}&subject=${subject}&startDate=${startDate}&endDate=${endDate}&sort=${sort}&skip=${skip}&limit=${limit}`
@@ -116,6 +117,27 @@ export const SessionServices = {
         err.response?.data?.error ||
         "Adding Time Spend failed. Please try again.";
       throw new Error(errorMessage);
+    }
+  },
+  async downloadSessionReport(sessionId: string): Promise<boolean> {
+    try {
+      const response = await sessionInstances.get(`/${sessionId}/report`, {
+        responseType: "blob", 
+      });
+
+      toast.success('Report Generated Successfully, Starting download..."');
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `report-${sessionId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
   },
 };

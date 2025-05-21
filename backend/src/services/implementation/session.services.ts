@@ -15,6 +15,8 @@ import { stopRoomSession } from '../../utils/socket.util';
 import { ISessionActivityRepository } from '../../repositories/interface/ISessionActivity.repository';
 import { DateTime } from 'luxon';
 import { INotificationservices } from '../interface/INotificationServices';
+import PDFDocument from 'pdfkit';
+import { IUserModel } from '../../models/user.model';
 
 export class SessionServices implements ISessionServices {
   constructor(
@@ -332,5 +334,192 @@ export class SessionServices implements ISessionServices {
     return await this._sesionRepository.getSessionCreationTrend(
       lastXDays as number
     );
+  }
+
+  private async generatePDF(data: any): Promise<Buffer> {
+    return new Promise<Buffer>((resolve, reject) => {
+      try {
+        const doc = new PDFDocument({ margin: 50 });
+        const buffers: Buffer[] = [];
+
+        doc.on('data', (buffer: Buffer) => buffers.push(buffer));
+        doc.on('end', () => resolve(Buffer.concat(buffers)));
+        doc.on('error', (err: Error) => reject(err));
+
+        // Header
+        doc.fontSize(25).text('Session Report', { align: 'center' });
+        doc.moveDown();
+
+        // Session Details
+        doc.fontSize(14).text('Session Details', { underline: true });
+        doc.fontSize(12).text(`Title: ${data.title}`);
+        doc.text(`Session Code: ${data.sessionCode}`);
+        doc.text(`Host: ${data.hostName}`);
+        doc.text(`Start Time: ${new Date(data.startTime).toLocaleString()}`);
+        doc.text(`End Time: ${new Date(data.endTime).toLocaleString()}`);
+        doc.text(`Total Participants: ${data.totalParticipants}`);
+        doc.moveDown(2);
+
+        // Participant Summary
+        doc.fontSize(14).text('Participant Summary', { underline: true });
+        doc.moveDown();
+
+        const tableTop = doc.y;
+        const tableHeaders = [
+          'Name',
+          'Email',
+          'Duration (Min)',
+          'Attendance %',
+        ];
+        const columnWidths = [150, 200, 100, 100];
+
+        // Draw header
+        let x = 50;
+        doc.fontSize(10).font('Helvetica-Bold');
+        tableHeaders.forEach((header, i) => {
+          doc.text(header, x, tableTop, {
+            width: columnWidths[i],
+            align: 'left',
+          });
+          x += columnWidths[i];
+        });
+
+        // Draw data rows
+        doc.moveDown();
+        doc.font('Helvetica');
+
+        let yPos = doc.y;
+        data.participants.forEach((participant: any) => {
+          if (yPos > doc.page.height - 100) {
+            doc.addPage();
+            yPos = 50;
+          }
+
+          x = 50;
+          doc.fontSize(10);
+          doc.text(participant.name, x, yPos, {
+            width: columnWidths[0],
+            align: 'left',
+          });
+          x += columnWidths[0];
+
+          doc.text(participant.email, x, yPos, {
+            width: columnWidths[1],
+            align: 'left',
+          });
+          x += columnWidths[1];
+
+          doc.text(participant.totalDuration.toString(), x, yPos, {
+            width: columnWidths[2],
+            align: 'left',
+          });
+          x += columnWidths[2];
+
+          doc.text(`${participant.attendancePercentage}%`, x, yPos, {
+            width: columnWidths[3],
+            align: 'left',
+          });
+
+          yPos = doc.y + 15;
+          doc.moveDown(0.5);
+        });
+
+        // Detailed logs section
+        doc.addPage();
+        doc.fontSize(14).text('Detailed Attendance Logs', { underline: true });
+        doc.moveDown();
+
+        data.participants.forEach((participant: any) => {
+          if (doc.y > doc.page.height - 150) {
+            doc.addPage();
+          }
+
+          doc.fontSize(12).font('Helvetica-Bold').text(`${participant.name}`);
+          doc.fontSize(10).font('Helvetica');
+
+          if (participant.logs.length === 0) {
+            doc.text('No attendance records found');
+          } else {
+            participant.logs.forEach((log: any, index: number) => {
+              const joinTime = new Date(log.joinTime).toLocaleString();
+              const leaveTime = log.leaveTime
+                ? new Date(log.leaveTime).toLocaleString()
+                : 'Still active';
+              const duration =
+                log.duration != null ? `${log.duration} Minutes` : 'N/A';
+
+              doc
+                .text(`Log #${index + 1}:`, { continued: true })
+                .text(`  Join: ${joinTime}`, { continued: true })
+                .text(`  Leave: ${leaveTime}`, { continued: true })
+                .text(`  Duration: ${Math.round(log.duration / (1000 * 60))}`);
+            });
+          }
+          doc.moveDown(2);
+        });
+
+        doc.end();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  async generateReport(sessionId: unknown): Promise<Buffer> {
+    const session = await this._sesionRepository.findBySessionId(
+      sessionId as Types.ObjectId
+    );
+    const activities = await this._sessionActivityRepo.getSessionActivities(
+      session?.code as string
+    );
+
+    console.log(activities);
+    if (!session) {
+      throw createHttpsError(
+        HttpStatus.BAD_REQUEST,
+        HttpResponse.INVALID_SESSION_CODE
+      );
+    }
+
+    const sessionDuration =
+      (new Date(session.endTime).getTime() -
+        new Date(session.startTime).getTime()) /
+      (1000 * 60);
+
+    const participants = activities.map((activity: any) => {
+      const attendancePercentage =
+        sessionDuration > 0
+          ? Math.min(
+              100,
+              (activity.totalDuration / (sessionDuration * 60)) * 100
+            )
+          : 0;
+
+      return {
+        userId: activity.userId._id,
+        name: activity.userId.username,
+        email: activity.userId.email,
+        totalDuration: parseFloat(
+          (activity.totalDuration / (1000 * 60)).toFixed(2)
+        ),
+
+        attendancePercentage: parseFloat(attendancePercentage.toFixed(2)),
+        logs: activity.logs,
+      };
+    });
+
+    const report = {
+      sessionId: session._id,
+      sessionCode: session.code,
+      title: session.sessionName,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      hostName: (session.createdBy as IUserModel).username,
+      totalParticipants: participants.length,
+      participants,
+    };
+
+    const pdfBuffer = await this.generatePDF(report);
+    return pdfBuffer;
   }
 }

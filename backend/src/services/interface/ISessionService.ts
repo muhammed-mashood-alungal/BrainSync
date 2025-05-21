@@ -42,4 +42,5 @@ export interface ISessionServices {
   totalSessionCount(): Promise<number>
   getTotalSessionTime():Promise<string>
   getSessionCreationTrend(lastXDays : unknown) : Promise<{ date: string; sessions: number }[]>
+  generateReport(sessionId: string): Promise<Buffer>
 }

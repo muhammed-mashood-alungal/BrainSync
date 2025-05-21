@@ -11,4 +11,5 @@ export interface ISessionController {
   ): Promise<void>;
   updateSession(req: Request, res: Response, next: NextFunction): Promise<void>;
   stopSession(req: Request, res: Response, next: NextFunction): Promise<void>;
+  sessionReport(req:Request , res : Response , next : NextFunction):Promise<void>
 }

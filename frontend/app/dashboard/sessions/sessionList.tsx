@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
@@ -10,7 +9,9 @@ import SessionDetailsModal from "./SessionDetails";
 import { SessionServices } from "@/services/client/session.client";
 import CreateSession from "./CreateSession";
 import GenericListing from "@/Components/SessionListing/SessionListing";
-
+import { FileDown } from "lucide-react";
+import { Trykker } from "next/font/google";
+import toast from "react-hot-toast";
 
 const SessionsListing: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -63,6 +64,16 @@ const SessionsListing: React.FC = () => {
     }
   };
 
+  const downloadReport = async (sessionId: string) => {
+    try {
+      const response = await SessionServices.downloadSessionReport(sessionId);
+      if (!response) return;
+      toast.success("PDF Downloaded Successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const fetchFilteredSessions = async (
     searchQuery: string,
     filterSubject: string,
@@ -110,6 +121,21 @@ const SessionsListing: React.FC = () => {
                     Join
                   </button>
                 )}
+              {getStatus(session.startTime, session.endTime) === "Ended" &&
+                !session.isStopped && (
+                  <div className="relative group">
+                    <button
+                      onClick={() => downloadReport(session._id)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white hover:bg-gray-700 transition-all shadow-md"
+                    >
+                      <FileDown size={18} />
+                    </button>
+                    <div className="absolute top-full mt-2 left-1/2 -translate-x-[60%] w-max bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                      Session Report
+                    </div>
+                  </div>
+                )}
+
               {session.isStopped && (
                 <p className="text-red-500">Admin Blocked </p>
               )}
