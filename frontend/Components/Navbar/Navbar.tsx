@@ -1,37 +1,35 @@
 // components/Navbar.jsx
-'use client'
-import {  useState } from 'react';
-import Link from 'next/link';
-import { useAuth } from '@/Context/auth.context';
-import { AuthServices } from '@/services/client/auth.client';
-import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { useAuth } from "@/Context/auth.context";
+import { AuthServices } from "@/services/client/auth.client";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user,checkAuth} = useAuth()
-  const router = useRouter()
-  const logout =async () => {
-     try{
-      
-        await AuthServices.logout()
-        checkAuth()
-     }catch(err){
-      console.log(err)
-        toast.error("Logout Failed")
-     }
-  }
-  const handleGoToDashboard =async () => {
-     console.log(document.cookie)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, checkAuth } = useAuth();
+  const router = useRouter();
+  const logout = async () => {
+    try {
+      await AuthServices.logout();
+      checkAuth();
+    } catch (err) {
+      console.log(err);
+      toast.error("Logout Failed");
+    }
+  };
+  const handleGoToDashboard = async () => {
+    console.log(document.cookie);
     // router.refresh()
     // router.push('/dashboard')
-    window.location.href = '/dashboard';
+    window.location.href = "/dashboard";
   };
 
   return (
     <nav className="py-4 px-4 md:px-12 bg-black text-white ">
       <div className="flex flex-wrap justify-between items-center ">
-
         <div className="text-2xl md:text-3xl font-bold">
           <Link href="/" className="text-cyan-400 hover:text-cyan-300">
             Brain Sync
@@ -43,12 +41,34 @@ const Navbar = () => {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? (
-            <svg className="w-6 h-6 hover:cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6 hover:cursor-pointer"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           ) : (
-            <svg className="w-6 h-6 hover:cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-6 h-6 hover:cursor-pointer"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           )}
         </button>
@@ -61,26 +81,40 @@ const Navbar = () => {
           <Link href="/premium-plans" className="hover:text-gray-300">
             Premium
           </Link>
-          
-          {
-            user ? <>
-              <button  onClick={logout} className="text-cyan-400 hover:text-cyan-300">
+
+          {user ? (
+            <>
+              <button
+                onClick={logout}
+                className="text-cyan-400 hover:text-cyan-300"
+              >
                 Logout
               </button>
-              <button onClick={handleGoToDashboard} className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full">
+              <button
+                onClick={handleGoToDashboard}
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full"
+              >
                 Go to Dashboard
               </button>
-            </> : <>
-              <Link href="/login" className="text-cyan-400 hover:text-cyan-300" prefetch={false} >
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-cyan-400 hover:text-cyan-300"
+                prefetch={false}
+              >
                 Login
               </Link>
-              <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full" prefetch={false}>
+              <Link
+                href="/signup"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full"
+                prefetch={false}
+              >
                 Sign Up
               </Link>
             </>
-
-          }
-
+          )}
         </div>
       </div>
 
@@ -93,14 +127,39 @@ const Navbar = () => {
           <Link href="/features" className="block hover:text-gray-300 py-2">
             Features
           </Link>
-          
+
           <div className="flex flex-col space-y-3 pt-2">
-            <Link href="/login" className="text-cyan-400 hover:text-cyan-300 py-2">
-              Login
-            </Link>
-            <Link href="/signup" className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full text-center w-30 ">
-              Sign Up
-            </Link>
+            {user ? (
+              <>
+                <button
+                  onClick={logout}
+                  className="text-cyan-400 hover:text-cyan-300"
+                >
+                  Logout
+                </button>
+                <button
+                  onClick={handleGoToDashboard}
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full"
+                >
+                  Go to Dashboard
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-cyan-400 hover:text-cyan-300 py-2"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full text-center w-30 "
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
