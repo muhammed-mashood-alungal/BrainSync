@@ -100,7 +100,8 @@ export class SessionServices implements ISessionServices {
     endDate?: unknown
   ): Promise<{ sessions: ISessionModal[]; count: number }> {
     const myGroups = await this._groupRepository.getMyGroups(
-      userId as Types.ObjectId
+      userId as Types.ObjectId,
+      ""
     );
     const groups = myGroups.map(grp => grp._id);
 

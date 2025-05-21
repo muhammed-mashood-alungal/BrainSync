@@ -41,9 +41,21 @@ export class GroupRepository
     return await this.model.findById(groupId).populate('members');
   }
 
-  async getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]> {
+  async getMyGroups(
+    userId: Types.ObjectId,
+    search: string
+  ): Promise<IGroupModel[]> {
+    const query: any = {
+      members: userId,
+      isActive: true,
+      isDeleted: false,
+    };
+
+    if (search.trim()) {
+      query.name = { $regex: search, $options: 'i' };
+    }
     return await this.model
-      .find({ members: userId, isActive: true, isDeleted: false })
+      .find(query)
       .populate('createdBy')
       .populate('members')
       .sort({ createdAt: -1 });
@@ -66,19 +78,27 @@ export class GroupRepository
     return await this.model.countDocuments({});
   }
   async deleteGroup(groupId: Types.ObjectId): Promise<IGroupModel | null> {
-    return await this.model.findByIdAndUpdate(groupId, {
-      $set: {
-        isDeleted: true,
+    return await this.model.findByIdAndUpdate(
+      groupId,
+      {
+        $set: {
+          isDeleted: true,
+        },
       },
-    },{new : true});
+      { new: true }
+    );
   }
   async removeMember(
     groupId: Types.ObjectId,
     memberId: Types.ObjectId
   ): Promise<IGroupModel | null> {
-    return await this.model.findByIdAndUpdate(groupId, {
-      $pull: { members: memberId },
-    },{new : true});
+    return await this.model.findByIdAndUpdate(
+      groupId,
+      {
+        $pull: { members: memberId },
+      },
+      { new: true }
+    );
   }
 
   async editGroupName(groupId: Types.ObjectId, newName: string): Promise<void> {

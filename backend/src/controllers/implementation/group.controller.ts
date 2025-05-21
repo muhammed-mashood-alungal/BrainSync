@@ -71,13 +71,14 @@ export class GroupController implements IGroupController {
   ): Promise<void> {
     try {
       const { userId } = req.params;
+      const {searchQuery} = req.query;
       if (userId == undefined) {
         throw createHttpsError(
           HttpStatus.NOT_FOUND,
           HttpResponse.USER_NOT_FOUND
         );
       }
-      const groups = await this._groupServices.myGroups(userId);
+      const groups = await this._groupServices.myGroups(userId,searchQuery as string);
 
       res
         .status(HttpStatus.OK)

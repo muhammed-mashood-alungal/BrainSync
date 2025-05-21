@@ -9,7 +9,7 @@ export interface IGroupRepository {
     members: Types.ObjectId[]
   ): Promise<IGroupModel | null>;
   getGroupData(groupId: Types.ObjectId): Promise<IGroupModel | null>;
-  getMyGroups(userId: Types.ObjectId): Promise<IGroupModel[]>;
+  getMyGroups(userId: Types.ObjectId , search : string): Promise<IGroupModel[]>;
   getAllGroups(): Promise<IGroupModel[]>;
   handleGroupActivation(groupId: Types.ObjectId): Promise<Boolean>;
   totalGroupsofUser(userId :unknown) :Promise<number>

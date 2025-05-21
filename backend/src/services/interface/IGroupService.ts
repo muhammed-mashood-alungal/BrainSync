@@ -7,7 +7,7 @@ export interface IGroupService {
   addToGroup(groupId: unknown, members: unknown[]): Promise<void>;
   leftFromGroup(groupId: unknown, userId: unknown): Promise<void>;
   allGroups(): Promise<IMappedGroupTypes[]>;
-  myGroups(userId: unknown): Promise<IMappedGroupTypes[]>;
+  myGroups(userId: unknown , search : string): Promise<IMappedGroupTypes[]>;
   groupData(id: unknown): Promise<IMappedGroupTypes>;
   handleGroupActivation(groupId: unknown): Promise<Boolean>;
   totalGroupCount():Promise<number>

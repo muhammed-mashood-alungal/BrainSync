@@ -67,9 +67,10 @@ export class GroupServices implements IGroupService {
     return groups.map(groupMapper);
   }
 
-  async myGroups(userId: unknown): Promise<IMappedGroupTypes[]> {
+  async myGroups(userId: unknown , search : string): Promise<IMappedGroupTypes[]> {
     const groups = await this._groupRepository.getMyGroups(
-      userId as Types.ObjectId
+      userId as Types.ObjectId,
+      search
     );
     return groups.map(groupMapper);
   }
