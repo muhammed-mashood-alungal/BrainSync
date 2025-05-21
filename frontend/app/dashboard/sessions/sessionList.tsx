@@ -10,7 +10,6 @@ import { SessionServices } from "@/services/client/session.client";
 import CreateSession from "./CreateSession";
 import GenericListing from "@/Components/SessionListing/SessionListing";
 import { FileDown } from "lucide-react";
-import { Trykker } from "next/font/google";
 import toast from "react-hot-toast";
 
 const SessionsListing: React.FC = () => {
