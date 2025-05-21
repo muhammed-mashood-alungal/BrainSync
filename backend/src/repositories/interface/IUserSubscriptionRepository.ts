@@ -5,12 +5,20 @@ export interface IUserSubscriptionRepository {
   createSubscription(
     subscriptionData: Partial<IUserSubscriptionModel>
   ): Promise<IUserSubscriptionModel>;
-  getAllSubscription(status : string , skip : number , limit : number): Promise<{subscriptions : IUserSubscriptionModel[] ,count : number}>;
+  getAllSubscription(
+    status: string,
+    skip: number,
+    limit: number
+  ): Promise<{ subscriptions: IUserSubscriptionModel[]; count: number }>;
   getUserSubscription(
     userId: Types.ObjectId
   ): Promise<IUserSubscriptionModel[]>;
-  cancelSubscription(subscriptionId : Types.ObjectId) : Promise<Types.ObjectId>
-  getAllActiveSubscriptions():Promise<IUserSubscriptionModel[]>
-  getAllExpiredSubscriptions(): Promise<IUserSubscriptionModel[]>
-  subscriptionExpired(subscriptionId : Types.ObjectId): Promise<void> 
+  cancelSubscription(subscriptionId: Types.ObjectId): Promise<Types.ObjectId>;
+  getAllActiveSubscriptions(): Promise<IUserSubscriptionModel[]>;
+  getAllExpiredSubscriptions(): Promise<IUserSubscriptionModel[]>;
+  subscriptionExpired(subscriptionId: Types.ObjectId): Promise<void>;
+  subscriptionStats(
+    startDate: Date | undefined,
+    endDate: Date | undefined
+  ): Promise<any>;
 }

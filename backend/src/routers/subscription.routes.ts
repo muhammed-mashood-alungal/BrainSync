@@ -14,10 +14,14 @@ import { NotificationServices } from '../services/implementation/notification.se
 const subscriptionRouter = Router();
 
 const subscriptionRepo = new UserSubscriptionRepository();
-const userRepo = new UserRepository()
-const notificationRepo  = new NotificationRepository()
-const notificationServices = new NotificationServices(notificationRepo)
-const subscriptionServices = new SubscriptionServices(subscriptionRepo,userRepo ,notificationServices);
+const userRepo = new UserRepository();
+const notificationRepo = new NotificationRepository();
+const notificationServices = new NotificationServices(notificationRepo);
+const subscriptionServices = new SubscriptionServices(
+  subscriptionRepo,
+  userRepo,
+  notificationServices
+);
 const subscriptionController = new SubscriptionController(subscriptionServices);
 subscriptionRouter.post(
   '/buy',
@@ -36,8 +40,13 @@ subscriptionRouter.get(
   subscriptionController.getUserSubscription.bind(subscriptionController)
 );
 subscriptionRouter.put(
-    '/cancel/:subscriptionId',
-    authMiddleware,
-    subscriptionController.cancelSubsription.bind(subscriptionController)
-  );
+  '/cancel/:subscriptionId',
+  authMiddleware,
+  subscriptionController.cancelSubsription.bind(subscriptionController)
+);
+subscriptionRouter.get(
+  '/stats',
+  adminAuth,
+  subscriptionController.subscriptionStats.bind(subscriptionController)
+);
 export default subscriptionRouter;

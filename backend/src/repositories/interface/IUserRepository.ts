@@ -27,4 +27,5 @@ export interface IUserRepository {
   userSubscriptionExpired(userId  : Types.ObjectId) : Promise<void>
   getTotalUsersCount() : Promise<number>
   getUserProfilePhotoUrl(userId : Types.ObjectId) : Promise<string | undefined>
+ 
 }

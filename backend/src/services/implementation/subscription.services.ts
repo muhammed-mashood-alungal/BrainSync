@@ -95,4 +95,18 @@ export class SubscriptionServices implements ISubscriptionServices {
     );
     return subscriptions.map(subscriptionMapper);
   }
+  async subscriptionStats(startDate: unknown, endDate: unknown): Promise<any> {
+    const start =
+      typeof startDate === 'string' && !isNaN(Date.parse(startDate))
+        ? new Date(startDate)
+        : undefined;
+
+    const end =
+      typeof endDate === 'string' && !isNaN(Date.parse(endDate))
+        ? new Date(endDate)
+        : undefined;
+
+    const stats = await this._subscriptionRepo.subscriptionStats(start, end);
+    return stats;
+  }
 }

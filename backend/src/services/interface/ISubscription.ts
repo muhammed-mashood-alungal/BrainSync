@@ -14,4 +14,5 @@ export interface ISubscriptionServices {
       getAllExpiredSubscriptions() : Promise<IUserSubscriptionModel[]>
      subscriptionExpired(subscriptionId : unknown, userId  : unknown): Promise<void> 
      userSubscribtionHistory(userId : unknown) : Promise<IMapppedSubscription[]>
+     subscriptionStats(startDate : unknown , endDate : unknown) : Promise<any>
 }

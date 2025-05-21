@@ -1,5 +1,6 @@
 import React from "react";
 import SubscriptionList from "./ListSubscriptions";
+import SubscriptionStats from "./SubscriptionStats";
 
 function page() {
   return (
@@ -9,6 +10,7 @@ function page() {
           All Subsriptions
         </h1>
       </div>
+      <SubscriptionStats/>
       <SubscriptionList />
     </div>
   );

@@ -2,7 +2,6 @@ import { sessionInstances } from "@/axios/createInstance";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 
 import { AxiosError } from "axios";
-import toast from "react-hot-toast";
 
 export const SessionServices = {
   async createSession(formData: Partial<ISessionTypes>): Promise<Session> {
@@ -125,7 +124,6 @@ export const SessionServices = {
         responseType: "blob", 
       });
 
-      toast.success('Report Generated Successfully, Starting download..."');
       const blob = new Blob([response.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");

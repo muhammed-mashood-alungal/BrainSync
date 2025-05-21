@@ -75,4 +75,15 @@ export class SubscriptionController implements ISubscriptionController {
       next(error);
     }
   }
+  async subscriptionStats(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const {startDate , endDate} = req.query
+      console.log(startDate , endDate)
+      const stats = await this._subscriptionServices.subscriptionStats(startDate,endDate)
+      console.log(stats)
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK,{stats}))
+    } catch (error) {
+      next(error)
+    }
+  }
 }

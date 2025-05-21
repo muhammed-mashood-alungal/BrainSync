@@ -473,7 +473,6 @@ export class SessionServices implements ISessionServices {
       session?.code as string
     );
 
-    console.log(activities);
     if (!session) {
       throw createHttpsError(
         HttpStatus.BAD_REQUEST,
@@ -481,18 +480,14 @@ export class SessionServices implements ISessionServices {
       );
     }
 
-    const sessionDuration =
-      (new Date(session.endTime).getTime() -
-        new Date(session.startTime).getTime()) /
-      (1000 * 60);
+    const sessionDurationMs =
+      new Date(session.endTime).getTime() -
+      new Date(session.startTime).getTime();
 
     const participants = activities.map((activity: any) => {
       const attendancePercentage =
-        sessionDuration > 0
-          ? Math.min(
-              100,
-              (activity.totalDuration / (sessionDuration * 60)) * 100
-            )
+        sessionDurationMs > 0
+          ? Math.min(100, (activity.totalDuration / sessionDurationMs) * 100)
           : 0;
 
       return {
@@ -502,7 +497,6 @@ export class SessionServices implements ISessionServices {
         totalDuration: parseFloat(
           (activity.totalDuration / (1000 * 60)).toFixed(2)
         ),
-
         attendancePercentage: parseFloat(attendancePercentage.toFixed(2)),
         logs: activity.logs,
       };
