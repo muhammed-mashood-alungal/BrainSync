@@ -97,5 +97,8 @@ export const env = {
   },
   get PROFILE_IMAGE_URL(){
     return process.env.PROFILE_IMAGE_URL
-  } 
+  },
+  get PUPPETEER_EXECUTABLE_PATH(){
+    return process.env.PUPPETEER_EXECUTABLE_PATH
+  }
 };

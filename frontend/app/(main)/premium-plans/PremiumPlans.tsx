@@ -11,7 +11,7 @@ interface PremiumPlansProps {
 }
 
 const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
-  const { user } = useAuth();
+  const { user , checkAuth } = useAuth();
   const router = useRouter()
   const handleOnlinePayment = (amount: number) => {
     return new Promise(async (resolve, reject) => {
@@ -108,6 +108,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           plan : plan ,
           transactionId : result.razorpayPaymentId
         }
+        checkAuth()
         router.push(`/premium-plans/purchase-success?data=${encodeURIComponent(JSON.stringify(data))}`)
       } else {
         

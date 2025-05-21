@@ -33,6 +33,7 @@
   "dependencies": {
     "@types/socket.io": "^3.0.1",
     "bcryptjs": "^3.0.2",
+    "cheerio": "^1.0.0",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -57,7 +58,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pdfkit": "^0.17.1",
-    "puppeteer": "^24.6.0",
+    "puppeteer": "^24.9.0",
     "razorpay": "^2.9.6",
     "redis": "^4.7.0",
     "socket.io": "^4.8.1",
