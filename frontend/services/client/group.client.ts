@@ -23,9 +23,9 @@ export const GroupServices = {
       throw new Error(errorMessage);
     }
   },
-  getMyGroups: async (userId: string): Promise<IGroupType[]> => {
+  getMyGroups: async (userId: string ,searchQuery : string): Promise<IGroupType[]> => {
     try {
-      const response = await groupInstance.get(`/my-groups/${userId}`);
+      const response = await groupInstance.get(`/my-groups/${userId}?searchQuery=${searchQuery}`);
       return response.data?.groups;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

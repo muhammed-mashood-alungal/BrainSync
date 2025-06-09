@@ -51,7 +51,7 @@ export class GroupRepository
       isDeleted: false,
     };
 
-    if (search.trim()) {
+    if (search && search?.trim()) {
       query.name = { $regex: search, $options: 'i' };
     }
     return await this.model

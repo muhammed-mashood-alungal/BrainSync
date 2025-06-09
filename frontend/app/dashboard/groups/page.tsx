@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Confirm from "@/Components/ConfirmModal/ConfirmModal";
 import CreateGroup from "./CreateGroup";
 import AddMember from "./AddMember";
+import Input from "@/Components/Input/Input";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>([]);
@@ -22,6 +23,7 @@ const GroupsPage: React.FC = () => {
   const [viewGroup, setViewGroup] = useState<IGroupType>();
   const [leavingGroupId, setLeavingGroupId] = useState("");
   const [deletingGroup, setDeletingGroupId] = useState("");
+  const [searchGroup , setSearchGroup] = useState('')
   const router = useRouter();
 
   useEffect(() => {
@@ -33,11 +35,11 @@ const GroupsPage: React.FC = () => {
 
   useEffect(() => {
     async function fetchGroups() {
-      const groups = await GroupServices.getMyGroups(user?.id as string);
+      const groups = await GroupServices.getMyGroups(user?.id as string , searchGroup);
       setGroups(groups as []);
     }
     fetchGroups();
-  }, [user]);
+  }, [user , searchGroup]);
 
   const deleteGroup = async () => {
     if (!deletingGroup) return;
@@ -144,7 +146,17 @@ const GroupsPage: React.FC = () => {
       </div>
       <div className="px-4 py-6">
         {/* Header with Create Group Button */}
-
+        <div className="w-[50%]">
+            <Input
+            type="text"
+            value={searchGroup}
+            onChange={(e) => setSearchGroup(e.target.value)}
+            name="search"
+            placeholder="Search Groups"
+            className="mb-5 w-[100px]"
+          />
+        </div>
+         
         {/* Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups?.length === 0 ? (
@@ -252,15 +264,6 @@ const GroupsPage: React.FC = () => {
                         {group.createdBy?._id === user?.id && " (You)"}
                       </span>
                     </div>
-                    {/* <div className="flex items-center text-sm text-gray-300">
-                      <span className="min-w-20 text-gray-400">
-                        Next Session
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} className="text-gray-400" />
-                        Not Assigned
-                      </span>
-                    </div> */}
                   </div>
                 </div>
               </div>
