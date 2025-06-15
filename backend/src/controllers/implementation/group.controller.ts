@@ -16,8 +16,10 @@ export class GroupController implements IGroupController {
   ): Promise<void> {
     try {
       const data = req.body;
-       const newGroup  = await this._groupServices.createGroup(data);
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.CREATED , {newGroup : newGroup}));
+      const newGroup = await this._groupServices.createGroup(data);
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.CREATED, { newGroup: newGroup }));
     } catch (err) {
       next(err);
     }
@@ -71,15 +73,17 @@ export class GroupController implements IGroupController {
   ): Promise<void> {
     try {
       const { userId } = req.params;
-      const {searchQuery} = req.query;
+      const { searchQuery } = req.query;
       if (userId == undefined) {
         throw createHttpsError(
           HttpStatus.NOT_FOUND,
           HttpResponse.USER_NOT_FOUND
         );
       }
-      const groups = await this._groupServices.myGroups(userId,searchQuery as string);
-
+      const groups = await this._groupServices.myGroups(
+        userId,
+        searchQuery as string
+      );
       res
         .status(HttpStatus.OK)
         .json(successResponse(HttpResponse.OK, { groups: groups }));
@@ -118,35 +122,47 @@ export class GroupController implements IGroupController {
       next(error);
     }
   }
-  async deleteGroup(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteGroup(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const {groupId} = req.params;
-      await this._groupServices.deleteGroup(groupId)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+      const { groupId } = req.params;
+      await this._groupServices.deleteGroup(groupId);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
-  async removeMember(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async removeMember(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const {groupId} = req.params
-      const {  adminId , memberId} = req.body
-      await this._groupServices.removeMember(groupId , adminId , memberId)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+      const { groupId } = req.params;
+      const { adminId, memberId } = req.body;
+      await this._groupServices.removeMember(groupId, adminId, memberId);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
 
-  async editGroupName(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async editGroupName(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { groupId} = req.params
-      const {  newName , adminId } = req.body
-      await this._groupServices.editGroupName(groupId , adminId ,newName)
-      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK))
+      const { groupId } = req.params;
+      const { newName, adminId } = req.body;
+      await this._groupServices.editGroupName(groupId, adminId, newName);
+      res.status(HttpStatus.OK).json(successResponse(HttpResponse.OK));
     } catch (error) {
-      next(error)
+      next(error);
     }
-  } 
+  }
 }

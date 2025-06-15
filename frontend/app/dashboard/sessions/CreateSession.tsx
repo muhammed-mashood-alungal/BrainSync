@@ -112,7 +112,7 @@ function CreateSession({
 
   useEffect(() => {
     const fetchMyGroups = async () => {
-      const groups = await GroupServices.getMyGroups(user?.id as string);
+      const groups = await GroupServices.getMyGroups(user?.id as string ,"");
       setMyGroups(groups);
     };
     fetchMyGroups();
