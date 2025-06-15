@@ -12,10 +12,7 @@ export async function middleware(req: NextRequest ) {
         const refreshToken = req.cookies.get("refreshToken")?.value
         const isAdminRoute = adminRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
         const isProtectedRoute = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
-      console.log('token is : ',token)
-      console.log('refresh token : ',refreshToken)
-      console.log(isAdminRoute)
-      console.log(isProtectedRoute)
+
       
         if (!token && req.nextUrl.pathname === "/admin/login") {
             console.log('no token 1')

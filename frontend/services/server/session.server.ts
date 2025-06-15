@@ -67,6 +67,9 @@ export const validateSession = async (sessionId: string) => {
             refreshToken ? `refreshToken=${refreshToken}` : ''
         ].filter(Boolean).join('; ')
 
+
+
+        console.log('Fetching')
         const response = await sessionInstances.get(`/validate/${sessionId}`, {
             headers: {
                 "Authorization": accessToken ? `Bearer ${accessToken}` : '',
@@ -74,10 +77,14 @@ export const validateSession = async (sessionId: string) => {
             }
         })
         console.log(response.data)
+     //   return response.data
         return response.data
 
     } catch (err:unknown) {
+        console.log('Error')
         const error = err as AxiosError<{ error: string }>
-        return {status : false , message : error.response?.data || "UnExpected Error Occured"}
+
+        console.log('Error Msg : '+error.response?.data || "UnExpected Error Occured")
+        return {result : {status : false , message : error.response?.data || "UnExpected Error Occured"}, sessionDetails : null}
     }
 }

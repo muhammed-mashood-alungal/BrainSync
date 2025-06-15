@@ -19,7 +19,9 @@ export const SessionServices = {
     sessionCode: string
   ): Promise<{ status: boolean; message: string }> {
     try {
+      console.log('This is fething')
       const response = await sessionInstances.get(`/validate/${sessionCode}`);
+      console.log(response.data.result)
       return response.data.result;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
