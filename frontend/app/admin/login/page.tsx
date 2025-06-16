@@ -35,7 +35,7 @@ const AdminPortal = () => {
             const res = validateLoginForm({ email, password })
             if (res.status) {
                 await AuthServices.loginService({ email, password })
-                checkAuth()
+                await checkAuth()
                 if (user?.role != 'admin') {
                     router.push('/')
                     return
