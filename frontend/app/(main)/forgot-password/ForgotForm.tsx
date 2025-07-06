@@ -8,8 +8,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import { useAuth } from "@/context/auth.context";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
+import { useAuth } from "@/context/auth.context";
 
 function ForgotForm() {
   const { user } = useAuth();

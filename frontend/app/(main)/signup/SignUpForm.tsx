@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { validateSignUpForm } from "@/validations";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,6 +9,7 @@ import Button from "@/components/ui/button/Button";
 import Input from "@/components/ui/Input/Input";
 import Link from "next/link";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
+import { useAuth } from "@/context/auth.context";
 
 function SignUpForm() {
   const router = useRouter();
