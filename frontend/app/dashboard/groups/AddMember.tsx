@@ -1,5 +1,5 @@
-import Input from "@/Components/Input/Input";
-import { useAuth } from "@/Context/auth.context";
+import Input from "@/components/ui/Input/Input";
+import { useAuth } from "@/context/auth.context";
 import { UserServices } from "@/services/client/user.client";
 import { IUserType } from "@/types/userTypes";
 import React, { useState } from "react";
@@ -14,8 +14,6 @@ function AddMember({
   const [memberEmail, setMemberEmail] = useState("");
   const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([]);
   const { user } = useAuth();
-
- 
 
   const handleMemberEmailChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -33,7 +31,7 @@ function AddMember({
       setSelectedMembers([...selectedMembers, usr]);
     }
     setMemberEmail("");
-    setSearchedUsers([])
+    setSearchedUsers([]);
     setSearchedUsers([]);
   };
 
@@ -42,8 +40,6 @@ function AddMember({
       selectedMembers.filter((member) => member._id !== email)
     );
   };
-
-
 
   return (
     <>

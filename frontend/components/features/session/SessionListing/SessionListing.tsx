@@ -8,9 +8,9 @@ import {
   faClose,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
-import { toast } from 'react-hot-toast';
-import SimpleStudyLoading from "@/Components/Loading/Loading";
-import EmptyList from "@/Components/EmptyList/EmptyList";
+import { toast } from "react-hot-toast";
+import SimpleStudyLoading from "@/components/ui/loading/Loading";
+import EmptyList from "@/components/ui/emptyList/EmptyList";
 
 interface FilterOption {
   value: string;

@@ -14,21 +14,21 @@ import VideoConference from "./VideoConference";
 import {
   useVideoCall,
   VideoCallProvider,
-} from "@/Context/videoConference.context";
-import { toast } from 'react-hot-toast';
+} from "@/context/videoConference.context";
+import { toast } from "react-hot-toast";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 import WhiteBoard from "./WhiteBoard";
-import { WhiteBoardProvider } from "@/Context/whiteBoardContex";
-import { SocketProvider } from "@/Context/socket.context";
+import { WhiteBoardProvider } from "@/context/whiteBoardContex";
+import { SocketProvider } from "@/context/socket.context";
 import ChatComponent from "./Chat";
-import { ChatProvider } from "@/Context/chat.context";
+import { ChatProvider } from "@/context/chat.context";
 import NoteEditor from "./NoteEditor";
-import BaseModal from "@/Components/Modal/Modal";
-import { useAuth } from "@/Context/auth.context";
+import BaseModal from "@/components/ui/modal/BaseModal";
+import { useAuth } from "@/context/auth.context";
 import { reportService } from "@/services/client/report.client";
-import Button from "@/Components/Button/Button";
+import Button from "@/components/ui/button/Button";
 import CodeEditor from "./CodeEditor";
-import { CodeEditorProvider } from "@/Context/codeEditor.context";
+import { CodeEditorProvider } from "@/context/codeEditor.context";
 import { IGroupType } from "@/types/groupTypes";
 
 const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
@@ -126,7 +126,7 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
       toast.success("Reported Successfully");
       setConfirmationOn(true);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Something Went Wrong");
     }
   };
@@ -140,10 +140,8 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
         </div>
         <div className="text-center">
           <div className="text-xl">
-            {session.sessionName || "Session Name"} {" "}
-            (
-              {session.subject || "Session Subject"}
-            )
+            {session.sessionName || "Session Name"} (
+            {session.subject || "Session Subject"})
           </div>
         </div>
         <div className="flex items-center gap-2 mt-2 sm:mt-0">
@@ -161,7 +159,7 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
               />
             </svg>
             <span>
-              {peers.length  + 1} /
+              {peers.length + 1} /
               {(session?.groupId as IGroupType)?.members?.length || "5 Members"}
             </span>
           </div>
@@ -425,8 +423,12 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
           <option value="" disabled selected>
             Select a Reason
           </option>
-          {commonReportReasons.map((reason,idx) => {
-            return <option key={idx} value={reason}>{reason}</option>;
+          {commonReportReasons.map((reason, idx) => {
+            return (
+              <option key={idx} value={reason}>
+                {reason}
+              </option>
+            );
           })}
         </select>
       </BaseModal>

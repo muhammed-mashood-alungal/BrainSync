@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
-import { useAuth } from "@/Context/auth.context";
+import { useAuth } from "@/context/auth.context";
 import { IGroupType } from "@/types/groupTypes";
 import { useRouter } from "next/navigation";
-import BaseModal from "@/Components/Modal/Modal";
+import BaseModal from "@/components/ui/modal/BaseModal";
 import SessionDetailsModal from "./SessionDetails";
 import { SessionServices } from "@/services/client/session.client";
 import CreateSession from "./CreateSession";
-import GenericListing from "@/Components/SessionListing/SessionListing";
+import GenericListing from "@/components/features/session/SessionListing/SessionListing";
 import { FileDown } from "lucide-react";
 import toast from "react-hot-toast";
 

@@ -1,7 +1,7 @@
 'use client'
 
-import Sidebar from '@/Components/DashboardSidebar/DashboardSidebar';
-import { useAuth } from '@/Context/auth.context';
+import Sidebar from '@/components/layouts/sidebar/DashboardSidebar';
+import { useAuth } from '@/context/auth.context';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react'
 

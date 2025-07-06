@@ -1,4 +1,4 @@
-import { useAuth } from "@/Context/auth.context";
+import { useAuth } from "@/context/auth.context";
 import { IGroupType } from "@/types/groupTypes";
 import { CheckCircle, Edit2, Save, User, Users, X } from "lucide-react";
 import React, { useState } from "react";
@@ -6,35 +6,38 @@ import React, { useState } from "react";
 interface GroupDetailsProps {
   groupData: IGroupType | undefined;
   currentUserId: string;
-  onRemoveMember: (groupId : string ,memberId: string) => void;
-  onUpdateGroupName?: (groupId : string , newName: string) => void;
+  onRemoveMember: (groupId: string, memberId: string) => void;
+  onUpdateGroupName?: (groupId: string, newName: string) => void;
 }
 
-const GroupDetails: React.FC<GroupDetailsProps> = ({ 
-  groupData, 
+const GroupDetails: React.FC<GroupDetailsProps> = ({
+  groupData,
   onRemoveMember,
-  onUpdateGroupName 
+  onUpdateGroupName,
 }) => {
-  const [group , setGroup]= useState<IGroupType | undefined>(groupData)
+  const [group, setGroup] = useState<IGroupType | undefined>(groupData);
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [newGroupName, setNewGroupName] = useState(group?.name || "");
-  
+
   const handleSaveGroupName = () => {
     if (newGroupName.trim() && onUpdateGroupName) {
-      onUpdateGroupName(group?._id as string , newGroupName);
+      onUpdateGroupName(group?._id as string, newGroupName);
       setIsEditing(false);
-      setGroup((grp : any)=> {
-        return {...grp , name : newGroupName }
-      })
+      setGroup((grp: any) => {
+        return { ...grp, name: newGroupName };
+      });
     }
   };
-  const handleRemoveMember=(memberId : string)=>{
-    onRemoveMember(group?._id as string , memberId)
-    setGroup((grp :any)=>{
-      return {...grp , members : grp.members.filter((m : IGroupType)=>m._id != memberId) }
-    })
-  }
+  const handleRemoveMember = (memberId: string) => {
+    onRemoveMember(group?._id as string, memberId);
+    setGroup((grp: any) => {
+      return {
+        ...grp,
+        members: grp.members.filter((m: IGroupType) => m._id != memberId),
+      };
+    });
+  };
 
   const isGroupOwner = group?.createdBy._id === user?.id;
 
@@ -45,9 +48,11 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
         <div className="flex-1">
           {!isEditing ? (
             <div className="flex items-center">
-              <h2 className="text-xl font-semibold text-white">{group?.name}</h2>
+              <h2 className="text-xl font-semibold text-white">
+                {group?.name}
+              </h2>
               {isGroupOwner && (
-                <button 
+                <button
                   onClick={() => setIsEditing(true)}
                   className="ml-2 p-1 text-gray-400 hover:text-white transition-colors"
                   title="Edit group name"
@@ -66,14 +71,14 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                 placeholder="Enter group name"
                 autoFocus
               />
-              <button 
+              <button
                 onClick={handleSaveGroupName}
                 className="p-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                 title="Save"
               >
                 <Save size={16} />
               </button>
-              <button 
+              <button
                 onClick={() => {
                   setIsEditing(false);
                   setNewGroupName(group?.name || "");
@@ -86,7 +91,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
             </div>
           )}
         </div>
-        
+
         <div className="flex items-center">
           <span
             className={`px-3 py-1 text-xs rounded-full flex items-center ${
@@ -134,7 +139,9 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                     <span className="ml-2 text-xs text-blue-400">(You)</span>
                   )}
                 </p>
-                <p className="text-gray-400 text-sm">{group?.createdBy?.email}</p>
+                <p className="text-gray-400 text-sm">
+                  {group?.createdBy?.email}
+                </p>
               </div>
             </div>
           </div>
@@ -144,12 +151,16 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
             <h3 className="text-gray-400 text-sm mb-3">Group Stats</h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-4 text-center">
-                <p className="text-2xl font-semibold text-white">{group?.members?.length || 0}</p>
+                <p className="text-2xl font-semibold text-white">
+                  {group?.members?.length || 0}
+                </p>
                 <p className="text-gray-400 text-sm">Members</p>
               </div>
               <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-4 text-center">
                 <p className="text-2xl font-semibold text-white">
-                  {new Date(group?.createdAt || Date.now()).toLocaleDateString()}
+                  {new Date(
+                    group?.createdAt || Date.now()
+                  ).toLocaleDateString()}
                 </p>
                 <p className="text-gray-400 text-sm">Created On</p>
               </div>
@@ -161,7 +172,8 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
         <div>
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-gray-400 text-sm flex items-center">
-              <Users size={16} className="mr-2" /> Members ({group?.members?.length})
+              <Users size={16} className="mr-2" /> Members (
+              {group?.members?.length})
             </h3>
           </div>
 
@@ -183,7 +195,9 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                     <p className="text-white font-medium">
                       {member.username}
                       {member._id === user?.id && (
-                        <span className="ml-2 text-xs text-blue-400">(You)</span>
+                        <span className="ml-2 text-xs text-blue-400">
+                          (You)
+                        </span>
                       )}
                     </p>
                     <p className="text-gray-400 text-sm">{member.email}</p>
@@ -192,7 +206,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                 {isGroupOwner && member._id !== user?.id && (
                   <div className="relative group">
                     <button
-                      onClick={() => handleRemoveMember( member._id)}
+                      onClick={() => handleRemoveMember(member._id)}
                       className="text-red-400 hover:text-red-300 hover:bg-red-900/40 p-2 rounded-md transition-colors"
                       title="Remove member"
                     >

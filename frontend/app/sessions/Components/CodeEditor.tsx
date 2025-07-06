@@ -9,12 +9,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faC } from "@fortawesome/free-solid-svg-icons";
 import { Lock, LockIcon, LockOpen } from "lucide-react";
-import { useCodeEditor } from "@/Context/codeEditor.context";
-import BaseModal from "@/Components/Modal/Modal";
-import Input from "@/Components/Input/Input";
-import { toast } from 'react-hot-toast';
+import { useCodeEditor } from "@/context/codeEditor.context";
+import BaseModal from "@/components/ui/modal/BaseModal";
+import Input from "@/components/ui/Input/Input";
+import { toast } from "react-hot-toast";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
-import { useAuth } from "@/Context/auth.context";
+import { useAuth } from "@/context/auth.context";
 import Link from "next/link";
 function CodeEditor({ roomId }: { roomId: string }) {
   const {

@@ -1,7 +1,7 @@
 "use client";
 
-import Table from "@/Components/Table/Table";
-import { useAuth } from "@/Context/auth.context";
+import Table from "@/components/ui/table/Table";
+import { useAuth } from "@/context/auth.context";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
 import { IUserSubscription } from "@/types/subscriptionTypes";
@@ -16,7 +16,9 @@ function SubscriptionHistory() {
   }, []);
 
   async function fetchSubscribers() {
-    const history = await subscriptionServices.getUserSubscription(user?.id as string);
+    const history = await subscriptionServices.getUserSubscription(
+      user?.id as string
+    );
     setSubscribtions(history);
   }
 
@@ -56,19 +58,12 @@ function SubscriptionHistory() {
     },
   ];
 
-  
-
   return (
     <>
-    <div>
+      <div>
         <h1 className="text-2xl font-bold">Subscription History</h1>
-         <Table
-        data={subscriptions}
-        columns={columns}
-        ShowSearchBar={false}
-      />
-    </div>
-    
+        <Table data={subscriptions} columns={columns} ShowSearchBar={false} />
+      </div>
     </>
   );
 }

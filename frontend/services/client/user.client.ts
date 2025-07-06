@@ -1,8 +1,8 @@
-import { userInstances } from "@/axios/createInstance";
+import { userInstances } from "@/axios/instance.axios";
 import { AxiosError } from "axios";
 
 export const UserServices = {
-  changeProfilePic: async (data: FormData, userId: string)  : Promise<string>=> {
+  changeProfilePic: async (data: FormData, userId: string): Promise<string> => {
     try {
       const response = await userInstances.put(
         `/change-profile-photo/${userId}`,
@@ -82,20 +82,29 @@ export const UserServices = {
       throw new Error(errorMessage);
     }
   },
-   getUserSessionGraph  : async (filterBy : string) : Promise<any[] | undefined>=>{
+  getUserSessionGraph: async (filterBy: string): Promise<any[] | undefined> => {
     try {
-        const response = await userInstances.get(`/user-session-progress?filterBy=${filterBy}`)
-        return response.data.graph
+      const response = await userInstances.get(
+        `/user-session-progress?filterBy=${filterBy}`
+      );
+      return response.data.graph;
     } catch (error) {
-        console.log(error)
+      console.log(error);
     }
-   },
-   getUserOverallStats : async () : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number} | undefined>=>{
+  },
+  getUserOverallStats: async (): Promise<
+    | {
+        totalGroups: number;
+        totalTimeSpend: string;
+        totalSessionsAttended: number;
+      }
+    | undefined
+  > => {
     try {
-      const response = await userInstances.get('/profile-stats')
-      return response.data.stats
+      const response = await userInstances.get("/profile-stats");
+      return response.data.stats;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-   }
+  },
 };

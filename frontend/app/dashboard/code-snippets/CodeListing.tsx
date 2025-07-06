@@ -1,12 +1,12 @@
 "use client";
-import Table from "@/Components/Table/Table";
+import Table from "@/components/ui/table/Table";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Download } from "lucide-react";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { ICodeSnippetTypes } from "@/types/codeSnippetTypes";
 import { ISessionTypes } from "@/types/sessionTypes";
-import { Language } from "@/Context/codeEditor.context";
+import { Language } from "@/context/codeEditor.context";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
@@ -64,7 +64,7 @@ function CodeSnippetListing() {
       render: (code: ICodeSnippetTypes) => (
         <div className="flex items-center gap-2">
           <div className="text-teal-500">
-          <FontAwesomeIcon icon={faCode}/>
+            <FontAwesomeIcon icon={faCode} />
           </div>
           <span>{code.title}</span>
         </div>

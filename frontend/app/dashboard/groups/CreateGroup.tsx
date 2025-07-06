@@ -1,27 +1,27 @@
-import Input from "@/Components/Input/Input";
-import { useAuth } from "@/Context/auth.context";
+import Input from "@/components/ui/Input/Input";
+import { useAuth } from "@/context/auth.context";
 import { GroupServices } from "@/services/client/group.client";
 import { UserServices } from "@/services/client/user.client";
 import { IUserType } from "@/types/userTypes";
 import { validateCreateGroup } from "@/validations";
 import React, { useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
 function CreateGroup({
   setGroups,
-  closeModal
+  closeModal,
 }: {
   setGroups: any;
-  closeModal:()=>void
+  closeModal: () => void;
 }) {
   const [newGroupName, setNewGroupName] = useState("");
   const [memberEmail, setMemberEmail] = useState("");
   const [selectedMembers, setSelectedMembers] = useState<IUserType[]>([]);
   const [searchedUsers, setSearchedUsers] = useState<IUserType[]>([]);
   const { user, checkAuth } = useAuth();
-  const router = useRouter()
-   
+  const router = useRouter();
+
   const [err, setErr] = useState({
     groupName: "",
     members: "",
@@ -52,8 +52,6 @@ function CreateGroup({
     );
   };
 
-  
-
   const createGroup = async () => {
     setErr({ groupName: "", members: "" });
 
@@ -69,7 +67,7 @@ function CreateGroup({
           members,
           user?.id as string
         );
-        setGroups((prevGroups : any) => {
+        setGroups((prevGroups: any) => {
           return [newGroup, ...prevGroups];
         });
         toast.success("Your Group Created Successfully");
@@ -83,7 +81,7 @@ function CreateGroup({
         checkAuth();
         closeModal();
         setNewGroupName("");
-        router.replace('/dashboard/groups')
+        router.replace("/dashboard/groups");
       }
     } else {
       setErr(res.err);

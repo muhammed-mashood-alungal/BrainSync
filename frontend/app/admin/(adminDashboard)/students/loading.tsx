@@ -1,6 +1,5 @@
-import StudyLoading from "@/Components/Loading/Loading";
-
+import StudyLoading from "@/components/ui/loading/Loading";
 
 export default function Loading() {
-  return <StudyLoading/>;
+  return <StudyLoading />;
 }

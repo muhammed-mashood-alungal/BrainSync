@@ -1,17 +1,17 @@
 "use client";
-import Button from "@/Components/Button/Button";
-import Input from "@/Components/Input/Input";
+import Button from "@/components/ui/button/Button";
+import Input from "@/components/ui/Input/Input";
 import { AuthServices } from "@/services/client/auth.client";
 import { validateLoginForm } from "@/validations";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from 'react-hot-toast';
-import { useAuth } from "@/Context/auth.context";
-import InPageLoading from "@/Components/InPageLoading/InPageLoading";
+import { toast } from "react-hot-toast";
+import { useAuth } from "@/context/auth.context";
+import InPageLoading from "@/components/ui/loading/InPageLoading";
 
 function LoginForm() {
-  const { user ,checkAuth} = useAuth();
+  const { user, checkAuth } = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (user) {
@@ -48,8 +48,8 @@ function LoginForm() {
       if (result.status) {
         await AuthServices.loginService(formData);
         // Poll for the accessToken cookie
-        await checkAuth()
-        router.push('/')
+        await checkAuth();
+        router.push("/");
       } else {
         setFormDataErr(result.err);
       }

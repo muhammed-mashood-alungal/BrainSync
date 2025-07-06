@@ -1,18 +1,18 @@
 "use client";
-import { useAuth } from "@/Context/auth.context";
+import { useAuth } from "@/context/auth.context";
 import { paymentServices } from "@/services/client/payment.client";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 interface PremiumPlansProps {
   plans: IPlans[];
 }
 
 const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
-  const { user , checkAuth } = useAuth();
-  const router = useRouter()
+  const { user, checkAuth } = useAuth();
+  const router = useRouter();
   const handleOnlinePayment = (amount: number) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -26,7 +26,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
 
         const options = {
           key: RAZORPAY_KEY_ID,
-          amount: order.amount ,
+          amount: order.amount,
           currency: order.currency,
           name: "Brain Sync",
           description: "Payment for your order",
@@ -45,7 +45,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                 razorpayPaymentId: response.razorpay_payment_id,
               });
             } catch (err) {
-              reject({ success: false, message: "Payment Failed" ,err});
+              reject({ success: false, message: "Payment Failed", err });
             }
           },
           prefill: {
@@ -80,13 +80,13 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
 
   const handleSubscription = async (plan: IPlans) => {
     try {
-        if(!user){
-            toast.error("Please Login First")
-           return router.push('/login')
-        }
-        if(user.isPremiumMember){
-          return  toast.error("You already have a Premium Plan")
-        }
+      if (!user) {
+        toast.error("Please Login First");
+        return router.push("/login");
+      }
+      if (user.isPremiumMember) {
+        return toast.error("You already have a Premium Plan");
+      }
       const result = (await handleOnlinePayment(plan.offerPrice)) as {
         success: boolean;
         message: string;
@@ -95,7 +95,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
       };
       if (result.success) {
         toast.success("Payment Success");
-       await subscriptionServices.buySubscription(
+        await subscriptionServices.buySubscription(
           {
             planId: plan._id,
             razorpayOrderId: result.razorpayOrderId,
@@ -105,15 +105,18 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           plan.interval
         );
         const data = {
-          plan : plan ,
-          transactionId : result.razorpayPaymentId
-        }
-        checkAuth()
-        router.push(`/premium-plans/purchase-success?data=${encodeURIComponent(JSON.stringify(data))}`)
+          plan: plan,
+          transactionId: result.razorpayPaymentId,
+        };
+        checkAuth();
+        router.push(
+          `/premium-plans/purchase-success?data=${encodeURIComponent(
+            JSON.stringify(data)
+          )}`
+        );
       } else {
-        
       }
-    } catch (error : unknown) {
+    } catch (error: unknown) {
       toast.error((error as Error).message || "Payment failed");
     }
   };

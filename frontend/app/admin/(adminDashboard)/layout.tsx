@@ -1,27 +1,26 @@
-'use client'
+"use client";
 
-import AdminSidebar from '@/Components/AdminSidebar/AdminSidebar';
-import { ReactNode, useState } from 'react'
+import AdminSidebar from "@/components/layouts/sidebar/AdminSidebar";
+import { ReactNode, useState } from "react";
 
-export default function DashboardLayout({ children } : {children : ReactNode}) {
+export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
- 
+
   return (
     <div className="flex h-screen bg-[#1E1E1E]">
-        
-      <button 
+      <button
         className="lg:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-[#00D2D9] text-[#1E1E1E] shadow-lg"
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="24" 
-          height="24" 
-          viewBox="0 0 24 24" 
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor" 
-          strokeWidth="2" 
-          strokeLinecap="round" 
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
           strokeLinejoin="round"
         >
           {sidebarOpen ? (
@@ -38,11 +37,11 @@ export default function DashboardLayout({ children } : {children : ReactNode}) {
           )}
         </svg>
       </button>
-      
+
       {/* Sidebar - hidden on mobile, takes 2/12 width on large screens */}
-      <div 
+      <div
         className={`
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
           lg:translate-x-0 lg:w-2/12 
           fixed lg:relative 
           z-40 
@@ -51,20 +50,18 @@ export default function DashboardLayout({ children } : {children : ReactNode}) {
       >
         <AdminSidebar />
       </div>
-      
+
       {/* Mobile overlay */}
       {sidebarOpen && (
-        <div 
+        <div
           className="lg:hidden fixed inset-0 z-30 bg-black bg-opacity-50 transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      
+
       {/* Main content - takes 10/12 width on large screens, full width on mobile */}
       <div className="flex-1 lg:w-10/12 overflow-auto">
-        <main className="p-6">
-          {children}
-        </main>
+        <main className="p-6">{children}</main>
       </div>
     </div>
   );

@@ -1,18 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import BaseModal from "@/Components/Modal/Modal";
+import BaseModal from "@/components/ui/modal/BaseModal";
 import { GroupServices } from "@/services/client/group.client";
-import { useAuth } from "@/Context/auth.context";
-import { toast } from 'react-hot-toast';
+import { useAuth } from "@/context/auth.context";
+import { toast } from "react-hot-toast";
 import { IUserType } from "@/types/userTypes";
 import { IGroupType } from "@/types/groupTypes";
 import GroupDetails from "@/app/dashboard/groups/GroupDetails";
-import {  LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
+import { LogOutIcon, Trash, UserPlus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Confirm from "@/Components/ConfirmModal/ConfirmModal";
+import Confirm from "@/components/ui/modal/ConfirmModal";
 import CreateGroup from "./CreateGroup";
 import AddMember from "./AddMember";
-import Input from "@/Components/Input/Input";
+import Input from "@/components/ui/Input/Input";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>([]);
@@ -23,7 +23,7 @@ const GroupsPage: React.FC = () => {
   const [viewGroup, setViewGroup] = useState<IGroupType>();
   const [leavingGroupId, setLeavingGroupId] = useState("");
   const [deletingGroup, setDeletingGroupId] = useState("");
-  const [searchGroup , setSearchGroup] = useState('')
+  const [searchGroup, setSearchGroup] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -35,11 +35,14 @@ const GroupsPage: React.FC = () => {
 
   useEffect(() => {
     async function fetchGroups() {
-      const groups = await GroupServices.getMyGroups(user?.id as string , searchGroup);
+      const groups = await GroupServices.getMyGroups(
+        user?.id as string,
+        searchGroup
+      );
       setGroups(groups as []);
     }
     fetchGroups();
-  }, [user , searchGroup]);
+  }, [user, searchGroup]);
 
   const deleteGroup = async () => {
     if (!deletingGroup) return;
@@ -63,9 +66,7 @@ const GroupsPage: React.FC = () => {
       return toast.error("Please Select atlead 1 member with you !");
     if (!selectedGroup) return toast.error("Please Select Group For Add");
     try {
-      const members = [
-        ...selectedMembers.map((user) => user._id)
-      ];
+      const members = [...selectedMembers.map((user) => user._id)];
       GroupServices.addToGroup(selectedGroup, members);
       toast.success("Added Member Successfully");
     } catch (error: unknown) {
@@ -96,33 +97,39 @@ const GroupsPage: React.FC = () => {
     }
   };
 
-  const updateGroupName =async( groupId :string , newName :string )=>{
+  const updateGroupName = async (groupId: string, newName: string) => {
     try {
-      await GroupServices.editGroupName(groupId ,user?.id as string ,  newName)
-      setGroups((grps)=>{
-        return grps.map((g)=>{
-          return g._id == groupId ? {...g , name : newName} : g
-        })
-      })
-      toast.success("Group Named Updated")
+      await GroupServices.editGroupName(groupId, user?.id as string, newName);
+      setGroups((grps) => {
+        return grps.map((g) => {
+          return g._id == groupId ? { ...g, name: newName } : g;
+        });
+      });
+      toast.success("Group Named Updated");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
-  const removeMember = async(groupId : string , memberId : string) =>{
+  const removeMember = async (groupId: string, memberId: string) => {
     try {
-      await GroupServices.removeMemberfromGroup(groupId , user?.id as string , memberId)
-      setGroups((grps)=>{
-        return grps.map((g)=>{
-          return g._id == groupId ? {...g , members : g.members.filter((m)=>m._id != memberId) } : g
-        })
-      })
-      toast.success("Removed User Successfully")
+      await GroupServices.removeMemberfromGroup(
+        groupId,
+        user?.id as string,
+        memberId
+      );
+      setGroups((grps) => {
+        return grps.map((g) => {
+          return g._id == groupId
+            ? { ...g, members: g.members.filter((m) => m._id != memberId) }
+            : g;
+        });
+      });
+      toast.success("Removed User Successfully");
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -147,7 +154,7 @@ const GroupsPage: React.FC = () => {
       <div className="px-4 py-6">
         {/* Header with Create Group Button */}
         <div className="w-[50%]">
-            <Input
+          <Input
             type="text"
             value={searchGroup}
             onChange={(e) => setSearchGroup(e.target.value)}
@@ -156,7 +163,7 @@ const GroupsPage: React.FC = () => {
             className="mb-5 w-[100px]"
           />
         </div>
-         
+
         {/* Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups?.length === 0 ? (

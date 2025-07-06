@@ -1,5 +1,5 @@
 "use client";
-import Table from "@/Components/Table/Table";
+import Table from "@/components/ui/table/Table";
 import { INoteTypes } from "@/types/note.types";
 import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
@@ -93,9 +93,11 @@ function NoteListing() {
         data={notes}
         columns={columns}
         actions={actions}
-        onPageChange={(page: number, limit: number, searchQuery: string | undefined) =>
-          fetchMyNotes(page, limit, searchQuery as string)
-        }
+        onPageChange={(
+          page: number,
+          limit: number,
+          searchQuery: string | undefined
+        ) => fetchMyNotes(page, limit, searchQuery as string)}
         totalCount={totalCount}
       />
     </>

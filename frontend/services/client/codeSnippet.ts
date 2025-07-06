@@ -1,4 +1,4 @@
-import { codeSnippetInstances } from "@/axios/createInstance";
+import { codeSnippetInstances } from "@/axios/instance.axios";
 import { ICodeSnippetTypes } from "@/types/codeSnippetTypes";
 import { AxiosError } from "axios";
 
@@ -18,9 +18,15 @@ export const codeSnippetServices = {
       throw new Error(errorMessage);
     }
   },
-  getMyCodes: async (searchQuery: string , skip : number , limit : number): Promise<{snippets : ICodeSnippetTypes[] , count : number}> => {
+  getMyCodes: async (
+    searchQuery: string,
+    skip: number,
+    limit: number
+  ): Promise<{ snippets: ICodeSnippetTypes[]; count: number }> => {
     try {
-      const response = await codeSnippetInstances.get(`/user-code-snippets?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`);
+      const response = await codeSnippetInstances.get(
+        `/user-code-snippets?searchQuery=${searchQuery}&skip=${skip}&limit=${limit}`
+      );
       return response.data;
     } catch (error) {
       throw new Error("Something Went Wrong While Saving Code");

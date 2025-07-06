@@ -5,12 +5,12 @@ import { IUserSubscription } from "@/types/subscriptionTypes";
 import { IUserType } from "@/types/userTypes";
 import { IPlans } from "@/types/plans.types";
 import { subscriptionServices } from "@/services/client/subscription.client";
-import Confirm from "@/Components/ConfirmModal/ConfirmModal";
-import AdminSideTable from "@/Components/AdminSideTable/AdminSideTable";
+import Confirm from "@/components/ui/modal/ConfirmModal";
+import AdminSideTable from "@/components/ui/table/AdminSideTable";
 
 function SubscriptionList() {
   const [subscriptions, setSubscribers] = useState<IUserSubscription[]>([]);
-  const [ selectedSubscriptionId , setSubscriptionId] = useState('')
+  const [selectedSubscriptionId, setSubscriptionId] = useState("");
   const limit = 8;
   const [totalCount, setTotalCount] = useState(0);
   useEffect(() => {
@@ -34,9 +34,7 @@ function SubscriptionList() {
 
   const cancelSubscribtion = async () => {
     try {
-      await subscriptionServices.cancelSubscription(
-        selectedSubscriptionId
-      );
+      await subscriptionServices.cancelSubscription(selectedSubscriptionId);
       setSubscribers((prev) => {
         return prev.map((sub) => {
           return sub._id == selectedSubscriptionId
@@ -44,7 +42,7 @@ function SubscriptionList() {
             : sub;
         });
       });
-      setSubscriptionId('')
+      setSubscriptionId("");
     } catch (error) {
       console.log(error);
     }
@@ -133,7 +131,11 @@ function SubscriptionList() {
         dropDownLists={dropDownList}
         ShowSearchBar={false}
       />
-      <Confirm isOpen={Boolean(selectedSubscriptionId)} onClose={()=>setSubscriptionId('')} onConfirm={cancelSubscribtion}/>
+      <Confirm
+        isOpen={Boolean(selectedSubscriptionId)}
+        onClose={() => setSubscriptionId("")}
+        onConfirm={cancelSubscribtion}
+      />
     </>
   );
 }

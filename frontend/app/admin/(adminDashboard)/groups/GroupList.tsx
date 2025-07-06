@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import BaseModal from "@/Components/Modal/Modal";
+import BaseModal from "@/components/ui/modal/BaseModal";
 import { GroupServices } from "@/services/client/group.client";
-import { useAuth } from "@/Context/auth.context";
-import { toast } from 'react-hot-toast';
+import { useAuth } from "@/context/auth.context";
+import { toast } from "react-hot-toast";
 import { IGroupType } from "@/types/groupTypes";
-import Confirm from "@/Components/ConfirmModal/ConfirmModal";
+import Confirm from "@/components/ui/modal/ConfirmModal";
 import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
 
@@ -205,14 +205,13 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
       <BaseModal
         isOpen={Boolean(viewGroup?._id)}
         onClose={() => setViewGroup(undefined)}
-        title={viewGroup?.name as string} 
-        size='4xl'
+        title={viewGroup?.name as string}
+        size="4xl"
       >
         <GroupDetails
           currentUserId={user?.id as string}
           groupData={viewGroup}
           onRemoveMember={() => console.log("removing")}
-         
         />
       </BaseModal>
     </>

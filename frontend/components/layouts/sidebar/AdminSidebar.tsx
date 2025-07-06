@@ -1,4 +1,3 @@
-// components/Sidebar.jsx
 'use client';
 
 import { Coins } from 'lucide-react';

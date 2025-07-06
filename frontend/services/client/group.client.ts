@@ -1,4 +1,4 @@
-import { groupInstance } from "@/axios/createInstance";
+import { groupInstance } from "@/axios/instance.axios";
 import { IGroupType } from "@/types/groupTypes";
 import { IUserType } from "@/types/userTypes";
 import { AxiosError } from "axios";
@@ -23,9 +23,14 @@ export const GroupServices = {
       throw new Error(errorMessage);
     }
   },
-  getMyGroups: async (userId: string ,searchQuery? : string): Promise<IGroupType[]> => {
+  getMyGroups: async (
+    userId: string,
+    searchQuery?: string
+  ): Promise<IGroupType[]> => {
     try {
-      const response = await groupInstance.get(`/my-groups/${userId}?searchQuery=${searchQuery}`);
+      const response = await groupInstance.get(
+        `/my-groups/${userId}?searchQuery=${searchQuery}`
+      );
       return response.data?.groups;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

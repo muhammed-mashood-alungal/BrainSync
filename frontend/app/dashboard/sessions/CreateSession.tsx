@@ -1,8 +1,8 @@
 "use client";
-import InPageLoading from "@/Components/InPageLoading/InPageLoading";
-import Input from "@/Components/Input/Input";
-import BaseModal from "@/Components/Modal/Modal";
-import { useAuth } from "@/Context/auth.context";
+import InPageLoading from "@/components/ui/loading/InPageLoading";
+import Input from "@/components/ui/Input/Input";
+import BaseModal from "@/components/ui/modal/BaseModal";
+import { useAuth } from "@/context/auth.context";
 import { GroupServices } from "@/services/client/group.client";
 import { SessionServices } from "@/services/client/session.client";
 import { IGroupType } from "@/types/groupTypes";
@@ -11,7 +11,7 @@ import { validateSessionForm } from "@/validations";
 import { AxiosError } from "axios";
 import { ChevronDown } from "lucide-react";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 function CreateSession({
   onClose,
@@ -112,7 +112,7 @@ function CreateSession({
 
   useEffect(() => {
     const fetchMyGroups = async () => {
-      const groups = await GroupServices.getMyGroups(user?.id as string ,"");
+      const groups = await GroupServices.getMyGroups(user?.id as string, "");
       setMyGroups(groups);
     };
     fetchMyGroups();

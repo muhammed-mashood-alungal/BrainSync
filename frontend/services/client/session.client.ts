@@ -1,4 +1,4 @@
-import { sessionInstances } from "@/axios/createInstance";
+import { sessionInstances } from "@/axios/instance.axios";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 
 import { AxiosError } from "axios";
@@ -19,9 +19,9 @@ export const SessionServices = {
     sessionCode: string
   ): Promise<{ status: boolean; message: string }> {
     try {
-      console.log('This is fething')
+      console.log("This is fething");
       const response = await sessionInstances.get(`/validate/${sessionCode}`);
-      console.log(response.data.result)
+      console.log(response.data.result);
       return response.data.result;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;
@@ -123,7 +123,7 @@ export const SessionServices = {
   async downloadSessionReport(sessionId: string): Promise<boolean> {
     try {
       const response = await sessionInstances.get(`/${sessionId}/report`, {
-        responseType: "blob", 
+        responseType: "blob",
       });
 
       const blob = new Blob([response.data], { type: "application/pdf" });

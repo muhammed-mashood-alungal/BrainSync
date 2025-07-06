@@ -1,7 +1,7 @@
 "use client";
-import InPageLoading from "@/Components/InPageLoading/InPageLoading";
-import Input from "@/Components/Input/Input";
-import BaseModal from "@/Components/Modal/Modal";
+import InPageLoading from "@/components/ui/loading/InPageLoading";
+import Input from "@/components/ui/Input/Input";
+import BaseModal from "@/components/ui/modal/BaseModal";
 import { LogIn, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -58,18 +58,18 @@ function QuickActions() {
           </div>
 
           {/* Create Group Card */}
-          <Link href={'/dashboard/groups#create'}>
-          <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg p-4 flex items-center cursor-pointer hover:shadow-lg transition">
-            <div className="bg-cyan-400 bg-opacity-30 rounded-full p-2 mr-4">
-              <Users className="h-6 w-6 text-white" />
+          <Link href={"/dashboard/groups#create"}>
+            <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg p-4 flex items-center cursor-pointer hover:shadow-lg transition">
+              <div className="bg-cyan-400 bg-opacity-30 rounded-full p-2 mr-4">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg">Create Group</h3>
+                <p className="text-sm text-cyan-100">
+                  Create your group for easy sharing
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-lg">Create Group</h3>
-              <p className="text-sm text-cyan-100">
-                Create your group for easy sharing
-              </p>
-            </div>
-          </div>
           </Link>
         </div>
       </section>

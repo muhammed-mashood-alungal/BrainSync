@@ -1,4 +1,4 @@
-import { adminInstance, userInstances } from "@/axios/createInstance";
+import { adminInstance, userInstances } from "@/axios/instance.axios";
 import { AxiosError } from "axios";
 
 export const AdminServices = {
@@ -32,7 +32,9 @@ export const AdminServices = {
   },
   getDashboardData: async (days: number): Promise<any> => {
     try {
-      const response = await adminInstance.get(`/get-dashboard-data?lastXDays=${days}`);
+      const response = await adminInstance.get(
+        `/get-dashboard-data?lastXDays=${days}`
+      );
       return response.data;
     } catch (error) {
       const err = error as AxiosError<{ error: string }>;

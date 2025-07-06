@@ -1,4 +1,4 @@
-import { subscriptionInstances } from "@/axios/createInstance";
+import { subscriptionInstances } from "@/axios/instance.axios";
 import { IUserSubscription } from "@/types/subscriptionTypes";
 import { AxiosError } from "axios";
 

@@ -1,19 +1,18 @@
 "use client";
-import ImageCropModal from "@/Components/CropImage/CropImage";
-import Input from "@/Components/Input/Input";
-import BaseModal from "@/Components/Modal/Modal";
-import { useAuth } from "@/Context/auth.context";
+import ImageCropModal from "@/components/features/profile/CropImage/CropImage";
+import Input from "@/components/ui/Input/Input";
+import BaseModal from "@/components/ui/modal/BaseModal";
+import { useAuth } from "@/context/auth.context";
 import { UserServices } from "@/services/client/user.client";
 import { validateResetPasswords } from "@/validations";
 import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 import { Trash } from "lucide-react";
-import UserInNav from "@/Components/UserInNav/UserInNav";
+import UserInNav from "@/components/layouts/navbar/UserInNav";
 import SubscriptionHistory from "./SubscriptionHistory";
 
-
 function Profile() {
-  const { user  } = useAuth();
+  const { user } = useAuth();
   const [userData, setUserData] = useState<{
     username: string;
     email: string;
@@ -58,7 +57,7 @@ function Profile() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNameEditOn, setIsNameEdit] = useState(false);
   const [isChangePass, setIsChangePass] = useState(false);
-  
+
   const [newUsername, setNewUsername] = useState("");
   const [pass, setPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
@@ -117,7 +116,7 @@ function Profile() {
     }
   };
   const handleSaveCroppedImage = async (croppedFile: File) => {
-   // setIsUploading(true);
+    // setIsUploading(true);
 
     try {
       const reader = new FileReader();
@@ -127,13 +126,13 @@ function Profile() {
       reader.readAsDataURL(croppedFile);
       const formData = new FormData();
       formData.append("image", croppedFile);
-       await UserServices.changeProfilePic(formData, user?.id as string);
-      
+      await UserServices.changeProfilePic(formData, user?.id as string);
+
       toast.success("Profile Picture Changed Successfully");
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
-    //  setIsUploading(false);
+      //  setIsUploading(false);
     }
   };
 
@@ -171,7 +170,6 @@ function Profile() {
     }
   };
 
- 
   return (
     <>
       <div className="flex-1 p-8">
@@ -239,7 +237,9 @@ function Profile() {
 
           <div className="flex justify-between">
             <div className="text-center bg-[#2B2B2B] w-full p-5 m-1 rounded-2xl">
-              <p className="text-white text-4xl font-bold">{stats?.totalGroups}</p>
+              <p className="text-white text-4xl font-bold">
+                {stats?.totalGroups}
+              </p>
               <p className="text-2xl font-bold text-[#00D2D9]">Groups</p>
             </div>
             <div className="text-center bg-[#2B2B2B] w-full p-5 m-1 rounded-2xl">
@@ -251,18 +251,19 @@ function Profile() {
               </p>
             </div>
             <div className="text-center bg-[#2B2B2B] w-full p-5 m-1 rounded-2xl">
-              <p className="text-white text-4xl font-bold">{stats?.totalTimeSpend}</p>
+              <p className="text-white text-4xl font-bold">
+                {stats?.totalTimeSpend}
+              </p>
               <p className="text-2xl font-bold text-[#00D2D9]">
                 Time Spent On Sessisons
               </p>
             </div>
           </div>
         </div>
-       <hr  className="my-5"/>
-      <SubscriptionHistory/>
+        <hr className="my-5" />
+        <SubscriptionHistory />
       </div>
 
-      
       <ImageCropModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

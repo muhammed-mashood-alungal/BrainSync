@@ -1,10 +1,10 @@
 "use client";
-import { useAuth } from "@/Context/auth.context";
+import { useAuth } from "@/context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
 import { AuthServices } from "@/services/client/auth.client";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 import {
   LineChart,
   Line,

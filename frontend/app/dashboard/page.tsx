@@ -1,8 +1,8 @@
-import React from 'react';
-import QuickActions from './DashboardComponents/QuickActions';
-import ScheduledSessions from './DashboardComponents/ScheduledSessions';
-import ProgressChart from './DashboardComponents/ProgressChart';
-import UserInNav from '@/Components/UserInNav/UserInNav';
+import React from "react";
+import QuickActions from "./DashboardComponents/QuickActions";
+import ScheduledSessions from "./DashboardComponents/ScheduledSessions";
+import ProgressChart from "./DashboardComponents/ProgressChart";
+import UserInNav from "@/components/layouts/navbar/UserInNav";
 
 const Dashboard = () => {
   return (
@@ -11,21 +11,20 @@ const Dashboard = () => {
         {/* Header with Search */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
           <h1 className="text-3xl font-bold mb-4 md:mb-0">Dashboard</h1>
-          
+
           <div className="flex items-center w-full md:w-auto">
-            <UserInNav/>
+            <UserInNav />
           </div>
         </div>
 
         {/* Quick Actions */}
-          <QuickActions/>
-          
+        <QuickActions />
+
         {/* Scheduled Sessions */}
-        <ScheduledSessions/>
+        <ScheduledSessions />
 
         {/* Progress Chart*/}
-        <ProgressChart/>
-       
+        <ProgressChart />
       </div>
     </div>
   );

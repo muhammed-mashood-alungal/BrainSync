@@ -1,4 +1,4 @@
-import { paymentInstances } from "@/axios/createInstance";
+import { paymentInstances } from "@/axios/instance.axios";
 import { AxiosError } from "axios";
 
 export const paymentServices = {
