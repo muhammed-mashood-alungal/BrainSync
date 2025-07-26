@@ -1,7 +1,7 @@
 "use client";
 import Table from "@/components/ui/table/Table";
 import { INoteTypes } from "@/types/note.types";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { noteServices } from "@/services/client/note.client";
 import { Download } from "lucide-react";
@@ -31,6 +31,12 @@ function NoteListing() {
   const downloadPdf = (pdfFileId: string) => {
     noteServices.getNotePdf(pdfFileId);
   };
+  const handlePageChange = useCallback(
+    (page: number, limit: number, searchQuery: string | undefined) => {
+      fetchMyNotes(page, limit, searchQuery as string);
+    },
+    []
+  );
 
   const columns = [
     {
@@ -75,7 +81,6 @@ function NoteListing() {
     },
   ];
 
-  // Actions for each row (optional)
   const actions = (note: INoteTypes) => (
     <div className="flex space-x-2 justify-center">
       <button
@@ -93,11 +98,7 @@ function NoteListing() {
         data={notes}
         columns={columns}
         actions={actions}
-        onPageChange={(
-          page: number,
-          limit: number,
-          searchQuery: string | undefined
-        ) => fetchMyNotes(page, limit, searchQuery as string)}
+        onPageChange={handlePageChange}
         totalCount={totalCount}
       />
     </>

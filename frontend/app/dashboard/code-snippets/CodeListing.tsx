@@ -1,13 +1,12 @@
 "use client";
 import Table from "@/components/ui/table/Table";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Download } from "lucide-react";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { ICodeSnippetTypes } from "@/types/codeSnippetTypes";
 import { ISessionTypes } from "@/types/sessionTypes";
 import { Language } from "@/context/codeEditor.context";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 
@@ -57,6 +56,11 @@ function CodeSnippetListing() {
     setSnippets(snippets);
   }
 
+  const handlePageChange = useCallback(
+    (page: number, limit: number, searchQuery: string | undefined) => {
+      fetchMyCodes(page, limit, searchQuery as string);
+    },[]);
+
   const columns = [
     {
       key: "name" as keyof ICodeSnippetTypes,
@@ -86,7 +90,6 @@ function CodeSnippetListing() {
     },
   ];
 
-  // Actions for each row (optional)
   const actions = (code: ICodeSnippetTypes) => (
     <div className="flex space-x-2 justify-center">
       <button
@@ -104,11 +107,7 @@ function CodeSnippetListing() {
         data={snippets}
         columns={columns}
         actions={actions}
-        onPageChange={(
-          page: number,
-          limit: number,
-          searchQuery: string | undefined
-        ) => fetchMyCodes(page, limit, searchQuery as string)}
+        onPageChange={handlePageChange}
         totalCount={totalCount}
       />
     </>

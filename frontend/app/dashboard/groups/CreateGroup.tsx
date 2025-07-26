@@ -7,6 +7,8 @@ import { validateCreateGroup } from "@/validations";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
 
 function CreateGroup({
   setGroups,
@@ -70,12 +72,12 @@ function CreateGroup({
         setGroups((prevGroups: any) => {
           return [newGroup, ...prevGroups];
         });
-        toast.success("Your Group Created Successfully");
+        toast.success(GROUP_MESSAGES.GROUP_CREATED);
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
-          toast.error("Unexpected Error Occured");
+          toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
         }
       } finally {
         checkAuth();

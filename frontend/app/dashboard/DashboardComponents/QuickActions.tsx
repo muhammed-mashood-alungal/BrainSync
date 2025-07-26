@@ -6,6 +6,7 @@ import { LogIn, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 
 function QuickActions() {
   const router = useRouter();
@@ -17,7 +18,7 @@ function QuickActions() {
   const handleJoinSession = () => {
     setSessionCodeErr("");
     if (sessionCode.trim() == "") {
-      setSessionCodeErr("Please Enter a Session Code");
+      setSessionCodeErr(SESSION_MESSAGES.ENTER_SESSION_CODE);
       setLoading(false);
       return;
     }
@@ -30,7 +31,6 @@ function QuickActions() {
       <section className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Create Session Card */}
           <Link href={"/dashboard/sessions#create"}>
             <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg p-4 flex items-center cursor-pointer hover:shadow-lg transition">
               <div className="bg-cyan-400 bg-opacity-30 rounded-full p-2 mr-4">
@@ -56,8 +56,7 @@ function QuickActions() {
               <p className="text-sm text-cyan-100">Enter with code/link</p>
             </div>
           </div>
-
-          {/* Create Group Card */}
+          
           <Link href={"/dashboard/groups#create"}>
             <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg p-4 flex items-center cursor-pointer hover:shadow-lg transition">
               <div className="bg-cyan-400 bg-opacity-30 rounded-full p-2 mr-4">

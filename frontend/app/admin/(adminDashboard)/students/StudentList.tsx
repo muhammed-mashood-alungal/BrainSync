@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import BaseModal from "@/components/ui/modal/BaseModal";
 import { toast } from "react-hot-toast";
 import Confirm from "@/components/ui/modal/ConfirmModal";
@@ -88,6 +88,13 @@ function StudentList({
     });
   };
 
+  const handlePageChange = useCallback(
+    (page: number, limit: number, searchQuery: string | undefined) => {
+      fetchStudents(page, limit, searchQuery as string);
+    },
+    []
+  );
+
   return (
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
@@ -98,13 +105,7 @@ function StudentList({
 
       <div className="overflow-x-auto">
         <AdminSideTable
-          onPageChange={(
-            page: number,
-            limit: number,
-            searchQuery: string | undefined
-          ) => {
-            fetchStudents(page, limit, searchQuery as string);
-          }}
+          onPageChange={handlePageChange}
           totalCount={totalCount}
           columns={[
             {

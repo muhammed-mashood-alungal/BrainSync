@@ -10,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { Trash } from "lucide-react";
 import UserInNav from "@/components/layouts/navbar/UserInNav";
 import SubscriptionHistory from "./SubscriptionHistory";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function Profile() {
   const { user } = useAuth();
@@ -24,31 +25,9 @@ function Profile() {
     totalSessionsAttended: number;
   }>();
 
-  // const stats = [
-  //     { value: '12', label: 'Total Session' },
-  //     { value: '78 hr', label: 'Time Spend' },
-  //     { value: '5', label: 'Groups Active' },
-  //     { value: '62', label: 'Resources Saved' },
-  // ]
-
   useEffect(() => {
-    async function fetchUserData() {
-      if (user) {
-        const data = await UserServices.getUserData(user.id);
-        setUserData(data);
-        if (data.profilePicture) {
-          setPreview(data.profilePicture);
-        }
-        setNewUsername(data.username);
-      }
-    }
     fetchUserData();
-    async function fetchStats() {
-      if (user) {
-        const stats = await UserServices.getUserOverallStats();
-        setStats(stats);
-      }
-    }
+
     fetchStats();
   }, [user]);
 
@@ -68,11 +47,29 @@ function Profile() {
     confirmPassword: "",
   });
 
+  async function fetchUserData() {
+    if (user) {
+      const data = await UserServices.getUserData(user.id);
+      setUserData(data);
+      if (data.profilePicture) {
+        setPreview(data.profilePicture);
+      }
+      setNewUsername(data.username);
+    }
+  }
+
+  async function fetchStats() {
+    if (user) {
+      const stats = await UserServices.getUserOverallStats();
+      setStats(stats);
+    }
+  }
+
   const handleImageDelete = async () => {
     try {
       await UserServices.deleteProfilePic(user?.id as string);
       setPreview(null);
-      toast.success("Profile Picture Deleted Successfully");
+      toast.success(USER_MESSAGES.PROFILE_PICTURE_DELETED);
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast.error(err.name);
@@ -86,11 +83,11 @@ function Profile() {
         return toast.error("Plese Provide a Username");
       }
       if (newUsername == userData?.username) {
-        return toast.error("Nothing To Update");
+        return toast.error("The is Nothing To Update");
       }
       await UserServices.editUsername(user?.id as string, newUsername);
 
-      toast.success("Username Updated Successfully");
+      toast.success(USER_MESSAGES.USER_UPDATED);
       setUserData({ ...userData, username: newUsername } as {
         username: string;
         email: string;
@@ -100,7 +97,7 @@ function Profile() {
       if (err instanceof Error) {
         toast.error(err.message);
       } else {
-        toast.error("Unexpected Error Occured");
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setIsNameEdit(false);
@@ -116,7 +113,6 @@ function Profile() {
     }
   };
   const handleSaveCroppedImage = async (croppedFile: File) => {
-    // setIsUploading(true);
 
     try {
       const reader = new FileReader();
@@ -128,12 +124,10 @@ function Profile() {
       formData.append("image", croppedFile);
       await UserServices.changeProfilePic(formData, user?.id as string);
 
-      toast.success("Profile Picture Changed Successfully");
+      toast.success(USER_MESSAGES.PROFILE_PICTURE_UPDATED);
     } catch (error) {
-      console.error("Error uploading image:", error);
-    } finally {
-      //  setIsUploading(false);
-    }
+      console.error(error);
+    } 
   };
 
   const changePassword = async () => {
@@ -152,12 +146,12 @@ function Profile() {
     if (res.status) {
       try {
         await UserServices.changePassword(user?.id as string, oldPass, pass);
-        toast.success("Password Changed Successfully");
+        toast.success(USER_MESSAGES.PASSWORD_CHANGED);
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
-          toast.error("An unexpected error occurred.");
+          toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
         }
       } finally {
         setOldPass("");
@@ -229,11 +223,8 @@ function Profile() {
           </div>
         </div>
 
-        {/* Study Statistics */}
         <div className=" rounded-lg p-6 mb-6">
-          {/* <h2 className="text-xl font-bold text-white mb-6">
-            Study Statistics
-          </h2> */}
+        
 
           <div className="flex justify-between">
             <div className="text-center bg-[#2B2B2B] w-full p-5 m-1 rounded-2xl">
@@ -268,7 +259,7 @@ function Profile() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveCroppedImage}
-        aspect={1} // 1:1 aspect ratio for profile pictures
+        aspect={1} 
         imageFile={selectedFile}
       />
 

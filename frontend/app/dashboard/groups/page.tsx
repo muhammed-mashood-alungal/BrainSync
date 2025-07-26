@@ -13,6 +13,8 @@ import Confirm from "@/components/ui/modal/ConfirmModal";
 import CreateGroup from "./CreateGroup";
 import AddMember from "./AddMember";
 import Input from "@/components/ui/Input/Input";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>([]);
@@ -54,42 +56,40 @@ const GroupsPage: React.FC = () => {
       });
       setDeletingGroupId("");
     } catch (error) {
-      console.log(error);
-      toast.error(
-        "Something Went Wrong While Deleting Group. Please Try Again Later"
-      );
+      toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
     }
   };
 
   const handleaddMembers = async () => {
     if (selectedMembers.length == 0)
-      return toast.error("Please Select atlead 1 member with you !");
-    if (!selectedGroup) return toast.error("Please Select Group For Add");
+      return toast.error(GROUP_MESSAGES.ATLEAST_ONE_MEMBER_NEEDED);
+    if (!selectedGroup) return;
     try {
       const members = [...selectedMembers.map((user) => user._id)];
       GroupServices.addToGroup(selectedGroup, members);
-      toast.success("Added Member Successfully");
+      toast.success(GROUP_MESSAGES.ADDED_MEMBER_SUCCESSFULLY);
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Unexpected Error Occured");
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setSelectedGroup("");
       checkAuth();
     }
   };
+
   const leaveGroup = async () => {
     try {
       GroupServices.leftGroup(leavingGroupId, user?.id as string);
-      toast.success("Leaved Group Successfully");
+      toast.success(GROUP_MESSAGES.GROUP_LEAVED);
       checkAuth();
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Unexpected Error Occured");
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       closeModal();
@@ -105,7 +105,7 @@ const GroupsPage: React.FC = () => {
           return g._id == groupId ? { ...g, name: newName } : g;
         });
       });
-      toast.success("Group Named Updated");
+      toast.success(GROUP_MESSAGES.GROUP_NAME_CHANGED);
     } catch (error) {
       console.log(error);
     }
@@ -125,7 +125,7 @@ const GroupsPage: React.FC = () => {
             : g;
         });
       });
-      toast.success("Removed User Successfully");
+      toast.success(GROUP_MESSAGES.REMOVED_USER_FROM_GROUP);
     } catch (error) {
       console.log(error);
     }
@@ -152,7 +152,6 @@ const GroupsPage: React.FC = () => {
         </button>
       </div>
       <div className="px-4 py-6">
-        {/* Header with Create Group Button */}
         <div className="w-[50%]">
           <Input
             type="text"
@@ -164,7 +163,6 @@ const GroupsPage: React.FC = () => {
           />
         </div>
 
-        {/* Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups?.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed border-cyan-500/40 rounded-xl">

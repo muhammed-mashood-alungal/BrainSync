@@ -146,7 +146,6 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
             </div>
           </div>
 
-          {/* Group Stats (You can add more stats here) */}
           <div className="mb-6">
             <h3 className="text-gray-400 text-sm mb-3">Group Stats</h3>
             <div className="grid grid-cols-2 gap-3">
@@ -168,7 +167,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
           </div>
         </div>
 
-        {/* Right Column - Members List */}
+        
         <div>
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-gray-400 text-sm flex items-center">

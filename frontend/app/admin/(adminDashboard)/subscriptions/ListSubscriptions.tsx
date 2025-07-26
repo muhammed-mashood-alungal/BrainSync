@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { IUserSubscription } from "@/types/subscriptionTypes";
 import { IUserType } from "@/types/userTypes";
@@ -13,7 +13,7 @@ function SubscriptionList() {
   const [selectedSubscriptionId, setSubscriptionId] = useState("");
   const limit = 8;
   const [totalCount, setTotalCount] = useState(0);
-  
+
   useEffect(() => {
     fetchSubscribers(1, limit, "All");
   }, []);
@@ -118,6 +118,12 @@ function SubscriptionList() {
     { value: "cancelled", label: "Cancelled" },
   ];
 
+  const handlePageChange = useCallback(
+    (page: number, limit: number, _: any, status : unknown) => {
+      fetchSubscribers(page, limit, status as string);
+    },[]
+  );
+
   return (
     <>
       <AdminSideTable
@@ -125,9 +131,7 @@ function SubscriptionList() {
         columns={columns}
         actions={actions}
         totalCount={totalCount}
-        onPageChange={(page: number, limit: number, _: any, status) =>
-          fetchSubscribers(page, limit, status as string)
-        }
+        onPageChange={handlePageChange}
         ShowDropDown={true}
         dropDownLists={dropDownList}
         ShowSearchBar={false}

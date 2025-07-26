@@ -1,14 +1,12 @@
-import React from 'react'
-import NotificationList from './NotificationList'
+import React from "react";
+import NotificationList from "./NotificationList";
 
 async function page() {
-
-  //  const notifications = await getMyNotifications()
   return (
     <div>
-        <NotificationList />
+      <NotificationList />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;
