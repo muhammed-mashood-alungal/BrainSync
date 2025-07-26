@@ -1,5 +1,5 @@
 "use client";
-import { AUTH_ERROR_MESSAGES } from "@/constants/errorMessages/auth.errors";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
 import { useAuth } from "@/context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
 import { AuthServices } from "@/services/client/auth.client";
@@ -110,7 +110,7 @@ const AdminDashboard: React.FC = ({}) => {
       await AuthServices.logout();
       checkAuth();
     } catch (err: unknown) {
-      toast.error((err as Error).message || AUTH_ERROR_MESSAGES.LOGOUT_FAILED);
+      toast.error((err as Error).message || AUTH_MESSAGES.LOGOUT_FAILED);
     }
   };
 

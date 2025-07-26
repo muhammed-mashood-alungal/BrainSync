@@ -8,6 +8,7 @@ import Confirm from "@/components/ui/modal/ConfirmModal";
 import { SessionServices } from "@/services/client/session.client";
 import GenericListing from "@/components/features/session/SessionListing/SessionListing";
 import toast from "react-hot-toast";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 
 interface Session extends ISessionTypes {
   _id: string;
@@ -19,7 +20,6 @@ const AdminSessionsListing: React.FC = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Get status color
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Live":
@@ -60,7 +60,6 @@ const AdminSessionsListing: React.FC = () => {
   const handleStopSession = async () => {
     try {
       await SessionServices.stopSession(selectedSession);
-      // Update the sessions list after stopping a session
       setSessions((prevSessions) =>
         prevSessions.map((session) =>
           session._id === selectedSession
@@ -69,7 +68,7 @@ const AdminSessionsListing: React.FC = () => {
         )
       );
     } catch (error) {
-      console.error("Error stopping session:", error);
+      toast.error(SESSION_MESSAGES.SESSSION_STOPPING_FAILED)
     } finally {
       setSelectedSession("");
     }
@@ -199,7 +198,6 @@ const AdminSessionsListing: React.FC = () => {
     { value: "Mathematics", label: "Math" },
     { value: "Physics", label: "Physics" },
     { value: "History", label: "History" },
-    // Add more subjects as needed
   ];
 
   return (

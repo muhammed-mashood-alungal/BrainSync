@@ -13,6 +13,7 @@ function SubscriptionList() {
   const [selectedSubscriptionId, setSubscriptionId] = useState("");
   const limit = 8;
   const [totalCount, setTotalCount] = useState(0);
+  
   useEffect(() => {
     fetchSubscribers(1, limit, "All");
   }, []);

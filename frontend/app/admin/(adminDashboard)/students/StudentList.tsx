@@ -7,6 +7,7 @@ import { AdminServices } from "@/services/client/admin.client";
 import { IUserType } from "@/types/userTypes";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function StudentList({
   initialStudents,
@@ -37,21 +38,19 @@ function StudentList({
     searchQuery: string
   ) => {
     setIsLoading(true);
-    console.log(currentPage, limit, searchQuery);
     try {
       const { students, count } = await AdminServices.getAllStudents(
         (currentPage - 1) * limit,
         limit,
         searchQuery
       );
-      console.log("new count " + count);
       setTotalCount(count);
       setStudents(students);
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setIsLoading(false);
@@ -71,8 +70,7 @@ function StudentList({
       );
       setblockingStudents("");
     } catch (error) {
-      console.error("Failed to update user status:", error);
-      toast.error("Failed to update user status");
+      toast.error(USER_MESSAGES.USER_UPDATION_FAILED);
     }
   };
 

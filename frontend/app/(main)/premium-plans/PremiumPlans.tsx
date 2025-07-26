@@ -1,7 +1,7 @@
 "use client";
-import { AUTH_ERROR_MESSAGES } from "@/constants/errorMessages/auth.errors";
-import { CONFIG_ERRORS } from "@/constants/errorMessages/config.errors";
-import { SUBSCRIPTION_ERROR_MESSAGES } from "@/constants/errorMessages/subscription.errors";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import {  CONFIG_MESSAGES } from "@/constants/messages/config.messages";
+import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
 import { useAuth } from "@/context/auth.context";
 import { paymentServices } from "@/services/client/payment.client";
 import { subscriptionServices } from "@/services/client/subscription.client";
@@ -23,7 +23,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
         const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_ID;
 
         if (!RAZORPAY_KEY_ID) {
-          throw new Error(CONFIG_ERRORS.MISSING_ENV("REZORPAY KEY"));
+          throw new Error(CONFIG_MESSAGES.MISSING_ENV("REZORPAY KEY"));
         }
 
         const order = await paymentServices.createPaymentOrder(amount * 100);
@@ -76,10 +76,10 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           });
         });
       } catch (err: any) {
-        toast.error(err.message || SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_ERROR);
+        toast.error(err.message || SUBSCRIPTION_MESSAGES.PAYMENT_ERROR);
         reject({
           success: false,
-          message: SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_ERROR,
+          message: SUBSCRIPTION_MESSAGES.PAYMENT_ERROR,
           error: err,
         });
       }
@@ -89,11 +89,11 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
   const handleSubscription = async (plan: IPlans) => {
     try {
       if (!user) {
-        toast.error(AUTH_ERROR_MESSAGES.PLEASE_LOGIN_TO_ACCESS);
+        toast.error(AUTH_MESSAGES.PLEASE_LOGIN_TO_ACCESS);
         return router.push("/login");
       }
       if (user.isPremiumMember) {
-        return toast.error(SUBSCRIPTION_ERROR_MESSAGES.ALREADY_PREMIUM_USER);
+        return toast.error(SUBSCRIPTION_MESSAGES.ALREADY_PREMIUM_USER);
       }
 
       const result = (await handleOnlinePayment(plan.offerPrice)) as {
@@ -103,7 +103,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
         razorpayPaymentId: string;
       };
       if (result.success) {
-        toast.success(SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_SUCCESS);
+        toast.success(SUBSCRIPTION_MESSAGES.PAYMENT_SUCCESS);
         await subscriptionServices.buySubscription(
           {
             planId: plan._id,
@@ -127,7 +127,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
       }
     } catch (error: unknown) {
       toast.error(
-        (error as Error).message || SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_FAILED
+        (error as Error).message || SUBSCRIPTION_MESSAGES.PAYMENT_FAILED
       );
     }
   };

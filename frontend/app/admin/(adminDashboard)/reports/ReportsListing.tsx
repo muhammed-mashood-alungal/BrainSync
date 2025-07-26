@@ -1,8 +1,7 @@
 "use client";
-
 import { reportService } from "@/services/client/report.client";
 import { IReportTypes } from "@/types/report.types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
 
@@ -10,6 +9,7 @@ function ReportsListing() {
   const [reports, setReports] = useState<IReportTypes[]>([]);
   const limit = 8;
   const [totalCount, setTotalCount] = useState(0);
+
   useEffect(() => {
     fetchReports(1, limit);
   }, []);
@@ -21,7 +21,6 @@ function ReportsListing() {
       limit
     );
     setTotalCount(count);
-    //  setTotalPage( Math.ceil(count / limit))
     setReports(reports);
   }
 
@@ -41,6 +40,10 @@ function ReportsListing() {
       });
     });
   };
+
+  const handlePageChange = useCallback((page: number, limit: number) => {
+    fetchReports(page, limit);
+  },[]);
 
   const columns = [
     {
@@ -78,7 +81,6 @@ function ReportsListing() {
     },
   ];
 
-  // Actions for each row (optional)
   const actions = (report: IReportTypes) => (
     <div className="flex space-x-2">
       <button
@@ -113,9 +115,7 @@ function ReportsListing() {
         columns={columns}
         actions={actions}
         totalCount={totalCount}
-        onPageChange={(page: number, limit: number) =>
-          fetchReports(page, limit)
-        }
+        onPageChange={handlePageChange}
         ShowSearchBar={false}
       />
     </>

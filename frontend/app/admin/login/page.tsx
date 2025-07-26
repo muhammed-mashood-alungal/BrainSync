@@ -5,6 +5,8 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth.context";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 const AdminPortal = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +17,6 @@ const AdminPortal = () => {
   });
   const router = useRouter();
   const { user, checkAuth } = useAuth();
-  // const [loading , setLoading] = useState(false)
 
   useEffect(() => {
     if (user && user.role == "admin") {
@@ -26,7 +27,6 @@ const AdminPortal = () => {
   }, [user]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
-    //  setLoading(true)
     try {
       e.preventDefault();
 
@@ -38,7 +38,7 @@ const AdminPortal = () => {
           router.push("/");
           return;
         } else {
-          toast.success("Login Success");
+          toast.success(AUTH_MESSAGES.LOGIN_SUCCESS);
 
           router.push("/admin/students");
         }
@@ -49,10 +49,8 @@ const AdminPortal = () => {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
-    } finally {
-      //  setLoading(false)
     }
   };
 

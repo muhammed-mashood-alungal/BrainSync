@@ -1,6 +1,6 @@
 import BaseModal from "@/components/ui/modal/BaseModal";
 import { IPlans } from "@/types/plans.types";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import CreatePlan from "./createPlan";
 import { Crown, Edit2, Power } from "lucide-react";
 import Confirm from "@/components/ui/modal/ConfirmModal";
@@ -24,17 +24,21 @@ const PlansListing: React.FC<PlansListingProps> = ({
     onEdit(selectedPlan, newData);
     setSelectedPlan("");
   };
+
+  const handleOnConfirm = useCallback(() => {
+    onToggleActive(toggledPlan._id, !toggledPlan.isActive);
+    setToggledPlan(null);
+  }, [onToggleActive, toggledPlan]);
+
   return (
     <div className="p-6">
       <div className="px-4 py-6">
-        {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-white">
           {plans.map((plan) => (
             <div
               key={plan._id}
               className="bg-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-purple-500/10 hover:translate-y-[-2px] transition-all duration-300"
             >
-              {/* Plan Header - Keeping the exact same classes for functionality */}
               <div
                 className={`bg-gradient-to-r from-purple-700 to-purple-500 text-white p-4 relative`}
               >
@@ -55,9 +59,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                 </div>
               </div>
 
-              {/* Plan Content */}
               <div className="p-6 border-t-0 border-purple-600 bg-gray-900">
-                {/* Price Section */}
                 <div className="mb-4">
                   <div className="flex justify-between items-center">
                     <div className="text-white">
@@ -73,7 +75,6 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   </div>
                 </div>
 
-                {/* Features Section - Keeping the exact same structure */}
                 <div className="mb-6">
                   <h3 className="font-semibold mb-2">Features:</h3>
                   <ul className="space-y-2">
@@ -92,7 +93,6 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   </ul>
                 </div>
 
-                {/* Actions - Using exact same onClick handlers */}
                 <div className="flex space-x-2">
                   <button
                     onClick={() => {
@@ -137,10 +137,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
       </BaseModal>
       <Confirm
         isOpen={Boolean(toggledPlan?._id)}
-        onConfirm={() => {
-          onToggleActive(toggledPlan._id, !toggledPlan.isActive);
-          setToggledPlan(null);
-        }}
+        onConfirm={handleOnConfirm} 
         onClose={() => setToggledPlan(null)}
       />
     </div>

@@ -9,7 +9,7 @@ import Input from "@/components/ui/Input/Input";
 import Link from "next/link";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
-import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function SignUpForm() {
   const router = useRouter();
@@ -74,7 +74,7 @@ function SignUpForm() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);

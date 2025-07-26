@@ -8,8 +8,8 @@ import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/components/ui/modal/ConfirmModal";
 import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
-import { GROUP_ERROR_MESSAGES } from "@/constants/errorMessages/group.errors";
-import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
+import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);
@@ -21,7 +21,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
     try {
       const groupId = selectedGroup;
       await GroupServices.deactivate(groupId);
-      toast.success(GROUP_ERROR_MESSAGES.GROUP_STATUS_UPDATED);
+      toast.success(GROUP_MESSAGES.GROUP_STATUS_UPDATED);
       setGroups((grps) => {
         return grps?.map((group) => {
           return group._id == groupId
@@ -33,7 +33,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setSelectedGroup("");

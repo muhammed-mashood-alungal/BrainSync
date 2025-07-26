@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
@@ -61,7 +61,7 @@ export default function VerifyOtp() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);
@@ -78,7 +78,7 @@ export default function VerifyOtp() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+        toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);

@@ -3,9 +3,9 @@ import { validatePlanForm } from "@/validations";
 import React, { useState } from "react";
 
 interface CreatePlanProps {
-  initialPlan?: IPlans; 
+  initialPlan?: IPlans;
   onSubmit: (plan: Omit<IPlans, "_id">) => void;
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
 const CreatePlan: React.FC<CreatePlanProps> = ({
@@ -82,9 +82,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(plan)
     const { status, err } = validatePlanForm(plan);
-    console.log(status , err)
     if (!status) {
       return setPlanErr(err);
     }
@@ -162,7 +160,6 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
             </div>
           </div>
 
-          {/* Plan Features */}
           <div>
             <div className="flex justify-between items-center mb-3">
               <label className="block text-lg font-medium text-white">
@@ -260,14 +257,13 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
               {plan.features.length === 0 && (
                 <div className="text-center py-4 text-gray-500">
-                  No features added yet. Click the &quot;Add Feature&quot; button to add
-                  one.
+                  No features added yet. Click the &quot;Add Feature&quot;
+                  button to add one.
                 </div>
               )}
             </div>
           </div>
 
-          {/* Plan Settings */}
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
             <div className="flex items-center">
               <input
@@ -304,7 +300,6 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
             </div>
           </div>
 
-          {/* Form Actions */}
           <div className="flex justify-end space-x-4 pt-4">
             <button
               type="button"

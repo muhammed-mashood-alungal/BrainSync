@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PlansListing from "./PlanListing";
 import BaseModal from "@/components/ui/modal/BaseModal";
 import CreatePlan from "./createPlan";
 import { plansServices } from "@/services/client/plans.client";
 import { toast } from "react-hot-toast";
 import { IPlans } from "@/types/plans.types";
+import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
 
 function Page() {
   const [plans, setPlans] = useState<IPlans[]>([]);
@@ -18,6 +19,7 @@ function Page() {
     };
     fetchPlans();
   }, []);
+
   const onToggle = async (planId: string, state: boolean) => {
     try {
       await plansServices.toggleActive(planId);
@@ -38,7 +40,7 @@ function Page() {
         return plan._id == planId ? { ...plan, ...newData } : plan;
       });
     });
-    toast.success("Plan Updated");
+    toast.success(SUBSCRIPTION_MESSAGES.PLAN_UPDATED);
   };
 
   const createPlan = async (plan: any) => {
@@ -52,6 +54,8 @@ function Page() {
       toast.error((error as Error).message);
     }
   };
+
+  const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
   return (
     <>
       <div className="flex justify-between items-center mb-6 ml-5">
@@ -66,15 +70,8 @@ function Page() {
       </div>
       <PlansListing plans={plans} onToggleActive={onToggle} onEdit={onEdit} />
 
-      <BaseModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title=""
-      >
-        <CreatePlan
-          onCancel={() => console.log("cancelled")}
-          onSubmit={createPlan}
-        />
+      <BaseModal isOpen={isModalOpen} onClose={handleCloseModal} title="">
+        <CreatePlan onSubmit={createPlan} />
       </BaseModal>
     </>
   );

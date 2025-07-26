@@ -38,7 +38,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </svg>
       </button>
 
-      {/* Sidebar - hidden on mobile, takes 2/12 width on large screens */}
       <div
         className={`
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
@@ -59,7 +58,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         />
       )}
 
-      {/* Main content - takes 10/12 width on large screens, full width on mobile */}
       <div className="flex-1 lg:w-10/12 overflow-auto">
         <main className="p-6">{children}</main>
       </div>
