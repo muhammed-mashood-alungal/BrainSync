@@ -3,7 +3,7 @@ import { validatePlanForm } from "@/validations";
 import React, { useState } from "react";
 
 interface CreatePlanProps {
-  initialPlan?: IPlans; // For editing existing plan
+  initialPlan?: IPlans; 
   onSubmit: (plan: Omit<IPlans, "_id">) => void;
   onCancel: () => void;
 }
@@ -99,7 +99,6 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
 
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">
-          {/* Basic Plan Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-white mb-1">

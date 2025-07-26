@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import BaseModal from "@/components/ui/modal/BaseModal";
 import { GroupServices } from "@/services/client/group.client";
 import { useAuth } from "@/context/auth.context";
@@ -8,6 +8,8 @@ import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/components/ui/modal/ConfirmModal";
 import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
+import { GROUP_ERROR_MESSAGES } from "@/constants/errorMessages/group.errors";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);
@@ -19,7 +21,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
     try {
       const groupId = selectedGroup;
       await GroupServices.deactivate(groupId);
-      toast.success("Updated Group Status");
+      toast.success(GROUP_ERROR_MESSAGES.GROUP_STATUS_UPDATED);
       setGroups((grps) => {
         return grps?.map((group) => {
           return group._id == groupId
@@ -31,17 +33,24 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("Unexpected Error Occured");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setSelectedGroup("");
     }
   };
 
+  const handleCloseConfirm = useCallback(() => setSelectedGroup(""), []);
+  const handleConfirm = useCallback(
+    () => handleActivation(),
+    [handleActivation]
+  );
+
+  const handleCloseModal = useCallback(() => setViewGroup(undefined), []);
+
   return (
     <>
       <div className="px-4 py-6">
-        {/* Groups Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {groups?.length === 0 ? (
             <div className="col-span-full flex flex-col items-center justify-center p-12 border border-dashed border-[#8979FF]/40 rounded-xl">
@@ -59,16 +68,13 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                 key={group._id}
                 className="bg-zinc-900/70 border border-[#8979FF]/30 hover:border-[#8979FF]/70 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-[#8979FF]/10 hover:translate-y-[-2px]"
               >
-                {/* Group Header */}
                 <div className="bg-gradient-to-r from-[#8979FF] to-[#A194FF] px-4 py-3">
                   <h2 className="text-xl font-semibold text-white text-center truncate">
                     {group.name}
                   </h2>
                 </div>
 
-                {/* Group Content */}
                 <div className="p-5">
-                  {/* Members Section */}
                   <div className="mb-5">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -86,7 +92,6 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                       </button>
                     </div>
 
-                    {/* Member Avatars */}
                     <div className="flex items-center">
                       {group.members.slice(0, 4).map((member) => (
                         <div
@@ -108,7 +113,6 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                     </div>
                   </div>
 
-                  {/* Group Info */}
                   <div className="space-y-3 pt-3 border-t border-zinc-800 mb-5">
                     <div className="flex items-center text-sm text-gray-300">
                       <span className="min-w-20 text-gray-400">Admin</span>
@@ -128,7 +132,6 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                     </div>
                   </div>
 
-                  {/* Action Button */}
                   <button
                     className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-white text-sm font-medium transition-all duration-300 ${
                       group.isActive
@@ -146,65 +149,15 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
           )}
         </div>
       </div>
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {groups?.length == 0 && <EmptyList />}
-                {groups?.map((group) => (
-                    <div key={group._id} className="bg-zinc-900 border text-[#8979FF] rounded-lg overflow-hidden">
-                        <div className="bg-[#8979FF] p-3 text-center">
-                            <h2 className="text-xl font-semibold text-white">{group.name}</h2>
-                        </div>
-                        <div className="p-4">
-                            <div className="mb-4">
-                                <div className="flex items-center justify-between mb-2">
-                                    <span className="text-gray-300 text-sm">{group.members.length} Members</span>
-                                    <a onClick={() => setViewGroup(group)} className="text-[#8979FF] text-xs hover:cursor-pointer">view all</a>
-                                </div>
-                                <div className="flex items-center">
-                                    {group.members.slice(0, 5).map((member) => (
-                                        <div
-                                            key={member._id}
-                                            className="w-8 h-8 rounded-full mr-1 flex items-center justify-center text-xs font-bold"
-                                        >
-                                            <img src={member?.profilePicture || "/profilePic.png"} alt="" className='h-8 w-8 rounded-2xl' />
-                                        </div>
-                                    ))}
-                                    {group.members.length > 5 && (
-                                        <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-xs">
-                                            +{group.members.length - 5}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
 
-                            <div className="text-sm text-gray-300 mb-2">
-                                Admin :  <span className="text-[#8979FF]">  {group.createdBy?.username} </span> {group.createdBy?._id == user?.id && '(You)'}
-                            </div>
-                            <div className="text-sm text-gray-300 mb-4">
-                                Next Session: {"Not Assigned"}
-                            </div>
-                            {group.isActive ? <button className=" bg-red-500 hover:bg-red-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                                onClick={() => setSelectedGroup(group._id)}
-                            >
-                                Deactivate
-                            </button> : <button className="bg-green-500 hover:bg-green-600 text-white py-1 px-4 rounded-md text-sm transition duration-200"
-                                onClick={() => setSelectedGroup(group._id)}
-                            >
-                                Activate
-                            </button>
-                            }
-
-                        </div>
-                    </div>
-                ))}
-            </div> */}
       <Confirm
         isOpen={Boolean(selectedGroup)}
-        onClose={() => setSelectedGroup("")}
-        onConfirm={() => handleActivation()}
+        onClose={handleCloseConfirm}
+        onConfirm={handleConfirm}
       ></Confirm>
       <BaseModal
         isOpen={Boolean(viewGroup?._id)}
-        onClose={() => setViewGroup(undefined)}
+        onClose={handleCloseModal}
         title={viewGroup?.name as string}
         size="4xl"
       >

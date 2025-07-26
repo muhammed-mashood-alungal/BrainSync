@@ -1,5 +1,5 @@
 "use client";
-import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
+import { AUTH_ERROR_MESSAGES } from "@/constants/errorMessages/auth.errors";
 import { CONFIG_ERRORS } from "@/constants/errorMessages/config.errors";
 import { SUBSCRIPTION_ERROR_MESSAGES } from "@/constants/errorMessages/subscription.errors";
 import { useAuth } from "@/context/auth.context";
@@ -89,7 +89,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
   const handleSubscription = async (plan: IPlans) => {
     try {
       if (!user) {
-        toast.error(COMMON_ERROR_MESSAGES.PLEASE_LOGIN_TO_ACCESS);
+        toast.error(AUTH_ERROR_MESSAGES.PLEASE_LOGIN_TO_ACCESS);
         return router.push("/login");
       }
       if (user.isPremiumMember) {

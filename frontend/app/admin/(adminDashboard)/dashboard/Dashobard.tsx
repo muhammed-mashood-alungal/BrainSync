@@ -1,4 +1,5 @@
 "use client";
+import { AUTH_ERROR_MESSAGES } from "@/constants/errorMessages/auth.errors";
 import { useAuth } from "@/context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
 import { AuthServices } from "@/services/client/auth.client";
@@ -16,14 +17,7 @@ import {
   Legend,
 } from "recharts";
 
-interface AdminDashboardProps {
-  userDistribution: {
-    free: number;
-    paid: number;
-  };
-}
-
-const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
+const AdminDashboard: React.FC = ({}) => {
   const [timeRange, setTimeRange] = useState<"7days" | "14days" | "30days">(
     "7days"
   );
@@ -69,29 +63,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
     }
     fetchDashboard();
   }, [timeRange]);
-  // Filter session trends data based on selected time range
-  // const getFilteredTrends = () => {
-  //   const today = new Date();
-  //   const pastDate = new Date();
 
-  //   switch (timeRange) {
-  //     case "7days":
-  //       pastDate.setDate(today.getDate() - 7);
-  //       break;
-  //     case "14days":
-  //       pastDate.setDate(today.getDate() - 14);
-  //       break;
-  //     case "30days":
-  //       pastDate.setDate(today.getDate() - 30);
-  //       break;
-  //     default:
-  //       pastDate.setDate(today.getDate() - 7);
-  //   }
-
-  //   return sessionTrends?.filter(
-  //     (item: any) => new Date(item.date) >= pastDate
-  //   );
-  // };
   const getFilteredTrends = () => {
     return sessionTrends?.filter((item: any) => {
       const itemDate = new Date(item.date);
@@ -108,7 +80,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
         today.getDate()
       );
 
-      const pastDate = new Date(todayStart); // Copy todayStart to avoid mutation
+      const pastDate = new Date(todayStart);
       switch (timeRange) {
         case "7days":
           pastDate.setDate(todayStart.getDate() - 7);
@@ -129,7 +101,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
 
   const filteredTrends = getFilteredTrends();
 
-  // Format numbers with commas
   const formatNumber = (num: number): string => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -139,7 +110,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
       await AuthServices.logout();
       checkAuth();
     } catch (err: unknown) {
-      toast.error((err as Error).message || "Logout Failed");
+      toast.error((err as Error).message || AUTH_ERROR_MESSAGES.LOGOUT_FAILED);
     }
   };
 
@@ -153,9 +124,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
           </button>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Total Users */}
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Users</h2>
@@ -167,7 +136,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
             </div>
           </div>
 
-          {/* Total Sessions */}
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Sessions</h2>
@@ -179,7 +147,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
             </div>
           </div>
 
-          {/* Total Groups */}
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Groups</h2>
@@ -191,7 +158,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
             </div>
           </div>
 
-          {/* Total Study Hours */}
           <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-400 font-medium">Total Study Hours</h2>
@@ -204,9 +170,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
           </div>
         </div>
 
-        {/* Charts Section */}
         <div className="">
-          {/* Sessions Trend Line Chart */}
           <div className="lg:col-span-2 bg-gray-800 rounded-lg p-6 border border-gray-700">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Session Trends</h2>
@@ -282,49 +246,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({}) => {
               </ResponsiveContainer>
             </div>
           </div>
-
-          {/* User Distribution Pie Chart */}
-          {/* <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-            <h2 className="text-xl font-semibold mb-6">User Distribution</h2>
-            <div className="h-80 flex flex-col items-center justify-center">
-              <ResponsiveContainer width="100%" height="70%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={70}
-                    outerRadius={90}
-                    paddingAngle={5}
-                    dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    labelLine={false}
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#1f2937', 
-                      borderColor: '#374151',
-                      color: '#fff'
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="flex justify-center space-x-6 mt-4">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-cyan-500 mr-2"></div>
-                  <span className="text-sm text-gray-300">Paid Users: {formatNumber(userDistribution.paid)}</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-gray-600 mr-2"></div>
-                  <span className="text-sm text-gray-300">Free Users: {formatNumber(userDistribution.free)}</span>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>
