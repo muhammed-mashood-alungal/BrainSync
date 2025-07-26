@@ -1,5 +1,4 @@
 "use client";
-
 import { AuthServices } from "@/services/client/auth.client";
 import { validateSignUpForm } from "@/validations";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -10,10 +9,12 @@ import Input from "@/components/ui/Input/Input";
 import Link from "next/link";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 function SignUpForm() {
   const router = useRouter();
   const { user } = useAuth();
+
   useEffect(() => {
     if (user) {
       router.push("/");
@@ -73,7 +74,7 @@ function SignUpForm() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);

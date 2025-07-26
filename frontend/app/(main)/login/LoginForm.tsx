@@ -9,10 +9,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 function LoginForm() {
   const { user, checkAuth } = useAuth();
   const router = useRouter();
+
   useEffect(() => {
     if (user) {
       router.push("/");
@@ -47,7 +49,6 @@ function LoginForm() {
       const result = validateLoginForm(formData);
       if (result.status) {
         await AuthServices.loginService(formData);
-        // Poll for the accessToken cookie
         await checkAuth();
         router.push("/");
       } else {
@@ -57,7 +58,7 @@ function LoginForm() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);

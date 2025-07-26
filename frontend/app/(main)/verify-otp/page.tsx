@@ -8,18 +8,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60);
-  // const email = sessionStorage.getItem("email")
   const [email, setEmail] = useState<string | null>(null);
   const { user, checkAuth } = useAuth();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    // This will run only on the client
     if (typeof window !== "undefined") {
       const savedEmail = sessionStorage.getItem("email");
       if (savedEmail) {
@@ -35,12 +34,6 @@ export default function VerifyOtp() {
       router.push("/");
     }
   }, [user, router]);
-
-  // useEffect(() => {
-  //   if (!email) {
-  //     router.push('/signup')
-  //   }
-  // }, [email])
 
   useEffect(() => {
     if (timer > 0) {
@@ -68,7 +61,7 @@ export default function VerifyOtp() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);
@@ -85,7 +78,7 @@ export default function VerifyOtp() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);
@@ -95,7 +88,6 @@ export default function VerifyOtp() {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="container mx-auto px-4">
-        {/* Sign Up Form */}
         <div className="max-w-4xl mx-auto my-12 bg-gray-900 rounded-lg p-12">
           <div className="grid md:grid-cols-2 gap-8">
             <div className=" text-center">

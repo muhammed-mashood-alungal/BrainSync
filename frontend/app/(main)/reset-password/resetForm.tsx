@@ -8,9 +8,11 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/auth.context";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 function ResetForm() {
   const { user } = useAuth();
+
   useEffect(() => {
     if (user) {
       router.push("/");
@@ -42,7 +44,7 @@ function ResetForm() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     }
   };

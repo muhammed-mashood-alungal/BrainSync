@@ -1,4 +1,7 @@
 "use client";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
+import { CONFIG_ERRORS } from "@/constants/errorMessages/config.errors";
+import { SUBSCRIPTION_ERROR_MESSAGES } from "@/constants/errorMessages/subscription.errors";
 import { useAuth } from "@/context/auth.context";
 import { paymentServices } from "@/services/client/payment.client";
 import { subscriptionServices } from "@/services/client/subscription.client";
@@ -13,13 +16,14 @@ interface PremiumPlansProps {
 const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
   const { user, checkAuth } = useAuth();
   const router = useRouter();
+
   const handleOnlinePayment = (amount: number) => {
     return new Promise(async (resolve, reject) => {
       try {
         const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_ID;
 
         if (!RAZORPAY_KEY_ID) {
-          throw new Error("Razorpay key is missing in environment variables");
+          throw new Error(CONFIG_ERRORS.MISSING_ENV("REZORPAY KEY"));
         }
 
         const order = await paymentServices.createPaymentOrder(amount * 100);
@@ -49,11 +53,11 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
             }
           },
           prefill: {
-            name: "Mashood A",
-            email: "muhdmashoodalungal@gmail.com",
+            name: user?.username,
+            email: user?.email,
           },
           notes: {
-            address: "Razorpay Corporate Office",
+            address: "BrainSync Corporate Office",
           },
           theme: {
             color: "#3399cc",
@@ -72,8 +76,12 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           });
         });
       } catch (err: any) {
-        toast.error(err.message || "Payment error occurred");
-        reject({ success: false, message: "Payment init error", error: err });
+        toast.error(err.message || SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_ERROR);
+        reject({
+          success: false,
+          message: SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_ERROR,
+          error: err,
+        });
       }
     });
   };
@@ -81,12 +89,13 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
   const handleSubscription = async (plan: IPlans) => {
     try {
       if (!user) {
-        toast.error("Please Login First");
+        toast.error(COMMON_ERROR_MESSAGES.PLEASE_LOGIN_TO_ACCESS);
         return router.push("/login");
       }
       if (user.isPremiumMember) {
-        return toast.error("You already have a Premium Plan");
+        return toast.error(SUBSCRIPTION_ERROR_MESSAGES.ALREADY_PREMIUM_USER);
       }
+
       const result = (await handleOnlinePayment(plan.offerPrice)) as {
         success: boolean;
         message: string;
@@ -94,7 +103,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
         razorpayPaymentId: string;
       };
       if (result.success) {
-        toast.success("Payment Success");
+        toast.success(SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_SUCCESS);
         await subscriptionServices.buySubscription(
           {
             planId: plan._id,
@@ -117,7 +126,9 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
       } else {
       }
     } catch (error: unknown) {
-      toast.error((error as Error).message || "Payment failed");
+      toast.error(
+        (error as Error).message || SUBSCRIPTION_ERROR_MESSAGES.PAYMENT_FAILED
+      );
     }
   };
   return (
@@ -147,7 +158,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                     <span className="text-lg font-normal ml-2">
                       billed {plan.interval}
                       {plan.interval === "yearly"
-                        ? ` (₹${plan.offerPrice * 12})`
+                        ? ` (₹${plan?.offerPrice * 12})`
                         : ""}
                     </span>
                   </h2>
@@ -166,9 +177,6 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                     previously sold for ₹{plan.orginalPrice}/month and is now
                     only ₹{plan.offerPrice}/month.
                   </p>
-                  {/* <p className="font-medium">
-                    This plan <span className="font-bold">saves you over 60%</span> in comparison to the monthly plan.
-                  </p> */}
                 </div>
               )}
 

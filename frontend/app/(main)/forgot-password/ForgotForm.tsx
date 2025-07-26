@@ -10,10 +10,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
+import { COMMON_ERROR_MESSAGES } from "@/constants/errorMessages/common.errors";
 
 function ForgotForm() {
   const { user } = useAuth();
   const router = useRouter();
+
   useEffect(() => {
     if (user) {
       router.push("/");
@@ -21,7 +23,6 @@ function ForgotForm() {
   }, [user, router]);
 
   const [loading, setLoading] = useState(false);
-
   const [email, setEmail] = useState("");
   const [emailErr, setEmailErr] = useState("");
 
@@ -41,7 +42,7 @@ function ForgotForm() {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error("An unexpected error occurred.");
+        toast.error(COMMON_ERROR_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } finally {
       setLoading(false);
