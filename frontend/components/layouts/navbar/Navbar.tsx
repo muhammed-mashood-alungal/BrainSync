@@ -13,8 +13,10 @@ const Navbar = () => {
     try {
       await AuthServices.logout();
       checkAuth();
-    } catch (err) {
-      toast.error(AUTH_MESSAGES.LOGOUT_FAILED);
+    } catch (err: unknown) {
+      const error =
+        err instanceof Error ? err.message : AUTH_MESSAGES.LOGOUT_FAILED;
+      toast.error(error);
     }
   };
   const handleGoToDashboard = async () => {

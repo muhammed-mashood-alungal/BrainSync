@@ -13,22 +13,17 @@ import { useRouter } from "next/navigation";
 import VideoConference from "./VideoConference";
 import {
   useVideoCall,
-  VideoCallProvider,
 } from "@/context/videoConference.context";
 import { toast } from "react-hot-toast";
-import { ISessionTypes, Session } from "@/types/sessionTypes";
+import { ISessionTypes } from "@/types/sessionTypes";
 import WhiteBoard from "./WhiteBoard";
-import { WhiteBoardProvider } from "@/context/whiteBoardContex";
-import { SocketProvider } from "@/context/socket.context";
 import ChatComponent from "./Chat";
-import { ChatProvider } from "@/context/chat.context";
 import NoteEditor from "./NoteEditor";
 import BaseModal from "@/components/ui/modal/BaseModal";
 import { useAuth } from "@/context/auth.context";
 import { reportService } from "@/services/client/report.client";
 import Button from "@/components/ui/button/Button";
 import CodeEditor from "./CodeEditor";
-import { CodeEditorProvider } from "@/context/codeEditor.context";
 import { IGroupType } from "@/types/groupTypes";
 import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
@@ -117,8 +112,9 @@ const SessionWorkspace: React.FC<{
       await reportService.reportSession(data);
       toast.success(SESSION_MESSAGES.SESSION_REPORTED);
       setConfirmationOn(true);
-    } catch (error) {
-      toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+    } catch (error : unknown) {
+      const errorMsg = (error as Error)?.message || COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED;
+      toast.error(errorMsg);
     }
   };
 

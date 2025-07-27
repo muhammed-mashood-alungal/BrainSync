@@ -55,8 +55,10 @@ const GroupsPage: React.FC = () => {
         return grps.filter((g) => g._id != deletingGroup);
       });
       setDeletingGroupId("");
-    } catch (error) {
-      toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
+    } catch (error: unknown) {
+      const errorMsg =
+        (error as Error)?.message || COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED;
+      toast.error(errorMsg);
     }
   };
 

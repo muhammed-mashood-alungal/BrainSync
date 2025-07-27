@@ -1,6 +1,5 @@
 "use client";
 import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
-import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 import { useAuth } from "@/context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { useRouter } from "next/navigation";
@@ -15,9 +14,10 @@ function UserInNav() {
       await AuthServices.logout();
       checkAuth();
       router.push("/login");
-    } catch (err) {
-      console.log(err);
-      toast.error(AUTH_MESSAGES.LOGOUT_FAILED);
+    } catch (err:unknown) {
+       const error =
+        err instanceof Error ? err.message : AUTH_MESSAGES.LOGOUT_FAILED;
+      toast.error(error);
     }
   };
   return (

@@ -17,12 +17,23 @@ import {
   Legend,
 } from "recharts";
 
+interface statsType {
+  totalUsers: number;
+  totalGroups: number;
+  totalSessions: number;
+  totalStudyTime: number;
+}
+interface SessionTrend {
+  date: string;      
+  sessions: number;
+}
+
 const AdminDashboard: React.FC = ({}) => {
   const [timeRange, setTimeRange] = useState<"7days" | "14days" | "30days">(
     "7days"
   );
-  const [sessionTrends, setSessionTrends] = useState<any>([]);
-  const [stats, setStats] = useState<any>({
+  const [sessionTrends, setSessionTrends] = useState<SessionTrend[]>([]);
+  const [stats, setStats] = useState<statsType>({
     totalUsers: 0,
     totalGroups: 0,
     totalSessions: 0,
@@ -40,7 +51,7 @@ const AdminDashboard: React.FC = ({}) => {
     if (user && user?.role != "admin") {
       router.push("/login");
     }
-  }, [user, loading]);
+  }, [user, loading,router]);
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -65,7 +76,7 @@ const AdminDashboard: React.FC = ({}) => {
   }, [timeRange]);
 
   const getFilteredTrends = () => {
-    return sessionTrends?.filter((item: any) => {
+    return sessionTrends?.filter((item: SessionTrend) => {
       const itemDate = new Date(item.date);
       const itemDayStart = new Date(
         itemDate.getFullYear(),

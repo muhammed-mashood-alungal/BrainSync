@@ -22,13 +22,9 @@ const AdminSessionsListing: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const downloadReport = async (sessionId: string) => {
-    try {
       const response = await SessionServices.downloadSessionReport(sessionId);
       if (!response) return;
       toast.success("PDF Downloaded Successfully");
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const handleStopSession = async () => {
@@ -41,8 +37,10 @@ const AdminSessionsListing: React.FC = () => {
             : session
         )
       );
-    } catch (error) {
-      toast.error(SESSION_MESSAGES.SESSSION_STOPPING_FAILED);
+    } catch (error:unknown) {
+       const errorMsg =
+        (error as Error)?.message || SESSION_MESSAGES.SESSSION_STOPPING_FAILED;
+      toast.error(errorMsg);;
     } finally {
       setSelectedSession("");
     }

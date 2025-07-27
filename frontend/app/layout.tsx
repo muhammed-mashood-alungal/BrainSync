@@ -4,15 +4,8 @@ import "./globals.css";
 import { AuthProvider } from "../context/auth.context";
 import ToastProvider from "@/components/ui/toast/Toast";
 import Script from "next/script";
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// })
+import "@/global-types/razorpay.d.ts";
 
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// })
 const archivo = Archivo({
   subsets: ["latin"],
   weight: ["400", "500", "700"],

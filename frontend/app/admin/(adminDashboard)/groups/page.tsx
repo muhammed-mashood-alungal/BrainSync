@@ -7,7 +7,8 @@ const GroupsPage: React.FC = async () => {
   const fetchGroups = async () => {
     try {
       return await getAllGroupsServer();
-    } catch (err) {
+    } catch (err : unknown) {
+      console.log(err)
       return [];
     }
   };

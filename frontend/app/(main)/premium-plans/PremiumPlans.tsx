@@ -6,12 +6,14 @@ import { useAuth } from "@/context/auth.context";
 import { paymentServices } from "@/services/client/payment.client";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import { IPlans } from "@/types/plans.types";
+import { RazorpayPaymentErrorResponse, RazorpayPaymentResponse } from "@/types/razorpay.types";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { toast } from "react-hot-toast";
 interface PremiumPlansProps {
   plans: IPlans[];
 }
+
 
 const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
   const { user, checkAuth } = useAuth();
@@ -35,7 +37,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           name: "Brain Sync",
           description: "Payment for your order",
           order_id: order.id,
-          handler: async (response: any) => {
+          handler: async (response: RazorpayPaymentResponse) => {
             try {
               await paymentServices.verifyPayment(
                 response.razorpay_order_id,
@@ -64,19 +66,18 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
           },
         };
 
-        const rzpay = new (window as any).Razorpay(options);
+        const rzpay = new window.Razorpay(options);
         rzpay.open();
 
-        rzpay.on("payment.failed", (response: any) => {
-          console.error("Payment failed", response.error);
+        rzpay.on("payment.failed", (response: RazorpayPaymentErrorResponse) => {
           reject({
             success: false,
             message: "Payment failed",
             error: response.error,
           });
         });
-      } catch (err: any) {
-        toast.error(err.message || SUBSCRIPTION_MESSAGES.PAYMENT_ERROR);
+      } catch (err: unknown) {
+        toast.error((err as Error).message || SUBSCRIPTION_MESSAGES.PAYMENT_ERROR);
         reject({
           success: false,
           message: SUBSCRIPTION_MESSAGES.PAYMENT_ERROR,

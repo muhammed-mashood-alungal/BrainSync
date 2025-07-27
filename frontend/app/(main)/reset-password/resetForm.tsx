@@ -12,19 +12,19 @@ import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function ResetForm() {
   const { user } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
       router.push("/");
     }
-  }, [user]);
+  }, [user, router]);
 
   const [password, setPassword] = useState("");
   const [passwordErr, setPasswordErr] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   const [confirmPassErr, setConfirmPassErr] = useState("");
 
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams?.get("token");
 
