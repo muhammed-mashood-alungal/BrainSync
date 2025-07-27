@@ -184,4 +184,5 @@ const Table = <T,>({
   );
 };
 
-export default Table;
+const MemoizedTable = React.memo(Table) as typeof Table;
+export default MemoizedTable;

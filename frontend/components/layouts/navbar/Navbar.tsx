@@ -1,10 +1,10 @@
-// components/Navbar.jsx
 "use client";
 import { useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { toast } from "react-hot-toast";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,14 +14,11 @@ const Navbar = () => {
       await AuthServices.logout();
       checkAuth();
     } catch (err) {
-      console.log(err);
-      toast.error("Logout Failed");
+      toast.error(AUTH_MESSAGES.LOGOUT_FAILED);
     }
   };
   const handleGoToDashboard = async () => {
     console.log(document.cookie);
-    // router.refresh()
-    // router.push('/dashboard')
     window.location.href = "/dashboard";
   };
 
@@ -71,7 +68,6 @@ const Navbar = () => {
           )}
         </button>
 
-        {/* Desktop navigation */}
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
           <Link href="/" className="hover:text-gray-300">
             Home

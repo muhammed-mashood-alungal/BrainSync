@@ -5,8 +5,8 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth.context";
-import { AUTH_MESSAGES } from "@/constants/message.constants/auth.messages";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 const AdminPortal = () => {
   const [email, setEmail] = useState("");

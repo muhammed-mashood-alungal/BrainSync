@@ -44,7 +44,6 @@ export const WhiteBoardProvider = ({
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    
     const parent = canvasRef?.current?.parentElement;
     const fabricCanvas = new fabric.Canvas(canvasRef.current, {
       isDrawingMode: true,
@@ -102,7 +101,6 @@ export const WhiteBoardProvider = ({
 
     socket.on("canvas-data", (data: CanvasData) => {
       if (!data || typeof data.slideIndex === "undefined" || !data.canvasData) {
-        console.error("Invalid canvas-data format:", data);
         return;
       }
 
@@ -121,7 +119,7 @@ export const WhiteBoardProvider = ({
           setupCanvasEventListeners();
           updateSlideContent(data.canvasData);
         } catch (error) {
-          console.error("Error updating canvas:", error);
+          console.error(error);
         }
       } else {
         setSlides((prevSlides) => {
@@ -144,17 +142,16 @@ export const WhiteBoardProvider = ({
       });
     });
 
-
     socket.on("board-locked", (lockedBy) => {
       canvas.isDrawingMode = false;
       canvas.selection = false;
-      canvas.skipTargetFind = true; 
+      canvas.skipTargetFind = true;
       canvas.defaultCursor = "not-allowed";
       canvas.hoverCursor = "not-allowed";
 
       canvas.forEachObject((obj) => {
         obj.selectable = false;
-        obj.evented = false; 
+        obj.evented = false;
       });
       setIsLocked(true);
       setLockedBy(lockedBy);
@@ -311,7 +308,7 @@ export const WhiteBoardProvider = ({
         });
       });
     } else {
-      console.warn("No content found for slide", slideIndex);
+      console.warn(slideIndex);
     }
 
     setCurrentSlideIndex(slideIndex);
@@ -354,7 +351,6 @@ export const WhiteBoardProvider = ({
     }
   };
 
-  
   const handleBrushSizeChange = (size: number): void => {
     setBrushSize(size);
     if (canvas && canvas.freeDrawingBrush) {
@@ -404,7 +400,6 @@ export const WhiteBoardProvider = ({
           const width = pointer.x - startX;
           const height = pointer.y - startY;
 
-         
           rect.set({
             width: Math.abs(width),
             height: Math.abs(height),
@@ -455,7 +450,7 @@ export const WhiteBoardProvider = ({
           const pointer = canvas.getPointer(e.e);
           const dx = pointer.x - circleStartX;
           const dy = pointer.y - circleStartY;
-          const radius = Math.sqrt(dx * dx + dy * dy) / 2; 
+          const radius = Math.sqrt(dx * dx + dy * dy) / 2;
 
           circle.set({
             radius: radius,
@@ -523,7 +518,6 @@ export const WhiteBoardProvider = ({
     });
   };
 
-  
   const clearCurrentSlide = (): void => {
     if (!canvas || isLocked) return;
     canvas.clear();

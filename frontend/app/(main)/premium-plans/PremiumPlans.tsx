@@ -1,7 +1,7 @@
 "use client";
-import { AUTH_MESSAGES } from "@/constants/message.constants/auth.messages";
-import { CONFIG_MESSAGES } from "@/constants/message.constants/config.messages";
-import { SUBSCRIPTION_MESSAGES } from "@/constants/message.constants/subscription.messages";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import { CONFIG_MESSAGES } from "@/constants/messages/config.messages";
+import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
 import { useAuth } from "@/context/auth.context";
 import { paymentServices } from "@/services/client/payment.client";
 import { subscriptionServices } from "@/services/client/subscription.client";

@@ -9,7 +9,7 @@ import Input from "@/components/ui/Input/Input";
 import Link from "next/link";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function SignUpForm() {
   const router = useRouter();

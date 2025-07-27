@@ -15,6 +15,7 @@ import { noteServices } from "@/services/client/note.client";
 import { toast } from 'react-hot-toast';
 import { useRouter } from "next/navigation";
 import { SessionServices } from "@/services/client/session.client";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 
 interface PeerData {
   peerId: string;
@@ -79,7 +80,7 @@ export const VideoCallProvider = ({
           socketRef.current?.id as string
         );
       } catch (error) {
-        console.error("Error setting up audio detection:", error);
+        console.error(error);
       }
     };
 
@@ -114,7 +115,7 @@ export const VideoCallProvider = ({
               const newPeers = users
                 .filter((usr) => {
                   if (user?.email == usr.email) {
-                    toast.error("You Are Already On this session")
+                    toast.error(SESSION_MESSAGES.ALREADY_JOINED_THE_SESSION)
                     return router.push('/dashboard/sessions')
                   } else {
                     return !peersRef.current.some((p) => p.email === usr.email);

@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React, { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from "react";
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -9,53 +9,56 @@ interface BaseModalProps {
   title: string;
   submitText?: string;
   children: ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | 'full';
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "full";
 }
 
- function BaseModal({
+function BaseModal({
   isOpen,
   onClose,
   onSubmit,
   title,
   submitText = "Update",
   children,
-  size = 'md'
+  size = "md",
 }: BaseModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     }
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
       // Prevent body scrolling when modal is open
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = '';
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "";
     };
   }, [isOpen, onClose]);
 
   // Close on escape key press
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscKey);
+      document.addEventListener("keydown", handleEscKey);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscKey);
+      document.removeEventListener("keydown", handleEscKey);
     };
   }, [isOpen, onClose]);
 
@@ -69,19 +72,19 @@ interface BaseModalProps {
   //   xl: 'max-w-xl',
   // };
 
-   const sizeClasses = {
-    sm: 'max-w-sm', // 384px
-    md: 'max-w-md', // 448px
-    lg: 'max-w-lg', // 512px
-    xl: 'max-w-xl', // 576px
-    '2xl': 'max-w-2xl', // 672px
-    '3xl': 'max-w-3xl', // 768px
-    '4xl': 'max-w-4xl', // 896px
-    'full': 'max-w-[90%]', // 90% of viewport width
+  const sizeClasses = {
+    sm: "max-w-sm", // 384px
+    md: "max-w-md", // 448px
+    lg: "max-w-lg", // 512px
+    xl: "max-w-xl", // 576px
+    "2xl": "max-w-2xl", // 672px
+    "3xl": "max-w-3xl", // 768px
+    "4xl": "max-w-4xl", // 896px
+    full: "max-w-[90%]", // 90% of viewport width
   };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center  bg-[rgba(0,0,0,0.46)]">
-      <div 
+      <div
         ref={modalRef}
         className={`${sizeClasses[size]} w-full mx-4 bg-[#1b1b1d]  rounded-md shadow-lg overflow-hidden`}
       >
@@ -93,17 +96,33 @@ interface BaseModalProps {
             className="text-gray-400 hover:text-white transition-colors"
             aria-label="Close"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M18 6L6 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M6 6L18 18"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="px-6 py-4">
-          {children}
-        </div>
+        <div className="px-6 py-4">{children}</div>
 
         {/* Modal Footer */}
         {onSubmit && (
@@ -121,4 +140,4 @@ interface BaseModalProps {
   );
 }
 
-export default React.memo(BaseModal)
+export default React.memo(BaseModal);

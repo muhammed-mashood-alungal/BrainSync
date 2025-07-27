@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 export default function VerifyOtp() {
   const [otp, setOtp] = useState("");

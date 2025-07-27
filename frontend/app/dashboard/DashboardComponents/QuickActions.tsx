@@ -6,7 +6,7 @@ import { LogIn, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { SESSION_MESSAGES } from "@/constants/message.constants/session.messages";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 
 function QuickActions() {
   const router = useRouter();

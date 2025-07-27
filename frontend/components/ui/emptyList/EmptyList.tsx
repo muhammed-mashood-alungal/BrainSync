@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface EmptyListProps {
   title?: string;
@@ -11,22 +11,21 @@ const EmptyList: React.FC<EmptyListProps> = ({
   title = "No items found",
   message = "There are no items to display at the moment.",
   icon,
-  actionButton
+  actionButton,
 }) => {
   return (
     <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-      {/* Icon - Default is an empty folder/box icon */}
       <div className="text-gray-500 mb-4">
         {icon || (
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="64" 
-            height="64" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="1.5" 
-            strokeLinecap="round" 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="64"
+            height="64"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
             strokeLinejoin="round"
           >
             <path d="M3 6h18" />
@@ -35,19 +34,12 @@ const EmptyList: React.FC<EmptyListProps> = ({
           </svg>
         )}
       </div>
-      
-      {/* Title */}
+
       <h3 className="text-lg font-medium text-white mb-2">{title}</h3>
-      
-      {/* Message */}
+
       <p className="text-gray-400 mb-6 max-w-md">{message}</p>
-      
-      {/* Optional Action Button */}
-      {actionButton && (
-        <div>
-          {actionButton}
-        </div>
-      )}
+
+      {actionButton && <div>{actionButton}</div>}
     </div>
   );
 };

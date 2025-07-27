@@ -4,5 +4,6 @@ export const SESSION_MESSAGES = {
   SESSION_CREATED: "Session Created Successfully",
   SESSION_UPDATED: "Session updated Successfully",
   PROVIDE_SESSION_REPORTING_REASON : "Please provide a reason to report this session",
-  SESSION_REPORTED  : "Session Reported"
+  SESSION_REPORTED  : "Session Reported",
+  ALREADY_JOINED_THE_SESSION : "You already joined the session"
 };

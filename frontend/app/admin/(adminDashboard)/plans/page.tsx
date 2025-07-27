@@ -6,7 +6,7 @@ import CreatePlan from "./createPlan";
 import { plansServices } from "@/services/client/plans.client";
 import { toast } from "react-hot-toast";
 import { IPlans } from "@/types/plans.types";
-import { SUBSCRIPTION_MESSAGES } from "@/constants/message.constants/subscription.messages";
+import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
 
 function Page() {
   const [plans, setPlans] = useState<IPlans[]>([]);

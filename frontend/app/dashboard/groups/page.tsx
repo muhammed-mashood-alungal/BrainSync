@@ -13,8 +13,8 @@ import Confirm from "@/components/ui/modal/ConfirmModal";
 import CreateGroup from "./CreateGroup";
 import AddMember from "./AddMember";
 import Input from "@/components/ui/Input/Input";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
-import { GROUP_MESSAGES } from "@/constants/message.constants/group.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
 
 const GroupsPage: React.FC = () => {
   const [groups, setGroups] = useState<IGroupType[]>([]);

@@ -1,5 +1,4 @@
-// components/Footer.jsx
-import Link from 'next/link';
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -9,7 +8,7 @@ const Footer = () => {
           Ready To Improve Your Study Sessions?
         </h2>
       </div>
-      
+
       {/* Footer Content */}
       <div className="w-full bg-black text-white py-6 px-4">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
@@ -17,7 +16,7 @@ const Footer = () => {
           <div className="mb-4 md:mb-0">
             <p className="text-lg font-semibold">BrainSync© 2024</p>
           </div>
-          
+
           {/* Footer Links */}
           <div className=" md:flex items-center space-x-4 lg:space-x-8">
             <Link href="/terms" className="hover:text-gray-300">

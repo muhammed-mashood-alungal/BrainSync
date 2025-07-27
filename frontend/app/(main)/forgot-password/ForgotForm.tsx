@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import { useAuth } from "@/context/auth.context";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function ForgotForm() {
   const { user } = useAuth();

@@ -1,4 +1,6 @@
 "use client";
+import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 import { useAuth } from "@/context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { useRouter } from "next/navigation";
@@ -15,7 +17,7 @@ function UserInNav() {
       router.push("/login");
     } catch (err) {
       console.log(err);
-      toast.error("Logout Failed");
+      toast.error(AUTH_MESSAGES.LOGOUT_FAILED);
     }
   };
   return (

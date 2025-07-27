@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { useAuth } from "@/context/auth.context";
-import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function ResetForm() {
   const { user } = useAuth();

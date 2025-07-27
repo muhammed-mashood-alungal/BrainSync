@@ -1,4 +1,3 @@
-// components/Sidebar.jsx
 "use client";
 
 import { faCode } from "@fortawesome/free-solid-svg-icons";

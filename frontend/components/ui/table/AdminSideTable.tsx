@@ -184,4 +184,7 @@ const AdminSideTable = <T,>({
   );
 };
 
-export default AdminSideTable;
+
+const MemoizedTable = React.memo(AdminSideTable) as typeof AdminSideTable;
+export default MemoizedTable;
+

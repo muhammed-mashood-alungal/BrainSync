@@ -11,8 +11,11 @@ import {
 import { useSocket } from "./socket.context";
 import { codeEditorServices } from "@/services/client/code.client";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 import { useAuth } from "./auth.context";
+import { CODE_SNIPPETS } from "@/constants/codeEditor/codeSnippet.constants";
+import { CODE_EDITOR_MESSAGES } from "@/constants/messages/codeEditor.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 export type Language = "javascript" | "python" | "java" | "c" | "go";
 
@@ -23,7 +26,7 @@ interface CodeEditorProvider {
   isLocked: boolean;
   lockedBy: string;
   lockCode: (lockedBy: string) => void;
-  unLockCode: (userId : string) => void;
+  unLockCode: (userId: string) => void;
   isError: boolean;
   setIsError: (state: boolean) => void;
   setOutput: Dispatch<SetStateAction<string[]>>;
@@ -32,9 +35,9 @@ interface CodeEditorProvider {
   runCode: () => void;
   onMount: (editor: any) => void;
   setValue: (value: string) => void;
-  onCodeChange:(code : string , writer : string) =>void;
-  onClearOutput : ()=>void;
-  saveNote : (title :string) =>void
+  onCodeChange: (code: string, writer: string) => void;
+  onClearOutput: () => void;
+  saveNote: (title: string) => void;
 }
 const codeEditorContext = createContext<CodeEditorProvider | undefined>(
   undefined
@@ -42,26 +45,19 @@ const codeEditorContext = createContext<CodeEditorProvider | undefined>(
 
 export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
   const { socket } = useSocket();
-  const CODE_SNIPPETS: Record<Language, string> = {
-    javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Javascript");\n`,
-    python: `\ndef greet(name):\n\tprint("Hello, " + name + "!")\n\ngreet("Python")\n`,
-    java: `\npublic class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello World");\n\t}\n}\n`,
-    c: `\n#include <stdio.h>\n\nvoid greet(const char *name) {\n\tprintf("Hello, %s!\\n", name);\n}\n\nint main() {\n\tgreet("C");\n\treturn 0;\n}\n`,
-    go: `\npackage main\n\nimport "fmt"\n\nfunc greet(name string) {\n\tfmt.Println("Hello, " + name + "!")\n}\n\nfunc main() {\n\tgreet("Golang")\n}\n`,
-  };
+
   const editorRef = useRef<any>(null);
   const [language, setLanguage] = useState<Language>("javascript");
   const [writer, setWriter] = useState("");
-  
-  //const [sourceCode, setSourceCode] = useState("");
   const [output, setOutput] = useState<string[]>([]);
   const [isLocked, setIsLocked] = useState(false);
   const [lockedBy, setLockedBy] = useState("");
   const [isError, setIsError] = useState(false);
-  const {user}  = useAuth()
+  const { user } = useAuth();
   const [value, setValue] = useState<string | undefined>(
     CODE_SNIPPETS["javascript"]
   );
+
   useEffect(() => {
     if (!socket) return;
     socket?.on("change-language", (language: Language) => {
@@ -72,17 +68,17 @@ export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
     socket.on("writing", (writer) => {
       setWriter(writer);
     });
-    socket.on("source-code", (sourceCode , writer) => {
-      setWriter(writer)
-      setTimeout(()=>{
-        setWriter('')
-      },1000)
+    socket.on("source-code", (sourceCode, writer) => {
+      setWriter(writer);
+      setTimeout(() => {
+        setWriter("");
+      }, 1000);
       setValue(sourceCode);
     });
 
-    socket.on("output", (output , isError) => {
+    socket.on("output", (output, isError) => {
       setOutput(output);
-      setIsError(isError)
+      setIsError(isError);
     });
 
     socket.on("code-locked", (lockedBy) => {
@@ -97,30 +93,29 @@ export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
   }, [socket]);
 
   const lockCode = (lockedBy: string) => {
-    setIsLocked(true)
-    setLockedBy(lockedBy)
+    setIsLocked(true);
+    setLockedBy(lockedBy);
     socket?.emit("code-locked", { lockedBy });
-
   };
-  const unLockCode = (unlockingUser : string) => {
-    if(unlockingUser != lockedBy) return
-    setIsLocked(false)
-    setLockedBy('')
+  const unLockCode = (unlockingUser: string) => {
+    if (unlockingUser != lockedBy) return;
+    setIsLocked(false);
+    setLockedBy("");
     socket?.emit("code-unlocked");
   };
 
-  const onCodeChange = (code : string ,writer : string ) => {
-    console.log(code)
-    if(isLocked && (user?.id != lockedBy)){
-      return  
+  const onCodeChange = (code: string, writer: string) => {
+    console.log(code);
+    if (isLocked && user?.id != lockedBy) {
+      return;
     }
-    setValue(code)
-    socket?.emit('source-code' , {code , writer :writer })
+    setValue(code);
+    socket?.emit("source-code", { code, writer: writer });
   };
 
   const runCode = async () => {
-     if(isLocked && (writer != lockedBy)){
-      return  
+    if (isLocked && writer != lockedBy) {
+      return;
     }
     const sourceCode = editorRef.current.getValue();
     if (!sourceCode) {
@@ -130,43 +125,49 @@ export const CodeEditorProvider = ({ children }: { children: ReactNode }) => {
       language,
       sourceCode
     );
-    const out = result?.output?.split("\n")
+    const out = result?.output?.split("\n");
     setOutput(out);
 
-    if(result.stderr){
-        socket?.emit('output' , {output :out ,isError : true})
-        setIsError(true)
-    }else{
-        socket?.emit('output' , {output :out ,isError : false})
-        setIsError(false)
+    if (result.stderr) {
+      socket?.emit("output", { output: out, isError: true });
+      setIsError(true);
+    } else {
+      socket?.emit("output", { output: out, isError: false });
+      setIsError(false);
     }
   };
 
-  const onClearOutput  = ()=>{
-     if(isLocked && (writer != lockedBy)){
-      return  
+  const onClearOutput = () => {
+    if (isLocked && writer != lockedBy) {
+      return;
     }
-    setOutput([])
-    setIsError(false)
-    socket?.emit("output" , {output :[] , isError : false});
-  }
+    setOutput([]);
+    setIsError(false);
+    socket?.emit("output", { output: [], isError: false });
+  };
 
-  const saveNote=async(title : string)=>{
+  const saveNote = async (title: string) => {
     try {
-        const result = await codeSnippetServices.saveCode({title , language , sourceCode : value  })
-        toast.success("Code Saved Successfully")
-    } catch (error : unknown) {
-        toast.error((error as Error).message || "Something Went Wrong")
+      const result = await codeSnippetServices.saveCode({
+        title,
+        language,
+        sourceCode: value,
+      });
+      toast.success(CODE_EDITOR_MESSAGES.CODE_SAVED_SUCCESSFULLY);
+    } catch (error: unknown) {
+      toast.error(
+        (error as Error).message || COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED
+      );
     }
-  }
+  };
 
   const onMount = (editor: any) => {
     editorRef.current = editor;
     editor.focus();
   };
   const onSelect = (language: Language) => {
-     if(isLocked && (user?.id != lockedBy)){
-      return  
+    if (isLocked && user?.id != lockedBy) {
+      return;
     }
     setLanguage(language);
     setValue(CODE_SNIPPETS[language]);
