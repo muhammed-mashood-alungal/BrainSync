@@ -4,7 +4,6 @@ import "./globals.css";
 import { AuthProvider } from "../context/auth.context";
 import ToastProvider from "@/components/ui/toast/Toast";
 import Script from "next/script";
-import "@/global-types/razorpay.d.ts";
 
 const archivo = Archivo({
   subsets: ["latin"],

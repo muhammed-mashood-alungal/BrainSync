@@ -1,10 +1,11 @@
+'use client'
 import { ChatProvider } from "@/context/chat.context";
 import { CodeEditorProvider } from "@/context/codeEditor.context";
 import { SocketProvider } from "@/context/socket.context";
 import { VideoCallProvider } from "@/context/videoConference.context";
 import { WhiteBoardProvider } from "@/context/whiteBoardContex";
 import SessionWorkspace from "./SessionWorkspace";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Session } from "@/types/sessionTypes";
@@ -25,12 +26,13 @@ const SessionProvidersWrapper: React.FC<SessionProvidersWrapperProps> = ({
   session: Session;
 }) => {
   const router = useRouter();
+
   useEffect(() => {
     if (!validationRes?.status) {
       toast.error(validationRes?.message);
       router.push("/dashboard/sessions");
     }
-  }, [validationRes]);
+  }, [validationRes, router]);
 
   if (!validationRes?.status) return;
   return (
