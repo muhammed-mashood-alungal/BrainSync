@@ -6,7 +6,7 @@ import { LogIn, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
+import { SESSION_MESSAGES } from "@/constants/message.constants/session.messages";
 
 function QuickActions() {
   const router = useRouter();
@@ -56,7 +56,7 @@ function QuickActions() {
               <p className="text-sm text-cyan-100">Enter with code/link</p>
             </div>
           </div>
-          
+
           <Link href={"/dashboard/groups#create"}>
             <div className="bg-gradient-to-r from-cyan-600 to-cyan-500 rounded-lg p-4 flex items-center cursor-pointer hover:shadow-lg transition">
               <div className="bg-cyan-400 bg-opacity-30 rounded-full p-2 mr-4">

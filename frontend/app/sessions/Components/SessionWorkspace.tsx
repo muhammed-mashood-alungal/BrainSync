@@ -30,11 +30,14 @@ import Button from "@/components/ui/button/Button";
 import CodeEditor from "./CodeEditor";
 import { CodeEditorProvider } from "@/context/codeEditor.context";
 import { IGroupType } from "@/types/groupTypes";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { commonReportReasons } from "@/constants/session/session.reportMessages";
 
-const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
-  roomId,
-  session,
-}) => {
+const SessionWorkspace: React.FC<{
+  roomId: string;
+  session: ISessionTypes;
+}> = ({ roomId, session }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("video");
   const [isVisible, setIsVisible] = useState(false);
@@ -46,15 +49,14 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
   const { leaveRoom, peers } = useVideoCall();
   const { user } = useAuth();
   const joinTimeRef = useRef(0);
+
   useEffect(() => {
     joinTimeRef.current = Date.now();
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       const { duration, log } = getTimeSpent();
 
-      //console.log(`Session Duration: ${totalDurationMinutes} minutes`);
       leaveRoom(duration, log);
       e.preventDefault();
-      //e.returnValue = "";
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
@@ -81,17 +83,9 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
     };
   }, []);
 
-  const commonReportReasons = [
-    "Inappropriate Behavior",
-    "Sharing Inappropriate Content",
-    "Spamming / Disruption",
-    "Impersonation / Fake Identity",
-    "Off-Topic or Misuse",
-  ];
-
   const getTimeSpent = () => {
-    const leaveTime = new Date(); // Instead of Date.now()
-    const joinTime = new Date(joinTimeRef.current); // Convert timestamp to Date
+    const leaveTime = new Date();
+    const joinTime = new Date(joinTimeRef.current);
 
     const duration = leaveTime.getTime() - joinTime.getTime();
 
@@ -103,8 +97,6 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
 
   const handleLeave = () => {
     const { duration, log } = getTimeSpent();
-    // console.log(`Session Duration: ${totalDurationMinutes} minutes`);
-
     leaveRoom(duration, log);
     router.push("/dashboard/sessions");
   };
@@ -113,7 +105,7 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
     try {
       setIsReporting(false);
       if (!reportReason) {
-        return toast.error("Please Provide a Error Message");
+        return toast.error(SESSION_MESSAGES.PROVIDE_SESSION_REPORTING_REASON);
       }
 
       const data = {
@@ -123,11 +115,10 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
         reportedby: user?.id,
       };
       await reportService.reportSession(data);
-      toast.success("Reported Successfully");
+      toast.success(SESSION_MESSAGES.SESSION_REPORTED);
       setConfirmationOn(true);
     } catch (error) {
-      console.log(error);
-      toast.error("Something Went Wrong");
+      toast.error(COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
     }
   };
 
@@ -262,7 +253,6 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
       {/* Main Content Area */}
       <div className="px-4 pb-4 flex flex-col md:flex-row gap-4 h-[calc(100vh-150px)]">
         <div className="flex-grow relative">
-          {/* Always render VideoConference, hide it with CSS when not active */}
           <div
             className={`${activeTab === "video" ? "block" : "hidden"} h-full`}
           >
@@ -286,7 +276,6 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
               activeTab === "code" ? "block" : "hidden"
             } h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}
           >
-            {/* <p className="text-gray-400">Code editor will appear here</p> */}
             <CodeEditor roomId={roomId} />
           </div>
           <div
@@ -294,7 +283,6 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
               activeTab === "notes" ? "block" : "hidden"
             } h-full flex items-center justify-center bg-gray-800 rounded-lg border border-cyan-500`}
           >
-            {/* <p className="text-gray-400">Notes will appear here</p> */}
             <NoteEditor roomId={roomId} />
           </div>
         </div>
@@ -457,42 +445,5 @@ const SessionContent: React.FC<{ roomId: string; session: ISessionTypes }> = ({
     </div>
   );
 };
-interface PageProps {
-  sessionCode: string;
-  validationRes: { status: true; message: string };
-  session: Session;
-}
 
-const Page: React.FC<PageProps> = ({
-  sessionCode,
-  validationRes,
-  session,
-}: {
-  sessionCode: string;
-  validationRes: { status: true; message: string };
-  session: Session;
-}) => {
-  const router = useRouter();
-  useEffect(() => {
-    if (!validationRes?.status) {
-      toast.error(validationRes?.message);
-      router.push("/dashboard/sessions");
-    }
-  }, [validationRes]);
-
-  if (!validationRes?.status) return;
-  return (
-    <SocketProvider>
-      <VideoCallProvider roomId={sessionCode as string}>
-        <ChatProvider>
-          <CodeEditorProvider>
-            <WhiteBoardProvider roomId={sessionCode as string}>
-              <SessionContent roomId={sessionCode} session={session} />
-            </WhiteBoardProvider>
-          </CodeEditorProvider>
-        </ChatProvider>
-      </VideoCallProvider>
-    </SocketProvider>
-  );
-};
-export default Page;
+export default SessionWorkspace;

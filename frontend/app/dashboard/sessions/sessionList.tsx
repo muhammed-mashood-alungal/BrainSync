@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 import { useAuth } from "@/context/auth.context";
 import { IGroupType } from "@/types/groupTypes";
@@ -11,6 +11,9 @@ import CreateSession from "./CreateSession";
 import GenericListing from "@/components/features/session/SessionListing/SessionListing";
 import { FileDown } from "lucide-react";
 import toast from "react-hot-toast";
+import { getStatus, getStatusColor } from "@/utils/sessionStatus.util";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { formatToLocaleString } from "@/utils/time.util";
 
 const SessionsListing: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -30,69 +33,70 @@ const SessionsListing: React.FC = () => {
     }
   }, []);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Live":
-        return "text-green-500";
-      case "Scheduled":
-        return "text-yellow-500";
-      case "Ended":
-        return "text-red-500";
-      default:
-        return "text-gray-400";
-    }
-  };
-
   const goToRoom = (sessionCode: string) => {
     router.push(`/sessions/${sessionCode}`);
-  };
-
-  const getStatus = (start: Date | string, end: Date | string) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const currentDate = new Date();
-
-    if (startDate > currentDate) {
-      return "Scheduled";
-    }
-    if (startDate < currentDate && endDate > currentDate) {
-      return "Live";
-    }
-    if (endDate < currentDate) {
-      return "Ended";
-    }
   };
 
   const downloadReport = async (sessionId: string) => {
     try {
       const response = await SessionServices.downloadSessionReport(sessionId);
       if (!response) return;
-      toast.success("PDF Downloaded Successfully");
+      toast.success(COMMON_MESSAGES.PDF_DOWNLOADED);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const fetchFilteredSessions = async (
-    searchQuery: string,
-    filterSubject: string,
-    startDate: string | null,
-    endDate: string | null,
-    sort: boolean,
-    skip: number,
-    limit: number
-  ) => {
-    const { sessions, count } = await SessionServices.getFilteredSessions(
-      searchQuery,
-      filterSubject,
-      startDate,
-      endDate,
-      Number(sort),
-      skip,
-      limit
-    );
-    return { items: sessions, count };
+  const handleBaseModalClose = useCallback(() => {
+    setIsDetailsOpen(false);
+    setSessionData(null);
+  }, []);
+
+  const handleCreateModalClose = (newSession?: Session) => {
+    setCreateOpen(false);
+    router.push("/dashboard/sessions");
+    if (newSession) {
+      setSessions((prev) => {
+        return [...prev, newSession];
+      });
+    }
   };
+
+  const handleUpdateModalClose = (newSession?: Session) => {
+    if (newSession) {
+      setSessions((prev) => {
+        return prev.map((s) => {
+          return s._id == sessionData?._id ? newSession : s;
+        });
+      });
+    }
+    setUpdateOpen(false);
+    setSessionData(null);
+  };
+
+  const fetchFilteredSessions = useCallback(
+    async (
+      searchQuery: string,
+      filterSubject: string,
+      startDate: string | null,
+      endDate: string | null,
+      sort: boolean,
+      skip: number,
+      limit: number
+    ) => {
+      const { sessions, count } = await SessionServices.getFilteredSessions(
+        searchQuery,
+        filterSubject,
+        startDate,
+        endDate,
+        Number(sort),
+        skip,
+        limit
+      );
+      return { items: sessions, count };
+    },
+    []
+  );
 
   const renderSessionCard = (session: Session) => {
     return (
@@ -146,20 +150,20 @@ const SessionsListing: React.FC = () => {
               <span className="text-gray-400">Date :</span>
             </div>
             <div>
-              <span>{new Date(session.date).toLocaleDateString()}</span>
+              <span>{formatToLocaleString(session.date)}</span>
             </div>
             <div>
               <span className="text-gray-400">Start Time:</span>
             </div>
             <div>
-              <span>{new Date(session.startTime).toLocaleTimeString()}</span>
+              <span>{formatToLocaleString(session.startTime)}</span>
             </div>
 
             <div>
               <span className="text-gray-400">End Time:</span>
             </div>
             <div>
-              <span>{new Date(session.endTime).toLocaleTimeString()}</span>
+              <span>{formatToLocaleString(session.endTime)}</span>
             </div>
 
             <div>
@@ -220,10 +224,10 @@ const SessionsListing: React.FC = () => {
     );
   };
 
-  const handleCreateClick = () => {
+  const handleCreateClick = useCallback(() => {
     router.push("/dashboard/sessions#create");
     setCreateOpen(true);
-  };
+  }, []);
 
   const filterOptions = [
     { value: "Mathematics", label: "Math" },
@@ -251,10 +255,7 @@ const SessionsListing: React.FC = () => {
 
       <BaseModal
         isOpen={isDetailsOpen}
-        onClose={() => {
-          setIsDetailsOpen(false);
-          setSessionData(null);
-        }}
+        onClose={handleBaseModalClose}
         title="Session Details"
       >
         <SessionDetailsModal session={sessionData} />
@@ -262,32 +263,14 @@ const SessionsListing: React.FC = () => {
 
       {iscreatOpen && (
         <CreateSession
-          onClose={(newSession?: Session) => {
-            setCreateOpen(false);
-            router.push("/dashboard/sessions");
-            if (newSession) {
-              setSessions((prev) => {
-                return [...prev, newSession];
-              });
-            }
-          }}
+          onClose={handleCreateModalClose}
           type={"create"}
           data={null}
         />
       )}
       {isUpdateOpen && (
         <CreateSession
-          onClose={(newSession?: Session) => {
-            if (newSession) {
-              setSessions((prev) => {
-                return prev.map((s) => {
-                  return s._id == sessionData?._id ? newSession : s;
-                });
-              });
-            }
-            setUpdateOpen(false);
-            setSessionData(null);
-          }}
+          onClose={handleUpdateModalClose}
           type={"update"}
           data={sessionData}
         />

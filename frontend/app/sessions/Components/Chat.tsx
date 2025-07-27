@@ -31,7 +31,6 @@ const ChatComponent = () => {
     e.preventDefault();
     if (newMessage.trim() === "") return;
     const id = uuidv4();
-    console.log("Unique id  is :", id);
     const currentTime = new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -54,7 +53,6 @@ const ChatComponent = () => {
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
-      {/* Toggle Button */}
       {!isOpen && (
         <button
           onClick={toggleChat}
@@ -77,15 +75,12 @@ const ChatComponent = () => {
         </button>
       )}
 
-      {/* Chat Interface */}
+      
       {isOpen && (
         <div className="bg-gray-900 rounded-lg shadow-xl w-90 flex flex-col h-[85vh] overflow-hidden">
-          {/* Chat Header */}
           <div className="bg-gray-800 px-4 py-2 flex justify-between items-center">
             <div className="flex space-x-4">
               <button className="text-gray-300 hover:text-white">Chat</button>
-              {/* <button className="text-gray-500 hover:text-gray-300">Report</button>
-                            <button className="text-gray-500 hover:text-gray-300">Options</button> */}
             </div>
             <button
               onClick={closeChat}

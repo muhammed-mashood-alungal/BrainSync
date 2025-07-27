@@ -7,7 +7,7 @@ import { AdminServices } from "@/services/client/admin.client";
 import { IUserType } from "@/types/userTypes";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
-import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
 
 function StudentList({
   initialStudents,

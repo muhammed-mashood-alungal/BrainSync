@@ -66,7 +66,6 @@ const WhiteboardWithSlides: React.FC = () => {
             onClick={() => {
               toggleDrawingMode("rectangle");
               if (currentMode === "rectangle") {
-                // addShape('rectangle');
               }
             }}
           >
@@ -80,9 +79,6 @@ const WhiteboardWithSlides: React.FC = () => {
             }`}
             onClick={() => {
               toggleDrawingMode("circle");
-              if (currentMode === "circle") {
-                // addShape('circle');
-              }
             }}
           >
             <FontAwesomeIcon icon={faCircle} />
@@ -178,8 +174,6 @@ const WhiteboardWithSlides: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Slide controls */}
 
       {/* Canvas container */}
       <div className="flex-1 w-full overflow-hidden rounded-md border border-gray-300 bg-gray-100">

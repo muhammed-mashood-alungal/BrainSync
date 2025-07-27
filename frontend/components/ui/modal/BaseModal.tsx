@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect, useRef } from 'react'
+import React, { ReactNode, useEffect, useRef } from 'react'
 
 interface BaseModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface BaseModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | 'full';
 }
 
-export default function BaseModal({
+ function BaseModal({
   isOpen,
   onClose,
   onSubmit,
@@ -120,3 +120,5 @@ export default function BaseModal({
     </div>
   );
 }
+
+export default React.memo(BaseModal)

@@ -7,8 +7,8 @@ import { validateCreateGroup } from "@/validations";
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
-import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
+import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
+import { GROUP_MESSAGES } from "@/constants/message.constants/group.messages";
 
 function CreateGroup({
   setGroups,

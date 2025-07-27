@@ -328,7 +328,7 @@ const NoteEditor = ({ roomId }: { roomId: string }) => {
           onUpdate={handleUpdate}
           editorProps={{
             attributes: {
-              class: `${styles.proseMirror} prose max-w-none p-4 focus:outline-none`, // Apply the scoped class
+              class: `${styles.proseMirror} prose max-w-none p-4 focus:outline-none`,
             },
           }}
         />

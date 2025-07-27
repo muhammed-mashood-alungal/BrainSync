@@ -271,4 +271,5 @@ const GenericListing = <T extends object>({
   );
 };
 
-export default GenericListing;
+const MemoizedList  =  React.memo(GenericListing) as typeof GenericListing
+export default MemoizedList

@@ -9,6 +9,7 @@ import { SessionServices } from "@/services/client/session.client";
 import GenericListing from "@/components/features/session/SessionListing/SessionListing";
 import toast from "react-hot-toast";
 import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
+import { getStatus, getStatusColor } from "@/utils/sessionStatus.util";
 
 interface Session extends ISessionTypes {
   _id: string;
@@ -20,33 +21,6 @@ const AdminSessionsListing: React.FC = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Live":
-        return "text-green-500";
-      case "Scheduled":
-        return "text-yellow-500";
-      case "Ended":
-      default:
-        return "text-gray-400";
-    }
-  };
-
-  const getStatus = (start: Date | string, end: Date | string) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const currentDate = new Date();
-
-    if (startDate > currentDate) {
-      return "Scheduled";
-    }
-    if (startDate < currentDate && endDate > currentDate) {
-      return "Live";
-    }
-    if (endDate < currentDate) {
-      return "Ended";
-    }
-  };
   const downloadReport = async (sessionId: string) => {
     try {
       const response = await SessionServices.downloadSessionReport(sessionId);
@@ -68,7 +42,7 @@ const AdminSessionsListing: React.FC = () => {
         )
       );
     } catch (error) {
-      toast.error(SESSION_MESSAGES.SESSSION_STOPPING_FAILED)
+      toast.error(SESSION_MESSAGES.SESSSION_STOPPING_FAILED);
     } finally {
       setSelectedSession("");
     }

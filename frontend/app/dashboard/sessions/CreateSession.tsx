@@ -12,6 +12,8 @@ import { AxiosError } from "axios";
 import { ChevronDown } from "lucide-react";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 function CreateSession({
   onClose,
@@ -39,6 +41,7 @@ function CreateSession({
       : "",
     groupId: (data?.groupId as IGroupType)?._id || "",
   });
+
   const [err, setErr] = useState({
     sessionName: "",
     subject: "",
@@ -80,20 +83,19 @@ function CreateSession({
           const response: Session = await SessionServices.createSession(
             formData
           );
-          toast.success("Session Created Successfully");
+          toast.success(SESSION_MESSAGES.SESSION_CREATED);
           onClose(response);
         } else {
           const response: Session = await SessionServices.updateSession(
             formData,
             data?._id as string
           );
-          toast.success("Session Updated Successfully");
+          toast.success(SESSION_MESSAGES.SESSION_UPDATED);
           onClose(response);
         }
       } catch (err: unknown) {
         const error = err as AxiosError<string>;
-        console.log(error);
-        toast.error(error.message || "An UnExpected Error Occured");
+        toast.error(error.message || COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED);
       }
     } else {
       setErr(() => {
@@ -110,11 +112,12 @@ function CreateSession({
     setLoading(false);
   };
 
+  const fetchMyGroups = async () => {
+    const groups = await GroupServices.getMyGroups(user?.id as string, "");
+    setMyGroups(groups);
+  };
+
   useEffect(() => {
-    const fetchMyGroups = async () => {
-      const groups = await GroupServices.getMyGroups(user?.id as string, "");
-      setMyGroups(groups);
-    };
     fetchMyGroups();
   }, [user?.id]);
 

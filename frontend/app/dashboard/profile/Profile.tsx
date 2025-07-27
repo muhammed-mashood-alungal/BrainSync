@@ -80,10 +80,10 @@ function Profile() {
   const editUsername = async () => {
     try {
       if (newUsername.trim() == "") {
-        return toast.error("Plese Provide a Username");
+        return toast.error(USER_MESSAGES.PLEASE_ENTER_A_NAME);
       }
       if (newUsername == userData?.username) {
-        return toast.error("The is Nothing To Update");
+        return toast.error(COMMON_MESSAGES.NOTHING_TO_UPDATE);
       }
       await UserServices.editUsername(user?.id as string, newUsername);
 
@@ -113,7 +113,6 @@ function Profile() {
     }
   };
   const handleSaveCroppedImage = async (croppedFile: File) => {
-
     try {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -127,7 +126,7 @@ function Profile() {
       toast.success(USER_MESSAGES.PROFILE_PICTURE_UPDATED);
     } catch (error) {
       console.error(error);
-    } 
+    }
   };
 
   const changePassword = async () => {
@@ -136,7 +135,7 @@ function Profile() {
     if (oldPass.trim() === "") {
       setChangePassErr((prev) => ({
         ...prev,
-        oldPass: "Please Enter Your Old Password",
+        oldPass: USER_MESSAGES.PLEASE_ENTER_OLD_PASS,
       }));
       return;
     }
@@ -224,8 +223,6 @@ function Profile() {
         </div>
 
         <div className=" rounded-lg p-6 mb-6">
-        
-
           <div className="flex justify-between">
             <div className="text-center bg-[#2B2B2B] w-full p-5 m-1 rounded-2xl">
               <p className="text-white text-4xl font-bold">
@@ -259,7 +256,7 @@ function Profile() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveCroppedImage}
-        aspect={1} 
+        aspect={1}
         imageFile={selectedFile}
       />
 

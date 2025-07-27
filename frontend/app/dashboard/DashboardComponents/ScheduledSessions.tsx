@@ -2,6 +2,7 @@
 import { SessionServices } from "@/services/client/session.client";
 import { IGroupType } from "@/types/groupTypes";
 import { Session } from "@/types/sessionTypes";
+import { getStatus, getStatusColor } from "@/utils/sessionStatus.util";
 import { FileQuestion } from "lucide-react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -24,34 +25,8 @@ function ScheduledSessions() {
     fetchSesssion();
   }, []);
 
-  const getStatus = (start: Date | string, end: Date | string) => {
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    const currentDate = new Date();
+  
 
-    if (startDate > currentDate) {
-      return "Scheduled";
-    }
-    if (startDate < currentDate && endDate > currentDate) {
-      return "Live";
-    }
-    if (endDate < currentDate) {
-      return "Ended";
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Live":
-        return "text-green-500";
-      case "Scheduled":
-        return "text-yellow-500";
-      case "Ended":
-        return "text-red-500";
-      default:
-        return "text-gray-400";
-    }
-  };
   return (
     <>
       <section className="mb-8">

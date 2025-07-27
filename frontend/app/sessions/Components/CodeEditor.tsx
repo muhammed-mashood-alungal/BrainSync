@@ -16,6 +16,9 @@ import { toast } from "react-hot-toast";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { useAuth } from "@/context/auth.context";
 import Link from "next/link";
+import { CODE_SNIPPETS } from "@/constants/codeEditor/codeSnippet.constants";
+import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { CODE_EDITOR_MESSAGES } from "@/constants/messages/codeEditor.messages";
 function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,
@@ -24,13 +27,10 @@ function CodeEditor({ roomId }: { roomId: string }) {
     lockCode,
     lockedBy,
     output,
-    // setIsError,
     onCodeChange,
     unLockCode,
     writer,
-    // setOutput,
     value,
-    // setValue,
     onMount,
     onSelect,
     runCode,
@@ -52,7 +52,9 @@ function CodeEditor({ roomId }: { roomId: string }) {
       setTitle("");
 
       if (!isValidFileName(title)) {
-        return setSetTitleError("Please Enter a valid Title");
+        return setSetTitleError(
+          CODE_EDITOR_MESSAGES.PLEASE_ENTER_A_VALID_FILE_NAME
+        );
       }
       await codeSnippetServices.saveCode({
         title,
@@ -60,20 +62,17 @@ function CodeEditor({ roomId }: { roomId: string }) {
         sourceCode: value,
         sessionId: roomId,
       });
-      toast.success("Code Saved Successfully");
+      toast.success(CODE_EDITOR_MESSAGES.CODE_SAVED_SUCCESSFULLY);
       setIsTitleModalOpen(false);
     } catch (error: unknown) {
-      setSetTitleError((error as Error).message || "Something Went Wrong");
+      setSetTitleError(
+        (error as Error).message || COMMON_MESSAGES.UNEXPECTED_ERROR_OCCURED
+      );
     }
   };
 
-  const CODE_SNIPPETS: Record<Language, string> = {
-    javascript: `\nfunction greet(name) {\n\tconsole.log("Hello, " + name + "!");\n}\n\ngreet("Javascript");\n`,
-    python: `\ndef greet(name):\n\tprint("Hello, " + name + "!")\n\ngreet("Python")\n`,
-    java: `\npublic class HelloWorld {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println("Hello World");\n\t}\n}\n`,
-    c: `\n#include <stdio.h>\n\nvoid greet(const char *name) {\n\tprintf("Hello, %s!\\n", name);\n}\n\nint main() {\n\tgreet("C");\n\treturn 0;\n}\n`,
-    go: `\npackage main\n\nimport "fmt"\n\nfunc greet(name string) {\n\tfmt.Println("Hello, " + name + "!")\n}\n\nfunc main() {\n\tgreet("Golang")\n}\n`,
-  };
+  const handleCodeChange = (value : any) =>
+    onCodeChange(value as string, user?.username as string);
 
   return (
     <>
@@ -143,9 +142,7 @@ function CodeEditor({ roomId }: { roomId: string }) {
                 defaultValue={CODE_SNIPPETS[language as Language]}
                 theme="vs-dark"
                 value={value}
-                onChange={(value) =>
-                  onCodeChange(value as string, user.username as string)
-                }
+                onChange={handleCodeChange}
                 language={language}
                 options={{
                   readOnly: isLocked && user?.id !== lockedBy,

@@ -96,7 +96,6 @@ interface PeerData {
   email?: string;
 }
 
-// Define types for our participant objects
 type MeParticipant = {
   type: "me";
   id: string;
@@ -129,7 +128,6 @@ export default function Room({
   } = useVideoCall();
   const myVideoRef = useRef<HTMLVideoElement>(null);
   const [pinnedUser, setPinnedUser] = useState<string | null>(null);
-  // const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (myVideoRef.current && myStream) {
@@ -158,11 +156,9 @@ export default function Room({
     }
 
     if (isPinActive) {
-      // On mobile, show 2 columns even when a user is pinned
       return "grid-cols-2 md:grid-cols-4";
     }
 
-    // Always show at least 2 columns on mobile
     if (totalParticipants <= 2) {
       return "grid-cols-2";
     } else if (totalParticipants <= 4) {
@@ -174,22 +170,18 @@ export default function Room({
     }
   };
 
-  // And update the getParticipantClass function to handle mobile pinning:
   const getParticipantClass = (id: string) => {
     if (pinnedUser === null) {
-      return ""; // No pinned user, all videos are equal size
+      return "";
     }
 
     if (id === pinnedUser) {
-      // For mobile, make pinned user span the full width on its own row
-      // For larger screens, use the 3/4 layout
       return "col-span-full md:col-span-3 md:row-span-2 ";
     }
 
-    return ""; // Other users are shown in smaller tiles
+    return "";
   };
 
-  // Combined list of all participants (me + peers) with proper typing
   const allParticipants: Participant[] = [
     { type: "me" as const, id: "me" },
     ...peers.map((peer) => ({
@@ -198,7 +190,7 @@ export default function Room({
       data: peer,
     })),
   ];
-  // Reorder to put pinned user first if any
+
   const orderedParticipants = allParticipants.sort((a, b) => {
     if (a.id === pinnedUser) return -1;
     if (b.id === pinnedUser) return 1;
@@ -207,7 +199,6 @@ export default function Room({
 
   return (
     <div
-      // ref={setContainerRef}
       className={`h-[85vh] grid gap-2 p-2 ${getGridLayout()} auto-rows-fr overflow-hidden`}
     >
       {orderedParticipants.map((participant) => {
@@ -253,7 +244,6 @@ export default function Room({
             </div>
           );
         } else {
-          // Use type guard to ensure TypeScript knows this participant has data property
           const peerParticipant = participant as PeerParticipant;
           const peerData = peerParticipant.data;
 

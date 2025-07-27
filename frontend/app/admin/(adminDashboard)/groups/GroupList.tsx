@@ -8,8 +8,8 @@ import { IGroupType } from "@/types/groupTypes";
 import Confirm from "@/components/ui/modal/ConfirmModal";
 import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
-import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
-import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { GROUP_MESSAGES } from "@/constants/message.constants/group.messages";
+import { COMMON_MESSAGES } from "@/constants/message.constants/common.messages";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);

@@ -1,5 +1,5 @@
 "use client";
-import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import { AUTH_MESSAGES } from "@/constants/message.constants/auth.messages";
 import { useAuth } from "@/context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
 import { AuthServices } from "@/services/client/auth.client";
