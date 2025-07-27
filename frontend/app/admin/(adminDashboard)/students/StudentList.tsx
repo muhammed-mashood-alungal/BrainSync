@@ -8,6 +8,7 @@ import { IUserType } from "@/types/userTypes";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { formatDate } from "@/utils/time.util";
 
 function StudentList({
   initialStudents,
@@ -70,7 +71,8 @@ function StudentList({
       );
       setblockingStudents("");
     } catch (error) {
-      toast.error(USER_MESSAGES.USER_UPDATION_FAILED);
+      const errorMsg =  (error as Error).message || USER_MESSAGES.USER_UPDATION_FAILED
+      toast.error(errorMsg);
     }
   };
 
@@ -79,14 +81,7 @@ function StudentList({
     setIsViewModalOpen(true);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+ 
 
   const handlePageChange = useCallback(
     (page: number, limit: number, searchQuery: string | undefined) => {
