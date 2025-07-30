@@ -16,7 +16,7 @@ export class UserController implements IUserController {
   ): Promise<void> {
     try {
       const Image = req.file;
-      const { userId } = req.params;
+      const userId  = req.user;
       if (!Image) {
         throw createHttpsError(
           HttpStatus.NOT_FOUND,
@@ -51,7 +51,7 @@ export class UserController implements IUserController {
   ): Promise<void> {
     try {
       const { username } = req.body;
-      const { userId } = req.params;
+      const userId  = req.user;
 
       await this._userServices.editUsername(userId, username);
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED));
@@ -66,7 +66,7 @@ export class UserController implements IUserController {
   ): Promise<void> {
     try {
       const { oldPass, newPass } = req.body;
-      const { userId } = req.params;
+      const userId = req.user;
       await this._userServices.updatePassword(userId, oldPass, newPass);
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED));
     } catch (error) {
@@ -149,7 +149,7 @@ export class UserController implements IUserController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.user;
       await this._userServices.deleteProfilePic(userId);
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.UPDATED));
     } catch (error) {

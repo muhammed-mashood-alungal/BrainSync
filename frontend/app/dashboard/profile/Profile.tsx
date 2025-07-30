@@ -11,6 +11,7 @@ import { Trash } from "lucide-react";
 import UserInNav from "@/components/layouts/navbar/UserInNav";
 import SubscriptionHistory from "./SubscriptionHistory";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import { USER_MESSAGES } from "@/constants/messages/user.message";
 
 function Profile() {
   const { user } = useAuth();

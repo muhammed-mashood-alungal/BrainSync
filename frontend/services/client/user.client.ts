@@ -5,7 +5,7 @@ export const UserServices = {
   changeProfilePic: async (data: FormData, userId: string): Promise<string> => {
     try {
       const response = await userInstances.put(
-        `/change-profile-photo/${userId}`,
+        `/change-profile-photo`,
         data
       );
       return response.data.imageUrl;
@@ -31,7 +31,7 @@ export const UserServices = {
   },
   editUsername: async (userId: string, username: string) => {
     try {
-      const response = await userInstances.put(`/edit-username/${userId}`, {
+      const response = await userInstances.put(`/edit-username`, {
         username,
       });
       return response.data?.user;
@@ -45,7 +45,7 @@ export const UserServices = {
   },
   changePassword: async (userId: string, oldPass: string, newPass: string) => {
     try {
-      const response = await userInstances.put(`/change-password/${userId}`, {
+      const response = await userInstances.put(`/change-password`, {
         oldPass,
         newPass,
       });
@@ -72,7 +72,7 @@ export const UserServices = {
   deleteProfilePic: async (userId: string) => {
     try {
       const response = await userInstances.delete(
-        `/delete-profile-photo/${userId}`
+        `/delete-profile-photo`
       );
       return response.data;
     } catch (error) {

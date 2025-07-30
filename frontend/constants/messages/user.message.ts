@@ -1,4 +1,4 @@
-const USER_MESSAGES = {
+export const USER_MESSAGES = {
   USER_UPDATION_FAILED: "User Updation Failed!",
   PROFILE_PICTURE_DELETED: "Profile Picture Deleted",
   USER_UPDATED: "Username Updated Successfully",

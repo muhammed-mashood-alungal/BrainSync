@@ -6,6 +6,7 @@ import upload from '../configs/multer.configs';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 import { GroupRepository } from '../repositories/implementation/group.repository';
+import { verifyUser } from '../middlewares/verifyUser.middleware';
 
 const userRouter = Router();
 
@@ -16,7 +17,7 @@ const userServices = new UserServices(userRepo, sessionActivityRepo, groupRepo);
 const userController = new UserController(userServices);
 
 userRouter.put(
-  '/change-profile-photo/:userId',
+  '/change-profile-photo',
   upload.single('image'),
   authMiddleware,
   userController.changeProfilePic.bind(userController)
@@ -40,12 +41,13 @@ userRouter.get(
 );
 
 userRouter.put(
-  '/edit-username/:userId',
+  '/edit-username',
   authMiddleware,
   userController.editUsername.bind(userController)
 );
+
 userRouter.put(
-  '/change-password/:userId',
+  '/change-password',
   authMiddleware,
   userController.changePassword.bind(userController)
 );
@@ -57,7 +59,7 @@ userRouter.get(
 );
 
 userRouter.delete(
-  '/delete-profile-photo/:userId',
+  '/delete-profile-photo',
   authMiddleware,
   userController.deleteAvatar.bind(userController)
 );
@@ -66,6 +68,6 @@ userRouter.get(
   '/:userId',
   authMiddleware,
   userController.getUserData.bind(userController)
-);
+); 
 
 export default userRouter;
