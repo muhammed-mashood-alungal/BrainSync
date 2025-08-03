@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { NotificationRepository } from '../repositories/implementation/notification.repository';
 import { NotificationServices } from '../services/implementation/notification.services';
-import { NotificationController } from '../controllers/implementation/notification.constroller';
+import { NotificationController } from '../controllers/implementation/notification.controller';
 import { authMiddleware } from '../middlewares/auth.middleware';
 const notificationRouter = Router();
 

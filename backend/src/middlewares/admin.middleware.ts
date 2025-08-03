@@ -7,7 +7,6 @@ import {
 import { JwtPayload } from 'jsonwebtoken';
 import { HttpStatus } from '../constants/status.constants';
 import { HttpResponse } from '../constants/responseMessage.constants';
-import { env } from '../configs/env.config';
 import { setAccessToken } from '../utils/cookie.util';
 
 export const adminAuth: RequestHandler = async (req, res, next) => {

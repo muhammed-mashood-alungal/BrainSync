@@ -6,10 +6,10 @@ import { INoteModel } from '../../models/note.model';
 export interface INoteRepository {
   writeNote(roomId: string, userId: string, content: string): Promise<void>;
   getContentFromFirebase(roomId: string, userId: string): Promise<string>;
-  saveNoteAsPdf(
-    htmlContent: string,
-    sessionId: string
-  ): Promise<Types.ObjectId | null>;
+  uploadPdfToGridFS(
+    buffer: Buffer,
+    fileName: string
+  ): Promise<Types.ObjectId> 
   getPdfStream(fileId: Types.ObjectId): Promise<GridFSBucketReadStream>;
   createNote(
     sessionId: Types.ObjectId,
@@ -23,4 +23,5 @@ export interface INoteRepository {
     skip: number,
     limit: number
   ): Promise<{ notes: INoteModel[]; count: number }>;
+  deletePdfByName(fileName: string): Promise<void>
 }

@@ -8,7 +8,11 @@ import { env } from '../../configs/env.config';
 import { IUserModel } from '../../models/user.model';
 import { IUserService } from '../../services/interface/IUserService';
 import { successResponse } from '../../utils/response';
-import { setAccessToken, setRefreshToken } from '../../utils/cookie.util';
+import {
+  clearCookie,
+  setAccessToken,
+  setRefreshToken,
+} from '../../utils/cookie.util';
 
 export class AuthController implements IAuthController {
   constructor(
@@ -19,7 +23,7 @@ export class AuthController implements IAuthController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const email = await this._authService.signup(req.body);
- 
+
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.OK, {
           email: email,
@@ -35,10 +39,9 @@ export class AuthController implements IAuthController {
 
       const tokens = await this._authService.signin(email, password);
 
+      setAccessToken(res, tokens.accessToken);
+      setRefreshToken(res, tokens.refreshToken);
 
-      setAccessToken(res , tokens.accessToken)
-      setRefreshToken(res , tokens.refreshToken)
-      
       res.status(HttpStatus.OK).json(
         successResponse(HttpResponse.LOGGED_IN_SUCCESSFULLY, {
           tokens: tokens,
@@ -57,8 +60,8 @@ export class AuthController implements IAuthController {
       const { otp, email } = req.body;
       const tokens = await this._authService.verifyOtp(email, otp);
 
-      setAccessToken(res,tokens.accessToken)
-      setRefreshToken(res , tokens.refreshToken)
+      setAccessToken(res, tokens.accessToken);
+      setRefreshToken(res, tokens.refreshToken);
 
       res
         .status(HttpStatus.CREATED)
@@ -101,8 +104,8 @@ export class AuthController implements IAuthController {
 
       const { newAccessToken, payload } =
         await this._authService.refreshAccessToken(refreshToken);
-      
-        setAccessToken(res,newAccessToken)
+
+      setAccessToken(res, newAccessToken);
       res
         .status(HttpStatus.OK)
         .json(
@@ -154,21 +157,9 @@ export class AuthController implements IAuthController {
   }
   async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      res.clearCookie('accessToken', {
-        httpOnly: true,
-        secure: env.NODE_ENV === 'production',
-        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
-        domain: env.NODE_ENV === 'production' ? '.brainsync.space' : undefined,
-        path: '/',
-      });
-      res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: env.NODE_ENV === 'production',
-        sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
-        domain: env.NODE_ENV === 'production' ? '.brainsync.space' : undefined,
-        path: '/',
-      });
-  
+      clearCookie('accessToken', res);
+      clearCookie('refreshToken', res);
+
       res.status(HttpStatus.OK).json(successResponse(HttpResponse.LOGGED_OUT));
     } catch (err) {
       next(err);
@@ -194,19 +185,18 @@ export class AuthController implements IAuthController {
       const isBlocked = await this._userService.isStudentsBlocked(
         userData.id as string
       );
-      console.log('is Blocked----------------------------------------' + isBlocked)
       if (isBlocked) {
         throw createHttpsError(HttpStatus.FORBIDDEN, HttpResponse.USER_BLOCKED);
       }
-      setAccessToken(res,tokens.accessToken)
-      setRefreshToken(res, tokens.refreshToken)
+      setAccessToken(res, tokens.accessToken);
+      setRefreshToken(res, tokens.refreshToken);
 
       res.redirect(`${env.CLIENT_ORIGIN}`);
     } catch (err: unknown) {
       if (err instanceof HttpError) {
         res.redirect(
           `${env.CLIENT_ORIGIN}/signup?$error=${err.message as string}`
-        ); 
+        );
       } else {
         res.redirect(
           `${env.CLIENT_ORIGIN}/signup?$error=${HttpResponse.SERVER_ERROR}`
@@ -215,7 +205,7 @@ export class AuthController implements IAuthController {
     }
   }
   async forgotPassword(
-    req: Request, 
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {

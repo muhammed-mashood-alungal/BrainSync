@@ -17,7 +17,6 @@ export const errorHandler = (
     statusCode = err.statusCode;
     message = err.message;
   }
-  //console.error(err);
   logger.error('Unhandled Error', {
     message: err.message,
     stack: (err as any).stack,
