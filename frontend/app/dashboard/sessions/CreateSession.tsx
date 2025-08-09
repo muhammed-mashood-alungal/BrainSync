@@ -254,7 +254,9 @@ function CreateSession({
                 ) : (
                   <button
                     type="submit"
-                    className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-150"
+                    className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white 
+                    font-medium rounded-full focus:outline-none focus:ring-2
+                     focus:ring-cyan-500 transition duration-150 hover:cursor-pointer"
                     style={{ backgroundColor: "#00D2D9" }}
                   >
                     {type == "create" ? "Create Session" : "Update Session"}

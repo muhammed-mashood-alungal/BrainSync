@@ -206,7 +206,7 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
 
               <button
                 onClick={() => handleSubscription(plan)}
-                className={`w-full py-3 rounded-md font-bold ${
+                className={`w-full py-3 rounded-md font-bold  hover:cursor-pointer ${
                   plan.isHighlighted
                     ? "bg-gray-900 hover:bg-gray-800 text-cyan-400"
                     : "bg-black hover:bg-gray-900"

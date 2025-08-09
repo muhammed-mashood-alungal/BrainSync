@@ -113,7 +113,7 @@ export default function VerifyOtp() {
                 ) : timer > 0 ? (
                   <Button
                     type="submit"
-                    className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
+                    className="w-full"
                   >
                     Verify and Proceed
                   </Button>
@@ -121,13 +121,13 @@ export default function VerifyOtp() {
                   <Button
                     type="button"
                     onClick={resendOtp}
-                    className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
+                    className="w-full"
                   >
                     Resend
                   </Button>
                 )}
 
-                <div className="flex items-center justify-between mt-6">
+                <div className="flex items-center justify-between mt-6 hover:cursor-pointer">
                   <Link
                     href="/signup"
                     className="text-cyan-400 hover:text-cyan-300"

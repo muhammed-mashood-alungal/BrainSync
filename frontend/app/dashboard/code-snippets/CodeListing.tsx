@@ -93,7 +93,7 @@ function CodeSnippetListing() {
   const actions = (code: ICodeSnippetTypes) => (
     <div className="flex space-x-2 justify-center">
       <button
-        className="text-cyan-500 hover:text-cyan-700 flex"
+        className="text-cyan-500 hover:text-cyan-700 flex hover:cursor-pointer"
         onClick={() => downloadSnippet(code)}
       >
         <Download className="mr-2" /> download

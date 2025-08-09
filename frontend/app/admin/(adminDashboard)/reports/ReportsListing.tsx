@@ -84,7 +84,7 @@ function ReportsListing() {
   const actions = (report: IReportTypes) => (
     <div className="flex space-x-2">
       <button
-        className={`${
+        className={` hover:cursor-pointer ${
           report.status == "Pending"
             ? "text-red-500 hover:text-red-700"
             : "text-gray-700"
@@ -95,7 +95,7 @@ function ReportsListing() {
         Solve
       </button>
       <button
-        className={`${
+        className={`hover:cursor-pointer ${
           report.status == "Pending"
             ? "text-red-500 hover:text-red-700"
             : "text-gray-700"

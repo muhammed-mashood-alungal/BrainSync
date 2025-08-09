@@ -118,7 +118,7 @@ const SessionsListing: React.FC = () => {
                 !session.isStopped && (
                   <button
                     className="bg-cyan-500 w-max px-4 py-1 rounded-4xl hover:cursor-pointer
-                                hover:bg-cyan-700 transition duration-300 ease-in-out"
+                                hover:bg-cyan-700 transition duration-300 ease-in-out "
                     onClick={() => goToRoom(session.code)}
                   >
                     Join
@@ -129,11 +129,12 @@ const SessionsListing: React.FC = () => {
                   <div className="relative group">
                     <button
                       onClick={() => downloadReport(session._id)}
-                      className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white hover:bg-gray-700 transition-all shadow-md"
+                      className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white hover:bg-gray-700 transition-all shadow-md hover:cursor-pointer"
                     >
                       <FileDown size={18} />
                     </button>
-                    <div className="absolute top-full mt-2 left-1/2 -translate-x-[60%] w-max bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    <div className="absolute top-full mt-2 left-1/2 -translate-x-[60%] w-max bg-black text-white text-xs rounded px-2 py-1 
+                    opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 hover:cursor-pointer">
                       Session Report
                     </div>
                   </div>

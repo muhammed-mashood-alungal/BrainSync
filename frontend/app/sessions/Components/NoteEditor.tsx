@@ -34,7 +34,7 @@ const MenuBar = () => {
   }
 
   const buttonClass =
-    "px-3 py-1.5 text-sm font-medium rounded border border-gray-300 hover:bg-gray-100 text-black";
+    "px-3 py-1.5 text-sm font-medium rounded border border-gray-300 hover:bg-gray-100 text-black hover:cursor-pointer";
   const activeButtonClass =
     "px-3 py-1.5 text-sm font-medium rounded border border-blue-500 bg-blue-100 text-cyan-700";
 

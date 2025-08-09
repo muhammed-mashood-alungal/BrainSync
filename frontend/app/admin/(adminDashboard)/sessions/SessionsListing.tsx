@@ -22,9 +22,9 @@ const AdminSessionsListing: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const downloadReport = async (sessionId: string) => {
-      const response = await SessionServices.downloadSessionReport(sessionId);
-      if (!response) return;
-      toast.success("PDF Downloaded Successfully");
+    const response = await SessionServices.downloadSessionReport(sessionId);
+    if (!response) return;
+    toast.success("PDF Downloaded Successfully");
   };
 
   const handleStopSession = async () => {
@@ -37,10 +37,10 @@ const AdminSessionsListing: React.FC = () => {
             : session
         )
       );
-    } catch (error:unknown) {
-       const errorMsg =
+    } catch (error: unknown) {
+      const errorMsg =
         (error as Error)?.message || SESSION_MESSAGES.SESSSION_STOPPING_FAILED;
-      toast.error(errorMsg);;
+      toast.error(errorMsg);
     } finally {
       setSelectedSession("");
     }
@@ -97,11 +97,12 @@ const AdminSessionsListing: React.FC = () => {
                 <div className="relative group">
                   <button
                     onClick={() => downloadReport(session._id)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white hover:bg-gray-700 transition-all shadow-md"
+                    className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white hover:bg-gray-700 transition-all shadow-md hover:cursor-pointer"
                   >
                     <FileDown size={18} />
                   </button>
-                  <div className="absolute top-full mt-2 left-1/2 -translate-x-[60%] w-max bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  <div className="absolute top-full mt-2 left-1/2 -translate-x-[60%] w-max bg-black text-white text-xs rounded px-2 py-1 
+                  opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 hover:cursor-pointer">
                     Session Report
                   </div>
                 </div>
@@ -157,7 +158,7 @@ const AdminSessionsListing: React.FC = () => {
           </div>
 
           <div className="mt-4">
-            <button className="text-[#8979FF] hover:text-[#5a50a7] hover:cursor-pointer text-sm">
+            <button className="text-[#8979FF] hover:text-[#5a50a7] hover:cursor-pointer text-sm ">
               Details
             </button>
           </div>

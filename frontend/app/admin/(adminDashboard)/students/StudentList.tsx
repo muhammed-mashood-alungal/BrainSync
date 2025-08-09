@@ -147,7 +147,7 @@ function StudentList({
           actions={(student: IUserType) => (
             <>
               <button
-                className="text-[#8979FF] hover:text-[#A59BFF] mr-4 transition-colors"
+                className="text-[#8979FF] hover:text-[#A59BFF] mr-4 transition-colors hover:cursor-pointer"
                 onClick={() => handleViewStudent(student)}
               >
                 View
@@ -226,7 +226,7 @@ function StudentList({
             <div className="flex justify-end gap-4 mt-6">
               <button
                 onClick={() => setIsViewModalOpen(false)}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors hover:cursor-pointer"
               >
                 Close
               </button>

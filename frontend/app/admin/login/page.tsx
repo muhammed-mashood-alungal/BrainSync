@@ -97,7 +97,7 @@ const AdminPortal = () => {
 
           <button
             type="submit"
-            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition duration-200"
+            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition duration-200 hover:cursor-pointer"
           >
             Login
           </button>

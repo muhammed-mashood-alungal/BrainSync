@@ -130,7 +130,7 @@ const AdminDashboard: React.FC = ({}) => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between">
           <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
-          <button onClick={logout} className="text-[#00D2D9] hover:underline">
+          <button onClick={logout} className="text-[#00D2D9] hover:underline hover:cursor-pointer">
             Logout
           </button>
         </div>
@@ -188,7 +188,7 @@ const AdminDashboard: React.FC = ({}) => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => setTimeRange("7days")}
-                  className={`px-3 py-1 rounded-md text-sm ${
+                  className={`px-3 py-1 rounded-md text-sm  hover:cursor-pointer ${
                     timeRange === "7days"
                       ? "bg-cyan-500 text-gray-900"
                       : "bg-gray-700 text-gray-300"
@@ -198,7 +198,7 @@ const AdminDashboard: React.FC = ({}) => {
                 </button>
                 <button
                   onClick={() => setTimeRange("14days")}
-                  className={`px-3 py-1 rounded-md text-sm ${
+                  className={`px-3 py-1 rounded-md text-sm hover:cursor-pointer ${
                     timeRange === "14days"
                       ? "bg-cyan-500 text-gray-900"
                       : "bg-gray-700 text-gray-300"
@@ -208,7 +208,7 @@ const AdminDashboard: React.FC = ({}) => {
                 </button>
                 <button
                   onClick={() => setTimeRange("30days")}
-                  className={`px-3 py-1 rounded-md text-sm ${
+                  className={`px-3 py-1 rounded-md text-sm hover:cursor-pointer ${
                     timeRange === "30days"
                       ? "bg-cyan-500 text-gray-900"
                       : "bg-gray-700 text-gray-300"

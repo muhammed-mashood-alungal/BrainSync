@@ -168,7 +168,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
               <button
                 type="button"
                 onClick={addFeature}
-                className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md"
+                className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md hover:cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +199,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                     <button
                       type="button"
                       onClick={() => removeFeature(index)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 hover:cursor-pointer"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -304,13 +304,13 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md"
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md hover:cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md hover:cursor-pointer"
             >
               {initialPlan ? "Update Plan" : "Create Plan"}
             </button>

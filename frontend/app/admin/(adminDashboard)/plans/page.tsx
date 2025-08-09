@@ -62,7 +62,7 @@ function Page() {
         <h1 className="text-3xl font-bold text-white">Subscription Plans</h1>
 
         <button
-          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md"
+          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md hover:cursor-pointer"
           onClick={() => setIsModalOpen(true)}
         >
           Create New Plan

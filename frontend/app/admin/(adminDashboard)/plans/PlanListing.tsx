@@ -99,7 +99,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                       setInitialPlan(plan);
                       setSelectedPlan(plan._id);
                     }}
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 hover:cursor-pointer"
                   >
                     <Edit2 size={16} />
                     <span>Edit</span>
@@ -108,7 +108,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                     onClick={() => {
                       setToggledPlan(plan);
                     }}
-                    className={`flex-1 py-2 px-4 rounded flex items-center justify-center gap-2 ${
+                    className={`flex-1 py-2 px-4 rounded flex items-center justify-center gap-2 hover:cursor-pointer ${
                       plan.isActive
                         ? "bg-red-500 hover:bg-red-600 text-white"
                         : "bg-green-500 hover:bg-green-600 text-white"

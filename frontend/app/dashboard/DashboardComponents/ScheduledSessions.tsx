@@ -75,7 +75,7 @@ function ScheduledSessions() {
                         "Live" &&
                         !session.isStopped && (
                           <Link href={`/sessions/${session.code}`}>
-                            <button className="bg-cyan-500 hover:bg-cyan-600 px-4 py-1 rounded-full text-sm transition">
+                            <button className="bg-cyan-500 hover:bg-cyan-600 px-4 py-1 rounded-full text-sm transition hover:cursor-pointer">
                               Join
                             </button>
                           </Link>

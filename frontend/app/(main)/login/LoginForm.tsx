@@ -102,7 +102,7 @@ function LoginForm() {
         ) : (
           <Button
             type="submit"
-            className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
+            className="w-full"
           >
             Login
           </Button>
@@ -112,7 +112,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={AuthServices.googleAuth}
-            className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800"
+            className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800 hover:cursor-pointer"
           >
             Google
           </button>

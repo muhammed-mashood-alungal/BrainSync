@@ -99,7 +99,7 @@ function SubscriptionList() {
   const actions = (subscription: IUserSubscription) => (
     <div className="flex space-x-2">
       <button
-        className={`${
+        className={`hover:cursor-pointer ${
           subscription.status == "active"
             ? "text-red-500 hover:text-red-700"
             : "text-gray-700"

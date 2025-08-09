@@ -34,7 +34,7 @@ const Navbar = () => {
         </div>
 
         <button
-          className="block md:hidden text-white"
+          className="block md:hidden text-white hover:cursor-pointer"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? (
@@ -82,13 +82,13 @@ const Navbar = () => {
             <>
               <button
                 onClick={logout}
-                className="text-cyan-400 hover:text-cyan-300"
+                className="text-cyan-400 hover:text-cyan-300 hover:cursor-pointer"
               >
                 Logout
               </button>
               <button
                 onClick={handleGoToDashboard}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full"
+                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full hover:cursor-pointer"
               >
                 Go to Dashboard
               </button>
@@ -129,13 +129,13 @@ const Navbar = () => {
               <>
                 <button
                   onClick={logout}
-                  className="text-cyan-400 hover:text-cyan-300"
+                  className="text-cyan-400 hover:text-cyan-300 hover:cursor-pointer"
                 >
                   Logout
                 </button>
                 <button
                   onClick={handleGoToDashboard}
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full"
+                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full hover:cursor-pointer"
                 >
                   Go to Dashboard
                 </button>

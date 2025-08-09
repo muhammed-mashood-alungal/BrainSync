@@ -52,7 +52,7 @@ function SubscriptionStats() {
           />
         </div>
         <button
-          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md m-2"
+          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md m-2 hover:cursor-pointer"
           onClick={fetchStats}
         >
           Filter

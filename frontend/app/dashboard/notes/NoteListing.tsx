@@ -84,7 +84,7 @@ function NoteListing() {
   const actions = (note: INoteTypes) => (
     <div className="flex space-x-2 justify-center">
       <button
-        className="text-cyan-500 hover:text-cyan-700 flex"
+        className="text-cyan-500 hover:text-cyan-700 flex hover:cursor-pointer"
         onClick={() => downloadPdf(note.pdfFileId)}
       >
         <Download className="mr-2" /> Download

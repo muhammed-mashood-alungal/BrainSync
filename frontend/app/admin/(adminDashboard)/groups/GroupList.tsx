@@ -86,7 +86,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                       </div>
                       <button
                         onClick={() => setViewGroup(group)}
-                        className="text-[#8979FF] text-sm hover:text-[#A194FF] hover:underline transition-colors"
+                        className="text-[#8979FF] text-sm hover:text-[#A194FF] hover:underline transition-colors hover:cursor-pointer"
                       >
                         view all
                       </button>
@@ -133,7 +133,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                   </div>
 
                   <button
-                    className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-white text-sm font-medium transition-all duration-300 ${
+                    className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:cursor-pointer ${
                       group.isActive
                         ? "bg-red-500 hover:bg-red-600"
                         : "bg-green-500 hover:bg-green-600"

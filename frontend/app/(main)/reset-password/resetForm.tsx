@@ -78,7 +78,7 @@ function ResetForm() {
           </div>
           <Button
             type="submit"
-            className="w-full py-3  bg-cyan-400 hover:bg-cyan-500 text-black font-medium rounded-md transition duration-300"
+            className="w-full"
           >
             Reset Password
           </Button>

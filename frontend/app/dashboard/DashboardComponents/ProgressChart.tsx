@@ -54,7 +54,7 @@ function ProgressChart() {
         <h2 className="text-xl font-semibold">Progress Overview</h2>
         <div className="relative">
           <button
-            className="flex items-center bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md text-sm transition"
+            className="flex items-center bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md text-sm transition hover:cursor-pointer"
             onClick={() => setFilterOpen(!filterOpen)}
           >
             {selectedFilter}
@@ -66,7 +66,7 @@ function ProgressChart() {
               {filterOptions.map((option) => (
                 <button
                   key={option}
-                  className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition"
+                  className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition hover:cursor-pointer"
                   onClick={() => handleFilterSelect(option)}
                 >
                   {option}
