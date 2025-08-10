@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/button/Button";
 import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
 import { CONFIG_MESSAGES } from "@/constants/messages/config.messages";
 import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
@@ -204,16 +205,13 @@ const PremiumPlans: React.FC<PremiumPlansProps> = ({ plans }) => {
                 Prices are marked in Rupee
               </p>
 
-              <button
+              <Button 
+              variant="secondary"
                 onClick={() => handleSubscription(plan)}
-                className={`w-full py-3 rounded-md font-bold  hover:cursor-pointer ${
-                  plan.isHighlighted
-                    ? "bg-gray-900 hover:bg-gray-800 text-cyan-400"
-                    : "bg-black hover:bg-gray-900"
-                }`}
+                className={`w-full bg-black hover:bg-gray-900`}
               >
                 Subscribe
-              </button>
+              </Button>
 
               {plan.features && plan.features.length > 0 && (
                 <div className="mt-6">

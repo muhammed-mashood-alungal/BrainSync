@@ -111,32 +111,27 @@ export default function VerifyOtp() {
                 {loading ? (
                   <InPageLoading />
                 ) : timer > 0 ? (
-                  <Button
-                    type="submit"
-                    className="w-full"
-                  >
+                  <Button type="submit" className="w-full">
                     Verify and Proceed
                   </Button>
                 ) : (
-                  <Button
-                    type="button"
-                    onClick={resendOtp}
-                    className="w-full"
-                  >
+                  <Button type="button" onClick={resendOtp} className="w-full">
                     Resend
                   </Button>
                 )}
 
                 <div className="flex items-center justify-between mt-6 hover:cursor-pointer">
-                  <Link
-                    href="/signup"
-                    className="text-cyan-400 hover:text-cyan-300"
-                  >
-                    Back
-                  </Link>
-                  <Link href="" className="text-cyan-400 hover:text-cyan-300">
+                  <Button variant="secondary">
+                    <Link
+                      href="/signup"
+                    >
+                      Back
+                    </Link>
+                  </Button>
+                     
+                  <span className="text-cyan-400 hover:text-cyan-300">
                     00:{timer}
-                  </Link>
+                  </span>
                 </div>
               </form>
             </div>

@@ -139,16 +139,17 @@ function SignUpForm() {
         )}
 
         <div className="flex items-center justify-between mt-6">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={AuthServices.googleAuth}
-            className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800 hover:cursor-pointer"
           >
             Google
-          </button>
-          <Link href="/login" className="text-cyan-400 hover:text-cyan-300">
+          </Button>
+          <Button variant="text-like">
+          <Link href="/login" >
             Log in to existing account
           </Link>
+          </Button>
         </div>
       </form>
     </>

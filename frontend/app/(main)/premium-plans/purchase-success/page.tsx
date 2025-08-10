@@ -2,6 +2,7 @@
 import React from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Button from "@/components/ui/button/Button";
 
 const PurchaseSuccess: React.FC = ({}) => {
   const searchParams = useSearchParams();
@@ -102,14 +103,14 @@ const PurchaseSuccess: React.FC = ({}) => {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link href="/dashboard" className="flex-1">
-            <button className="w-full bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-2 md:py-3 px-4 md:px-6 rounded-md transition duration-300 hover:cursor-pointer">
+            <Button className="w-full ">
               Go to Dashboard
-            </button>
+            </Button>
           </Link>
           <Link href="/help" className="flex-1">
-            <button className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-md border border-gray-600 transition duration-300 hover:cursor-pointer">
+            <Button className="w-full bg-gray-700 hover:bg-gray-600 text-white">
               Need Help?
-            </button>
+            </Button>
           </Link>
         </div>
       </div>

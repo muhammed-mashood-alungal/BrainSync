@@ -5,6 +5,7 @@ import { useAuth } from "@/context/auth.context";
 import { AuthServices } from "@/services/client/auth.client";
 import { toast } from "react-hot-toast";
 import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
+import Button from "@/components/ui/button/Button";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -127,33 +128,27 @@ const Navbar = () => {
           <div className="flex flex-col space-y-3 pt-2">
             {user ? (
               <>
-                <button
+                <Button
+                variant="text-like"
                   onClick={logout}
-                  className="text-cyan-400 hover:text-cyan-300 hover:cursor-pointer"
                 >
                   Logout
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="secondary"
                   onClick={handleGoToDashboard}
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full hover:cursor-pointer"
                 >
                   Go to Dashboard
-                </button>
+                </Button>
               </>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  className="text-cyan-400 hover:text-cyan-300 py-2"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/signup"
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full text-center w-30 "
-                >
-                  Sign Up
-                </Link>
+                <Button variant="text-like">
+                  <Link href="/login">Login</Link>
+                </Button>
+                <Button variant="secondary">
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
               </>
             )}
           </div>

@@ -89,36 +89,32 @@ function LoginForm() {
           <span className="text-red-600 ml-1"> {formDataErr?.password}</span>
         </div>
         <div className="text-start">
+          <Button variant="text-like">
           <Link
             href="/forgot-password"
-            className="text-cyan-400 hover:text-cyan-300   mb-4"
           >
             Forgotten Password?
           </Link>
+          </Button>
         </div>
 
         {loading ? (
           <InPageLoading />
         ) : (
-          <Button
-            type="submit"
-            className="w-full"
-          >
+          <Button type="submit" className="w-full">
             Login
           </Button>
         )}
 
         <div className="flex items-center justify-between mt-6">
-          <button
-            type="button"
-            onClick={AuthServices.googleAuth}
-            className="flex items-center justify-center px-4 py-2 border border-gray-700 rounded-full hover:bg-gray-800 hover:cursor-pointer"
-          >
+          <Button variant="secondary" onClick={AuthServices.googleAuth}>
             Google
-          </button>
-          <Link href="/signup" className="text-cyan-400 hover:text-cyan-300">
-            Create a new account
-          </Link>
+          </Button>
+          <Button variant="text-like">
+            <Link href="/signup">
+              Create a new account
+            </Link>
+          </Button>
         </div>
       </form>
     </>

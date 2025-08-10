@@ -65,27 +65,24 @@ function ForgotForm() {
         {loading ? (
           <InPageLoading />
         ) : (
-          <Button
-            type="submit"
-            className="w-full"
-          >
+          <Button type="submit" className="w-full">
             Reset Password
           </Button>
         )}
 
         <div className="flex items-center justify-between mt-6">
           <div className="text-start">
-            <Link
-              href=""
-              onClick={() => router.back()}
-              className="text-cyan-400 hover:text-cyan-300   mb-4"
-            >
-              Back
-            </Link>
+            <Button variant="text-like">
+              <Link href="" onClick={() => router.back()}>
+                Back
+              </Link>
+            </Button>
           </div>
-          <Link href="/signup" className="text-cyan-400 hover:text-cyan-300">
-            Create a new account
-          </Link>
+          <Button variant="text-like">
+            <Link href="/signup">
+              Create a new account
+            </Link>
+          </Button>
         </div>
       </form>
     </>
