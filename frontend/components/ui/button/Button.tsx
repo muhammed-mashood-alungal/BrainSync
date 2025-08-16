@@ -3,7 +3,14 @@ import React, { ButtonHTMLAttributes, ReactNode } from "react";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   className?: string;
-  variant?: "primary" | "secondary" | "action" | "text-like";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "action"
+    | "text-like"
+    | "admin-primary"
+    | "admin-text-like"
+    | "other";
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -12,7 +19,6 @@ const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   ...props
 }) => {
-  
   let classeNames = "";
   switch (variant) {
     case "primary":
@@ -30,11 +36,20 @@ const Button: React.FC<ButtonProps> = ({
       rounded-md font-medium transition-all  hover:cursor-pointer 
       duration-200 ${className}`;
       break;
-    case 'text-like':
+    case "text-like":
       classeNames = `text-cyan-400 hover:text-cyan-300 ${className}`;
       break;
+    case "admin-primary":
+      classeNames = `bg-[#8979FF] hover:bg-[#9283fc]  px-4 py-3 text-black  
+      rounded-md font-medium transition-all  hover:cursor-pointer 
+      duration-200 ${className}`;
+      break;
+    case "admin-text-like":
+      classeNames = `text-[#8979FF] text-sm hover:text-[#A194FF] ${className}`;
+      break;
+    case "other":
+      classeNames = className;
   }
-
 
   return (
     <button {...props} className={classeNames}>

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth.context";
 import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import Button from "@/components/ui/button/Button";
 
 const AdminPortal = () => {
   const [email, setEmail] = useState("");
@@ -95,12 +96,9 @@ const AdminPortal = () => {
             <span className="text-red-600 ml-1"> {err?.password}</span>
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition duration-200 hover:cursor-pointer"
-          >
+          <Button type="submit" variant="admin-primary">
             Login
-          </button>
+          </Button>
         </form>
       </div>
     </div>

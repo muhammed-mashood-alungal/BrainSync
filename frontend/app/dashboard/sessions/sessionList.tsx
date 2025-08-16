@@ -5,7 +5,7 @@ import { useAuth } from "@/context/auth.context";
 import { IGroupType } from "@/types/groupTypes";
 import { useRouter } from "next/navigation";
 import BaseModal from "@/components/ui/modal/BaseModal";
-import SessionDetailsModal from "./SessionDetails";
+
 import { SessionServices } from "@/services/client/session.client";
 import CreateSession from "./CreateSession";
 import GenericListing from "@/components/features/session/SessionListing/SessionListing";
@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import { getStatus, getStatusColor } from "@/utils/sessionStatus.util";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 import { formatToLocaleString } from "@/utils/time.util";
+import SessionDetailsModal from "@/components/features/session/SessionDetails";
 
 const SessionsListing: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);

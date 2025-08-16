@@ -10,6 +10,7 @@ interface ConfirmProps {
   size?: "sm" | "md" | "lg" | "xl";
   isOpen: boolean;
   danger?: boolean;
+  isAdmin?: boolean;
 }
 
 const Confirm: React.FC<ConfirmProps> = ({
@@ -22,6 +23,7 @@ const Confirm: React.FC<ConfirmProps> = ({
   size = "md",
   isOpen = false,
   danger = false,
+  isAdmin = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -110,7 +112,9 @@ const Confirm: React.FC<ConfirmProps> = ({
             className={`px-6 py-2 font-medium rounded-md transition-colors hover:cursor-pointer ${
               danger
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-[#00D2D9] text-[#1E1E1E] hover:bg-[#00BDC3]"
+                : `${
+                    isAdmin ? "bg-[#8979FF] hover:bg-[#9283fc]" : "bg-[#00D2D9]"
+                  } text-[#1E1E1E] hover:bg-[#00BDC3]`
             }`}
           >
             {confirmText}

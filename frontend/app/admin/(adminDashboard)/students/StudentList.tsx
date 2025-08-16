@@ -10,6 +10,7 @@ import AdminSideTable from "@/components/ui/table/AdminSideTable";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 import { formatDate } from "@/utils/time.util";
 import { USER_MESSAGES } from "@/constants/messages/user.message";
+import Button from "@/components/ui/button/Button";
 
 function StudentList({
   initialStudents,
@@ -72,7 +73,8 @@ function StudentList({
       );
       setblockingStudents("");
     } catch (error) {
-      const errorMsg =  (error as Error).message || USER_MESSAGES.USER_UPDATION_FAILED
+      const errorMsg =
+        (error as Error).message || USER_MESSAGES.USER_UPDATION_FAILED;
       toast.error(errorMsg);
     }
   };
@@ -81,8 +83,6 @@ function StudentList({
     setSelectedStudent(student);
     setIsViewModalOpen(true);
   };
-
- 
 
   const handlePageChange = useCallback(
     (page: number, limit: number, searchQuery: string | undefined) => {
@@ -146,16 +146,18 @@ function StudentList({
           data={students}
           actions={(student: IUserType) => (
             <>
-              <button
+              <Button
+                variant="other"
                 className="text-[#8979FF] hover:text-[#A59BFF] mr-4 transition-colors hover:cursor-pointer"
                 onClick={() => handleViewStudent(student)}
               >
                 View
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setblockingStudents(student._id);
                 }}
+                variant="other"
                 className={`transition-colors ${
                   student.isActive
                     ? "text-red-400 hover:text-red-300"
@@ -163,7 +165,7 @@ function StudentList({
                 }`}
               >
                 {student.isActive ? "Block" : "Unblock"}
-              </button>
+              </Button>
             </>
           )}
         />

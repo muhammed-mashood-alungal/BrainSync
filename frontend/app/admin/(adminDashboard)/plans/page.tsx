@@ -7,6 +7,7 @@ import { plansServices } from "@/services/client/plans.client";
 import { toast } from "react-hot-toast";
 import { IPlans } from "@/types/plans.types";
 import { SUBSCRIPTION_MESSAGES } from "@/constants/messages/subscription.messages";
+import Button from "@/components/ui/button/Button";
 
 function Page() {
   const [plans, setPlans] = useState<IPlans[]>([]);
@@ -61,12 +62,12 @@ function Page() {
       <div className="flex justify-between items-center mb-6 ml-5">
         <h1 className="text-3xl font-bold text-white">Subscription Plans</h1>
 
-        <button
-          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md hover:cursor-pointer"
+        <Button
+          variant="admin-primary"
           onClick={() => setIsModalOpen(true)}
         >
           Create New Plan
-        </button>
+        </Button>
       </div>
       <PlansListing plans={plans} onToggleActive={onToggle} onEdit={onEdit} />
 

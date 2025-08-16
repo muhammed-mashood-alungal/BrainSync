@@ -1,3 +1,4 @@
+import Button from "@/components/ui/button/Button";
 import { IPlanError, IPlans } from "@/types/plans.types";
 import { validatePlanForm } from "@/validations";
 import React, { useState } from "react";
@@ -165,8 +166,9 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
               <label className="block text-lg font-medium text-white">
                 Features
               </label>
-              <button
+              <Button
                 type="button"
+                variant="other"
                 onClick={addFeature}
                 className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md hover:cursor-pointer"
               >
@@ -183,7 +185,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                   />
                 </svg>
                 Add Feature
-              </button>
+              </Button>
             </div>
 
             <div className="space-y-4 h-[300px] w-full overflow-auto">
@@ -193,11 +195,12 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                   className="p-4 border border-gray-200 rounded-md "
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h4 className="text-sm font-medium text-cyan-500">
+                    <h4 className="text-sm font-medium text-[#8979FF]">
                       Feature {index + 1}
                     </h4>
-                    <button
+                    <Button
                       type="button"
+                      variant="other"
                       onClick={() => removeFeature(index)}
                       className="text-red-500 hover:text-red-700 hover:cursor-pointer"
                     >
@@ -213,7 +216,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                           clipRule="evenodd"
                         />
                       </svg>
-                    </button>
+                    </Button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -301,19 +304,21 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
           </div>
 
           <div className="flex justify-end space-x-4 pt-4">
-            <button
+            <Button
               type="button"
+              variant="other"
               onClick={onCancel}
               className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md hover:cursor-pointer"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
+              variant="admin-primary"
               className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md hover:cursor-pointer"
             >
               {initialPlan ? "Update Plan" : "Create Plan"}
-            </button>
+            </Button>
           </div>
         </div>
       </form>

@@ -10,6 +10,7 @@ import GroupDetails from "../../../dashboard/groups/GroupDetails";
 import { Calendar, Power, Users } from "lucide-react";
 import { GROUP_MESSAGES } from "@/constants/messages/group.messages";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+import Button from "@/components/ui/button/Button";
 
 function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
   const [groups, setGroups] = useState<IGroupType[]>(inititalGroups);
@@ -84,12 +85,13 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                           {group.members.length === 1 ? "Member" : "Members"}
                         </span>
                       </div>
-                      <button
+                      <Button
                         onClick={() => setViewGroup(group)}
-                        className="text-[#8979FF] text-sm hover:text-[#A194FF] hover:underline transition-colors hover:cursor-pointer"
+                        variant="admin-text-like"
+                        className=" hover:underline transition-colors hover:cursor-pointer"
                       >
                         view all
-                      </button>
+                      </Button>
                     </div>
 
                     <div className="flex items-center">
@@ -132,7 +134,8 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                     </div>
                   </div>
 
-                  <button
+                  <Button
+                  variant="other"
                     className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-white text-sm font-medium transition-all duration-300 hover:cursor-pointer ${
                       group.isActive
                         ? "bg-red-500 hover:bg-red-600"
@@ -142,7 +145,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
                   >
                     <Power size={16} />
                     <span>{group.isActive ? "Deactivate" : "Activate"}</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))
@@ -154,6 +157,7 @@ function GroupList({ inititalGroups }: { inititalGroups: IGroupType[] }) {
         isOpen={Boolean(selectedGroup)}
         onClose={handleCloseConfirm}
         onConfirm={handleConfirm}
+        isAdmin={true}
       ></Confirm>
       <BaseModal
         isOpen={Boolean(viewGroup?._id)}

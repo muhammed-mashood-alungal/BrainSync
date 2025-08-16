@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import CreatePlan from "./createPlan";
 import { Crown, Edit2, Power } from "lucide-react";
 import Confirm from "@/components/ui/modal/ConfirmModal";
+import Button from "@/components/ui/button/Button";
 
 interface PlansListingProps {
   plans: IPlans[];
@@ -94,7 +95,8 @@ const PlansListing: React.FC<PlansListingProps> = ({
                 </div>
 
                 <div className="flex space-x-2">
-                  <button
+                  <Button
+                    variant="other"
                     onClick={() => {
                       setInitialPlan(plan);
                       setSelectedPlan(plan._id);
@@ -103,8 +105,9 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   >
                     <Edit2 size={16} />
                     <span>Edit</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="other"
                     onClick={() => {
                       setToggledPlan(plan);
                     }}
@@ -116,7 +119,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   >
                     <Power size={16} />
                     <span>{plan.isActive ? "Deactivate" : "Activate"}</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -137,7 +140,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
       </BaseModal>
       <Confirm
         isOpen={Boolean(toggledPlan?._id)}
-        onConfirm={handleOnConfirm} 
+        onConfirm={handleOnConfirm}
         onClose={() => setToggledPlan(null)}
       />
     </div>

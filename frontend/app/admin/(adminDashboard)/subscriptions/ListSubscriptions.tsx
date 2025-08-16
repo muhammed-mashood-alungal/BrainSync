@@ -7,6 +7,7 @@ import { IPlans } from "@/types/plans.types";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import Confirm from "@/components/ui/modal/ConfirmModal";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
+import Button from "@/components/ui/button/Button";
 
 function SubscriptionList() {
   const [subscriptions, setSubscribers] = useState<IUserSubscription[]>([]);
@@ -98,7 +99,8 @@ function SubscriptionList() {
   // Actions for each row (optional)
   const actions = (subscription: IUserSubscription) => (
     <div className="flex space-x-2">
-      <button
+      <Button
+      variant="other"
         className={`hover:cursor-pointer ${
           subscription.status == "active"
             ? "text-red-500 hover:text-red-700"
@@ -108,7 +110,7 @@ function SubscriptionList() {
         disabled={subscription.status == "cancelled"}
       >
         Cancel
-      </button>
+      </Button>
     </div>
   );
 

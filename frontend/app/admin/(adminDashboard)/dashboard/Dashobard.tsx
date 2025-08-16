@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/button/Button";
 import { AUTH_MESSAGES } from "@/constants/messages/auth.messages";
 import { useAuth } from "@/context/auth.context";
 import { AdminServices } from "@/services/client/admin.client";
@@ -24,7 +25,7 @@ interface statsType {
   totalStudyTime: number;
 }
 interface SessionTrend {
-  date: string;      
+  date: string;
   sessions: number;
 }
 
@@ -51,7 +52,7 @@ const AdminDashboard: React.FC = ({}) => {
     if (user && user?.role != "admin") {
       router.push("/login");
     }
-  }, [user, loading,router]);
+  }, [user, loading, router]);
 
   useEffect(() => {
     async function fetchDashboard() {
@@ -128,11 +129,11 @@ const AdminDashboard: React.FC = ({}) => {
   return (
     <div className="min-h-screen text-white p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between">
-          <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
-          <button onClick={logout} className="text-[#00D2D9] hover:underline hover:cursor-pointer">
+        <div className="flex justify-between mb-10">
+          <h1 className="text-3xl font-bold ">Admin Dashboard</h1>
+          <Button onClick={logout} variant="admin-primary">
             Logout
-          </button>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -141,7 +142,7 @@ const AdminDashboard: React.FC = ({}) => {
               <h2 className="text-gray-400 font-medium">Total Users</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold text-cyan-500">
+              <h3 className="text-3xl font-bold text-[#8979FF]">
                 {formatNumber(stats.totalUsers)}+
               </h3>
             </div>
@@ -152,7 +153,7 @@ const AdminDashboard: React.FC = ({}) => {
               <h2 className="text-gray-400 font-medium">Total Sessions</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold text-cyan-500">
+              <h3 className="text-3xl font-bold text-[#8979FF]">
                 {formatNumber(stats.totalSessions)}+
               </h3>
             </div>
@@ -163,7 +164,7 @@ const AdminDashboard: React.FC = ({}) => {
               <h2 className="text-gray-400 font-medium">Total Groups</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-3xl font-bold text-cyan-500">
+              <h3 className="text-3xl font-bold text-[#8979FF]">
                 {formatNumber(stats.totalGroups)}+
               </h3>
             </div>
@@ -174,7 +175,7 @@ const AdminDashboard: React.FC = ({}) => {
               <h2 className="text-gray-400 font-medium">Total Study Hours</h2>
             </div>
             <div className="flex items-end">
-              <h3 className="text-2xl font-bold text-cyan-500">
+              <h3 className="text-2xl font-bold text-[#8979FF]">
                 {stats.totalStudyTime}
               </h3>
             </div>
@@ -186,36 +187,39 @@ const AdminDashboard: React.FC = ({}) => {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Session Trends</h2>
               <div className="flex space-x-2">
-                <button
+                <Button
                   onClick={() => setTimeRange("7days")}
-                  className={`px-3 py-1 rounded-md text-sm  hover:cursor-pointer ${
+                  variant="admin-primary"
+                  className={`rounded-md text-sm ${
                     timeRange === "7days"
-                      ? "bg-cyan-500 text-gray-900"
-                      : "bg-gray-700 text-gray-300"
+                      ? "bg-[#8979FF] text-gray-900 py-1"
+                      : "bg-gray-700 text-gray-300 py-1"
                   }`}
                 >
                   7 Days
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setTimeRange("14days")}
+                  variant="admin-primary"
                   className={`px-3 py-1 rounded-md text-sm hover:cursor-pointer ${
                     timeRange === "14days"
-                      ? "bg-cyan-500 text-gray-900"
+                      ? "bg-[#8979FF] text-gray-900"
                       : "bg-gray-700 text-gray-300"
                   }`}
                 >
                   14 Days
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setTimeRange("30days")}
+                  variant="admin-primary"
                   className={`px-3 py-1 rounded-md text-sm hover:cursor-pointer ${
                     timeRange === "30days"
-                      ? "bg-cyan-500 text-gray-900"
+                      ? "bg-[#8979FF] text-gray-900"
                       : "bg-gray-700 text-gray-300"
                   }`}
                 >
                   30 Days
-                </button>
+                </Button>
               </div>
             </div>
             <div className="h-80">
@@ -224,8 +228,8 @@ const AdminDashboard: React.FC = ({}) => {
                   <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" />
                   <XAxis
                     dataKey="date"
-                    stroke="#9ca3af"
-                    tick={{ fill: "#9ca3af" }}
+                    stroke="#8979FF"
+                    tick={{ fill: "#8979FF" }}
                     tickFormatter={(value) => {
                       const date = new Date(value);
                       return date.toLocaleDateString("en-US", {
@@ -234,11 +238,11 @@ const AdminDashboard: React.FC = ({}) => {
                       });
                     }}
                   />
-                  <YAxis stroke="#9ca3af" tick={{ fill: "#9ca3af" }} />
+                  <YAxis stroke="#8979FF" tick={{ fill: "#8979FF" }} />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "#1f2937",
-                      borderColor: "#374151",
+                      borderColor: "#8979FF",
                       color: "#fff",
                     }}
                     labelStyle={{ color: "#fff" }}
@@ -248,9 +252,9 @@ const AdminDashboard: React.FC = ({}) => {
                     type="monotone"
                     dataKey="sessions"
                     name="Sessions Created"
-                    stroke="#06b6d4"
+                    stroke="#8979FF"
                     strokeWidth={2}
-                    dot={{ fill: "#06b6d4", r: 4 }}
+                    dot={{ fill: "#8979FF", r: 4 }}
                     activeDot={{ r: 6 }}
                   />
                 </LineChart>
