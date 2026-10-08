@@ -56,7 +56,7 @@ const ChatComponent = () => {
       {!isOpen && (
         <button
           onClick={toggleChat}
-          className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-3 shadow-lg flex items-center justify-center"
+          className="bg-cyan-500 hover:bg-cyan-600 text-white rounded-full p-3 shadow-lg flex items-center justify-center hover:cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

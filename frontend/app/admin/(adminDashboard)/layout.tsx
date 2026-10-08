@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen bg-[#1E1E1E]">
       <button
-        className="lg:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-[#00D2D9] text-[#1E1E1E] shadow-lg"
+        className="lg:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-[#00D2D9] text-[#1E1E1E] shadow-lg hover:cursor-pointer"
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <svg

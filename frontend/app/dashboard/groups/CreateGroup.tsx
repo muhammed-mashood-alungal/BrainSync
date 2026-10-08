@@ -133,7 +133,7 @@ function CreateGroup({
                       </div>
                       <div className="text-gray-400 text-sm">{user.email}</div>
                     </div>
-                    <button className="text-[#00D2D9] text-sm">Add</button>
+                    <button className="text-[#00D2D9] text-sm hover:cursor-pointer">Add</button>
                   </li>
                 ))}
               </ul>
@@ -153,7 +153,7 @@ function CreateGroup({
                     </div>
                     <button
                       onClick={() => removeMember(member._id)}
-                      className="text-red-500 hover:text-red-400 ml-2"
+                      className="text-red-500 hover:text-red-400 ml-2 hover:cursor-pointer"
                     >
                       ✕
                     </button>
@@ -167,13 +167,13 @@ function CreateGroup({
         <div className="flex justify-end">
           <button
             onClick={closeModal}
-            className="bg-zinc-700 hover:bg-zinc-600 text-white py-2 px-4 rounded-md mr-2"
+            className="bg-zinc-700 hover:bg-zinc-600 text-white py-2 px-4 rounded-md mr-2 hover:cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={createGroup}
-            className="bg-[#00D2D9] hover:bg-teal-600 text-white py-2 px-4 rounded-md"
+            className="bg-[#00D2D9] hover:bg-teal-600 text-white py-2 px-4 rounded-md hover:cursor-pointer"
           >
             Create Group
           </button>

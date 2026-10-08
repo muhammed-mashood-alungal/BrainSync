@@ -40,6 +40,7 @@ interface GenericListingProps<T> {
   loading?: boolean;
   setLoading?: (loading: boolean) => void;
   limit?: number;
+  isAdmin? : boolean
 }
 
 const GenericListing = <T extends object>({
@@ -57,6 +58,7 @@ const GenericListing = <T extends object>({
   loading = false,
   setLoading = () => {},
   limit = 9,
+  isAdmin = false
 }: GenericListingProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterValue, setFilterValue] = useState("");
@@ -234,7 +236,8 @@ const GenericListing = <T extends object>({
           <div className="relative w-full sm:w-auto">
             <button
               onClick={onCreateClick}
-              className="bg-[#00D2D9] hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 w-full sm:w-auto"
+              className="bg-[#00D2D9] hover:bg-teal-600 text-white font-medium py-2 px-4 
+              rounded-md transition duration-200 w-full sm:w-auto hover:cursor-pointer"
             >
               {createButtonText}
             </button>
@@ -256,9 +259,9 @@ const GenericListing = <T extends object>({
               <button
                 key={index}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`w-8 h-8 flex items-center justify-center rounded-md ${
+                className={`w-8 h-8 flex items-center justify-center rounded-md hover:cursor-pointer ${
                   currentPage === index + 1
-                    ? "bg-cyan-500 text-white"
+                    ? `${isAdmin ? "bg-[#8979FF]" : "bg-cyan-500"} text-white`
                     : "bg-gray-800 text-gray-400"
                 }`}
               >

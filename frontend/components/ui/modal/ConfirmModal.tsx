@@ -10,6 +10,7 @@ interface ConfirmProps {
   size?: "sm" | "md" | "lg" | "xl";
   isOpen: boolean;
   danger?: boolean;
+  isAdmin?: boolean;
 }
 
 const Confirm: React.FC<ConfirmProps> = ({
@@ -22,6 +23,7 @@ const Confirm: React.FC<ConfirmProps> = ({
   size = "md",
   isOpen = false,
   danger = false,
+  isAdmin = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -64,7 +66,7 @@ const Confirm: React.FC<ConfirmProps> = ({
           <h2 className="text-xl font-semibold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors hover:cursor-pointer"
             aria-label="Close"
           >
             <svg
@@ -101,16 +103,18 @@ const Confirm: React.FC<ConfirmProps> = ({
         <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-700">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-700 text-white font-medium rounded-md hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 bg-gray-700 text-white font-medium rounded-md hover:bg-gray-600 transition-colors hover:cursor-pointer"
           >
             {cancelText}
           </button>
           <button
             onClick={onConfirm}
-            className={`px-6 py-2 font-medium rounded-md transition-colors ${
+            className={`px-6 py-2 font-medium rounded-md transition-colors hover:cursor-pointer ${
               danger
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-[#00D2D9] text-[#1E1E1E] hover:bg-[#00BDC3]"
+                : `${
+                    isAdmin ? "bg-[#8979FF] hover:bg-[#9283fc]" : "bg-[#00D2D9]"
+                  } text-[#1E1E1E] hover:bg-[#00BDC3]`
             }`}
           >
             {confirmText}

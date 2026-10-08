@@ -73,7 +73,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
               />
               <button
                 onClick={handleSaveGroupName}
-                className="p-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                className="p-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors hover:cursor-pointer"
                 title="Save"
               >
                 <Save size={16} />
@@ -83,7 +83,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                   setIsEditing(false);
                   setNewGroupName(group?.name || "");
                 }}
-                className="p-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors"
+                className="p-2 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors hover:cursor-pointer"
                 title="Cancel"
               >
                 <X size={16} />
@@ -206,7 +206,7 @@ const GroupDetails: React.FC<GroupDetailsProps> = ({
                   <div className="relative group">
                     <button
                       onClick={() => handleRemoveMember(member._id)}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-900/40 p-2 rounded-md transition-colors"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-900/40 p-2 rounded-md transition-colors hover:cursor-pointer"
                       title="Remove member"
                     >
                       <X size={18} />

@@ -48,7 +48,7 @@ const WhiteboardWithSlides: React.FC = () => {
 
         <div className="flex gap-2">
           <button
-            className={`px-4 py-2 h-10  border border-gray-300 text-cyan-500 rounded-md cursor-pointer ${
+            className={`px-4 py-2 h-10  border border-gray-300 text-cyan-500 rounded-md cursor-pointer  hover:cursor-pointer ${
               currentMode === "pencil"
                 ? "bg-gray-200 border-gray-400"
                 : "bg-white"
@@ -58,7 +58,7 @@ const WhiteboardWithSlides: React.FC = () => {
             <FontAwesomeIcon icon={faPencil} />
           </button>
           <button
-            className={`px-4 py-2  h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer ${
+            className={`px-4 py-2  h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer hover:cursor-pointer ${
               currentMode === "rectangle"
                 ? "bg-gray-200 border-gray-400"
                 : "bg-white"
@@ -72,7 +72,7 @@ const WhiteboardWithSlides: React.FC = () => {
             <FontAwesomeIcon icon={faSquare} />
           </button>
           <button
-            className={`px-4 py-2 h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer ${
+            className={`px-4 py-2 h-10 border border-gray-300  text-cyan-500 rounded-md cursor-pointer hover:cursor-pointer ${
               currentMode === "circle"
                 ? "bg-gray-200 border-gray-400"
                 : "bg-white"
@@ -84,7 +84,7 @@ const WhiteboardWithSlides: React.FC = () => {
             <FontAwesomeIcon icon={faCircle} />
           </button>
           <button
-            className={`px-4 py-2 h-10 border border-gray-300 text-cyan-500 rounded-md cursor-pointer ${
+            className={`px-4 py-2 h-10 border border-gray-300 text-cyan-500 rounded-md cursor-pointer hover:cursor-pointer ${
               currentMode === "select"
                 ? "bg-gray-200 border-gray-400"
                 : "bg-white"
@@ -103,12 +103,12 @@ const WhiteboardWithSlides: React.FC = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleColorChange(e.target.value)
               }
-              className="h-7 w-7 cursor-pointer rounded-4xl  "
+              className="h-7 w-7 cursor-pointer rounded-4xl hover:cursor-pointer "
             />
           </div>
 
           {/* Brush size */}
-          <div className="flex items-center">
+          <div className="flex items-center hover:cursor-pointer">
             <input
               type="range"
               min="1"
@@ -125,13 +125,13 @@ const WhiteboardWithSlides: React.FC = () => {
         {/* Clear button */}
         <button
           onClick={clearCurrentSlide}
-          className="px-4 py-2 border border-red-300 text-red-500 rounded-md hover:bg-red-50 h-10"
+          className="px-4 py-2 border border-red-300 text-red-500 rounded-md hover:bg-red-50 h-10 hover:cursor-pointer"
         >
           Clear Board
         </button>
         <button
           onClick={deleteSelected}
-          className="px-4 py-2 border border-red-300 text-red-500 rounded-md hover:bg-red-50 h-10"
+          className="px-4 py-2 border border-red-300 text-red-500 rounded-md hover:bg-red-50 h-10 hover:cursor-pointer"
         >
           Remove
         </button>
@@ -140,7 +140,7 @@ const WhiteboardWithSlides: React.FC = () => {
           <button
             onClick={prevSlide}
             disabled={currentSlideIndex === 0}
-            className={`px-4 py-2 h-10  border border-gray-700 text-gray-700 rounded-md ${
+            className={`px-4 py-2 h-10  border border-gray-700 text-gray-700 rounded-md  hover:cursor-pointer ${
               currentSlideIndex === 0
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer bg-white"
@@ -158,7 +158,7 @@ const WhiteboardWithSlides: React.FC = () => {
           <button
             onClick={nextSlide}
             disabled={currentSlideIndex === slides.length - 1}
-            className={`px-4 py-2 border border-gray-700 text-gray-700  rounded-md ${
+            className={`px-4 py-2 border border-gray-700 text-gray-700  rounded-md hover:cursor-pointer ${
               currentSlideIndex === slides.length - 1
                 ? "opacity-50 cursor-not-allowed"
                 : "cursor-pointer bg-white"
@@ -168,7 +168,7 @@ const WhiteboardWithSlides: React.FC = () => {
           </button>
           <button
             onClick={createNewSlide}
-            className="px-4 py-2 border border-blue-300 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100"
+            className="px-4 py-2 border border-blue-300 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 hover:cursor-pointer"
           >
             New Slide
           </button>

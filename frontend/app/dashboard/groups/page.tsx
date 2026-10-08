@@ -147,7 +147,8 @@ const GroupsPage: React.FC = () => {
             setIsModalOpen(true);
             router.push("/dashboard/groups#create");
           }}
-          className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 flex items-center gap-2"
+          className="bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-6 rounded-lg 
+          transition-all duration-300 flex items-center gap-2 hover:cursor-pointer"
         >
           <span>Create Group</span>
           <UserPlus size={18} />
@@ -191,14 +192,14 @@ const GroupsPage: React.FC = () => {
                     {group.createdBy?._id === user?.id ? (
                       <>
                         <button
-                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors hover:cursor-pointer"
                           onClick={() => setSelectedGroup(group._id)}
                           title="Add Members"
                         >
                           <UserPlus size={18} />
                         </button>
                         <button
-                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                          className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors hover:cursor-pointer"
                           onClick={() => setDeletingGroupId(group._id)}
                           title="Delete Group"
                         >
@@ -207,7 +208,7 @@ const GroupsPage: React.FC = () => {
                       </>
                     ) : (
                       <button
-                        className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors"
+                        className="text-white p-1.5 rounded-md hover:bg-white/20 transition-colors hover:cursor-pointer"
                         onClick={() => setLeavingGroupId(group._id)}
                         title="Leave Group"
                       >
@@ -234,7 +235,7 @@ const GroupsPage: React.FC = () => {
                       </div>
                       <button
                         onClick={() => setViewGroup(group)}
-                        className="text-cyan-400 text-sm hover:text-cyan-300 hover:underline transition-colors"
+                        className="text-cyan-400 text-sm hover:text-cyan-300 hover:underline transition-colors hover:cursor-pointer"
                       >
                         view all
                       </button>

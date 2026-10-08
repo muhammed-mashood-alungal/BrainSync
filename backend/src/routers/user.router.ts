@@ -6,7 +6,6 @@ import upload from '../configs/multer.configs';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 import { GroupRepository } from '../repositories/implementation/group.repository';
-import { verifyUser } from '../middlewares/verifyUser.middleware';
 
 const userRouter = Router();
 

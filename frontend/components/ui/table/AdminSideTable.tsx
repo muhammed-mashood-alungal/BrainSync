@@ -162,7 +162,7 @@ const AdminSideTable = <T,>({
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50 hover:cursor-pointer"
           >
             Previous
           </button>
@@ -174,7 +174,7 @@ const AdminSideTable = <T,>({
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50 hover:cursor-pointer"
           >
             Next
           </button>

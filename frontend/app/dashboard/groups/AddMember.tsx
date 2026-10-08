@@ -87,7 +87,7 @@ function AddMember({
                   </div>
                   <button
                     onClick={() => removeMember(member._id)}
-                    className="text-red-500 hover:text-red-400 ml-2"
+                    className="text-red-500 hover:text-red-400 ml-2 hover:cursor-pointer"
                   >
                     ✕
                   </button>

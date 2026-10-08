@@ -4,8 +4,11 @@ import { useAuth } from "@/context/auth.context";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
 
+const SIDEBAR_COLLAPSED_KEY = "dashboardSidebarCollapsed";
+
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -15,10 +18,27 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
+  useEffect(() => {
+    try {
+      setSidebarCollapsed(
+        localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "true"
+      );
+    } catch {}
+  }, []);
+
+  const toggleSidebarCollapsed = () => {
+    setSidebarCollapsed((prev) => {
+      try {
+        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(!prev));
+      } catch {}
+      return !prev;
+    });
+  };
+
   return (
     <div className="flex h-screen bg-[#1E1E1E]">
       <button
-        className="lg:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-[#00D2D9] text-[#1E1E1E] shadow-lg"
+        className="lg:hidden fixed z-50 bottom-4 right-4 p-2 rounded-full bg-[#00D2D9] text-[#1E1E1E] shadow-lg hover:cursor-pointer"
         onClick={() => setSidebarOpen(!sidebarOpen)}
       >
         <svg
@@ -51,13 +71,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div
         className={`
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-          lg:translate-x-0 lg:w-2/12 
-          fixed lg:relative 
-          z-40 
+          lg:translate-x-0 lg:shrink-0
+          fixed lg:relative
+          z-40
           transition-transform duration-300 ease-in-out
         `}
       >
-        <Sidebar />
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={toggleSidebarCollapsed}
+        />
       </div>
 
      
@@ -68,7 +91,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         />
       )}
 
-      <div className="flex-1 lg:w-10/12 overflow-auto">
+      <div className="flex-1 min-w-0 overflow-auto">
         <main className="p-6">{children}</main>
       </div>
     </div>

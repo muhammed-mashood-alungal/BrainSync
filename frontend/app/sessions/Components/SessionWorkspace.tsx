@@ -163,7 +163,7 @@ const SessionWorkspace: React.FC<{
       <div className="px-4">
         <div className="flex gap-1 sm:gap-2 overflow-x-auto no-scrollbar w-full">
           <button
-            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm ${
+            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm  hover:cursor-pointer ${
               activeTab === "video"
                 ? "bg-cyan-900 text-cyan-400"
                 : "bg-gray-800"
@@ -174,7 +174,7 @@ const SessionWorkspace: React.FC<{
             <span className="sm:text-sm  md:text-md">Video Call</span>
           </button>
           <button
-            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm ${
+            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm hover:cursor-pointer ${
               activeTab === "whiteboard"
                 ? "bg-cyan-900 text-cyan-400"
                 : "bg-gray-800"
@@ -196,7 +196,7 @@ const SessionWorkspace: React.FC<{
             <span className="sm:text-sm   md:text-md">WhiteBoard</span>
           </button>
           <button
-            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm ${
+            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center whitespace-nowrap text-xs sm:text-sm hover:cursor-pointer ${
               activeTab === "code" ? "bg-cyan-900 text-cyan-400" : "bg-gray-800"
             }`}
             onClick={() => setActiveTab("code")}
@@ -221,7 +221,7 @@ const SessionWorkspace: React.FC<{
             </span>
           </button>
           <button
-            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center  text-xs sm:text-md ${
+            className={`px-2 sm:px-4 py-1 sm:py-2 rounded-t-lg flex items-center  text-xs sm:text-md hover:cursor-pointer ${
               activeTab === "notes"
                 ? "bg-cyan-900 text-cyan-400"
                 : "bg-gray-800"
@@ -293,7 +293,7 @@ const SessionWorkspace: React.FC<{
         <div className="flex gap-2 bg-[#15166b0f] p-2 px-12 rounded-4xl border border-cyan-500 backdrop-blur-md mb-5">
           <button
             onClick={() => setActiveTab("video")}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               activeTab === "video" ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -301,7 +301,7 @@ const SessionWorkspace: React.FC<{
           </button>
           <button
             onClick={() => setActiveTab("whiteboard")}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               activeTab === "whiteboard" ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -320,7 +320,7 @@ const SessionWorkspace: React.FC<{
           </button>
           <button
             onClick={() => setActiveTab("code")}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               activeTab === "code" ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -339,7 +339,7 @@ const SessionWorkspace: React.FC<{
           </button>
           <button
             onClick={() => setActiveTab("notes")}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               activeTab === "notes" ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -361,7 +361,7 @@ const SessionWorkspace: React.FC<{
           <span className="w-0.5 bg-cyan-500 ml-2 mr-2 rounded-2xl"></span>
           <button
             onClick={() => setVideoEnabled(!videoEnabled)}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               videoEnabled ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -373,7 +373,7 @@ const SessionWorkspace: React.FC<{
           </button>
           <button
             onClick={() => setMicEnabled(!micEnabled)}
-            className={`p-4 rounded-full ${
+            className={`p-4 rounded-full hover:cursor-pointer ${
               micEnabled ? "bg-cyan-500" : "bg-gray-700"
             }`}
           >
@@ -383,7 +383,7 @@ const SessionWorkspace: React.FC<{
               <MicOff className="h-6 w-6" />
             )}
           </button>
-          <button className="p-4 rounded-full bg-red-500">
+          <button className="p-4 rounded-full bg-red-500 hover:cursor-pointer">
             <LogOut className="h-6 w-6" onClick={handleLeave} />
           </button>
         </div>
@@ -402,7 +402,9 @@ const SessionWorkspace: React.FC<{
           name=""
           id="reason"
           onChange={(e) => setReportReason(e.target.value)}
-          className="w-full py-3 px-4 rounded-md border-gray-700 border mt-3 bg-gray-800  text-white placeholder-gray-400 focus:outline-none  focus:ring-cyan-500 appearance-none"
+          className="w-full py-3 px-4 rounded-md border-gray-700 border mt-3 bg-gray-800 
+           text-white placeholder-gray-400 focus:outline-none  focus:ring-cyan-500 appearance-none
+           hover:cursor-pointer"
         >
           <option value="" disabled selected>
             Select a Reason

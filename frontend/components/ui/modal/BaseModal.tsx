@@ -93,7 +93,7 @@ function BaseModal({
           <h2 className="text-xl font-semibold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors hover:cursor-pointer"
             aria-label="Close"
           >
             <svg
@@ -129,7 +129,7 @@ function BaseModal({
           <div className="flex justify-end px-6 py-4 border-t border-gray-700">
             <button
               onClick={onSubmit}
-              className="px-6 py-2 bg-[#00D2D9] text-[#1E1E1E] font-medium rounded-md hover:bg-[#00BDC3] transition-colors"
+              className="px-6 py-2 bg-[#00D2D9] text-[#1E1E1E] font-medium rounded-md hover:bg-[#00BDC3] transition-colors hover:cursor-pointer"
             >
               {submitText}
             </button>

@@ -19,6 +19,7 @@ import Link from "next/link";
 import { CODE_SNIPPETS } from "@/constants/codeEditor/codeSnippet.constants";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 import { CODE_EDITOR_MESSAGES } from "@/constants/messages/codeEditor.messages";
+import Button from "@/components/ui/button/Button";
 function CodeEditor({ roomId }: { roomId: string }) {
   const {
     language,
@@ -236,9 +237,9 @@ function CodeEditor({ roomId }: { roomId: string }) {
             group—right inside the app.
           </div>
           <Link href="/premium-plans" className="flex-1">
-            <button className=" bg-cyan-500 hover:bg-cyan-600 text-gray-900 font-bold py-3 px-6 rounded-md transition duration-300">
+            <Button>
               Explore Premium Plans
-            </button>
+            </Button>
           </Link>
         </div>
       )}
