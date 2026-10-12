@@ -1,7 +1,7 @@
 // GenericListing.tsx
 "use client";
 import React, { useState, useEffect, ReactNode } from "react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpWideShort,
@@ -11,6 +11,7 @@ import {
 import { toast } from "react-hot-toast";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import EmptyList from "@/components/ui/emptyList/EmptyList";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 
 interface FilterOption {
   value: string;
@@ -155,24 +156,13 @@ const GenericListing = <T extends object>({
 
         <div className="flex flex-col sm:flex-row gap-4">
           {filterOptions.length > 0 && (
-            <div className="relative w-full sm:w-auto">
-              <select
-                className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 w-full sm:w-auto appearance-none pr-8"
-                onChange={(e) => setFilterValue(e.target.value)}
-                value={filterValue}
-              >
-                <option value="">{filterLabel}</option>
-                {filterOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={16}
-              />
-            </div>
+            <Dropdown
+              value={filterValue}
+              onChange={setFilterValue}
+              options={[{ value: "", label: filterLabel }, ...filterOptions]}
+              size="sm"
+              className="w-full sm:w-44"
+            />
           )}
 
           {showDateFilter && (

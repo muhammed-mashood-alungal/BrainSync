@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 import {
   LineChart,
   Line,
@@ -14,17 +14,11 @@ import {
 import { UserServices } from "@/services/client/user.client";
 
 function ProgressChart() {
-  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("Monthly");
   const [graphData, setGraphData] = useState<
     { name: string; duration: number }[]
   >([]);
   const filterOptions = ["Weekly", "Monthly", "Yearly"];
-
-  const handleFilterSelect = (option: string) => {
-    setSelectedFilter(option);
-    setFilterOpen(false);
-  };
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -52,29 +46,17 @@ function ProgressChart() {
     <section className="mb-8">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Progress Overview</h2>
-        <div className="relative">
-          <button
-            className="flex items-center bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-md text-sm transition hover:cursor-pointer"
-            onClick={() => setFilterOpen(!filterOpen)}
-          >
-            {selectedFilter}
-            <ChevronDown className="ml-2 h-4 w-4" />
-          </button>
-
-          {filterOpen && (
-            <div className="absolute right-0 mt-2 w-36 bg-gray-800 rounded-md shadow-lg z-10">
-              {filterOptions.map((option) => (
-                <button
-                  key={option}
-                  className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-700 transition hover:cursor-pointer"
-                  onClick={() => handleFilterSelect(option)}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        <Dropdown
+          value={selectedFilter}
+          onChange={setSelectedFilter}
+          options={filterOptions.map((option) => ({
+            value: option,
+            label: option,
+          }))}
+          size="sm"
+          searchable={false}
+          className="w-36"
+        />
       </div>
 
       <div className="bg-gray-800 rounded-lg p-6">
