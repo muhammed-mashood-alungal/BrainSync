@@ -14,7 +14,7 @@ const Footer = () => {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
           {/* Copyright */}
           <div className="mb-4 md:mb-0">
-            <p className="text-lg font-semibold">BrainSync© 2024</p>
+            <p className="text-lg font-semibold">BrainSync© 2026</p>
           </div>
 
           {/* Footer Links */}

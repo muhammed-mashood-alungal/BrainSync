@@ -1,4 +1,5 @@
 import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 import { IPlanError, IPlans } from "@/types/plans.types";
 import { validatePlanForm } from "@/validations";
 import React, { useState } from "react";
@@ -148,15 +149,22 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
               <label className="block text-sm font-medium text-white  mb-1">
                 Billing Interval
               </label>
-              <select
-                name="interval"
+              <Dropdown
                 value={plan.interval}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 bg-black rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
+                onChange={(interval) =>
+                  setPlan({
+                    ...plan,
+                    interval: interval as Omit<IPlans, "_id">["interval"],
+                  })
+                }
+                options={[
+                  { value: "monthly", label: "Monthly" },
+                  { value: "yearly", label: "Yearly" },
+                ]}
+                theme="admin"
+                size="sm"
+                searchable={false}
+              />
               <span className="text-red-600 ml-1"> {planErr?.interval}</span>
             </div>
           </div>

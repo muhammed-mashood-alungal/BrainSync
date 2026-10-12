@@ -23,6 +23,7 @@ import BaseModal from "@/components/ui/modal/BaseModal";
 import { useAuth } from "@/context/auth.context";
 import { reportService } from "@/services/client/report.client";
 import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 import CodeEditor from "./CodeEditor";
 import { IGroupType } from "@/types/groupTypes";
 import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
@@ -398,25 +399,18 @@ const SessionWorkspace: React.FC<{
         <label htmlFor="reason" className="text-md mb-2">
           Select Reason for Reporting
         </label>
-        <select
-          name=""
+        <Dropdown
           id="reason"
-          onChange={(e) => setReportReason(e.target.value)}
-          className="w-full py-3 px-4 rounded-md border-gray-700 border mt-3 bg-gray-800 
-           text-white placeholder-gray-400 focus:outline-none  focus:ring-cyan-500 appearance-none
-           hover:cursor-pointer"
-        >
-          <option value="" disabled selected>
-            Select a Reason
-          </option>
-          {commonReportReasons.map((reason, idx) => {
-            return (
-              <option key={idx} value={reason}>
-                {reason}
-              </option>
-            );
-          })}
-        </select>
+          value={reportReason}
+          onChange={setReportReason}
+          options={commonReportReasons.map((reason) => ({
+            value: reason,
+            label: reason,
+          }))}
+          placeholder="Select a Reason"
+          searchPlaceholder="Search reasons..."
+          className="mt-3"
+        />
       </BaseModal>
       <BaseModal
         isOpen={confirmationOn}

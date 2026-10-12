@@ -14,8 +14,7 @@ passport.use(
     {
       clientID: clientID,
       clientSecret: clientSecret,
-     // callbackURL: `${apiBaseUrl}/api/auth/google/callback`,
-     callbackURL:`https://api.brainsync.space/api/auth/google/callback`
+      callbackURL: `${apiBaseUrl}/api/auth/google/callback`,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
