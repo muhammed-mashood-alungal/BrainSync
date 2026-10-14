@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import EmptyList from "@/components/ui/emptyList/EmptyList";
 import Dropdown from "@/components/ui/dropdown/Dropdown";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
 
 interface FilterOption {
   value: string;
@@ -167,24 +168,22 @@ const GenericListing = <T extends object>({
 
           {showDateFilter && (
             <>
-              <input
-                type="text"
-                name="startDate"
-                placeholder="Start Date"
+              <DatePicker
                 value={startDate}
-                className="h-10 rounded p-2 bg-gray-900"
-                onChange={(e) => setStartDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
+                onChange={setStartDate}
+                placeholder="Start Date"
+                max={endDate || undefined}
+                size="sm"
+                className="w-full sm:w-48"
               />
 
-              <input
-                type="text"
-                name="endDate"
-                placeholder="End Date"
+              <DatePicker
                 value={endDate}
-                className="h-10 rounded p-2 bg-gray-900"
-                onChange={(e) => setEndDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
+                onChange={setEndDate}
+                placeholder="End Date"
+                min={startDate || undefined}
+                size="sm"
+                className="w-full sm:w-48"
               />
               <div className="h-10 w-10 flex justify-center items-center bg-gray-900 rounded">
                 <FontAwesomeIcon icon={faFilter} onClick={customDateFilter} />

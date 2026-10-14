@@ -26,3 +26,9 @@ export interface IDecodedUserType{
     profilePicture?:string
 }
 
+
+export interface ISubjectStudyTime {
+  subject: string;
+  duration: number; // seconds
+  sessions: number;
+}

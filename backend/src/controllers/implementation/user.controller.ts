@@ -175,6 +175,25 @@ export class UserController implements IUserController {
       next(error);
     }
   }
+  async getTimeBySubject(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.user;
+      const { filterBy } = req.query;
+      const subjects = await this._userServices.getUserTimeBySubject(
+        userId,
+        filterBy as string
+      );
+      res
+        .status(HttpStatus.OK)
+        .json(successResponse(HttpResponse.OK, { subjects }));
+    } catch (error) {
+      next(error);
+    }
+  }
   async getProfileStats(
     req: Request,
     res: Response,

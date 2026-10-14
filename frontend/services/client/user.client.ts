@@ -1,5 +1,6 @@
 import { userInstances } from "@/axios/instance.axios";
 import { AxiosError } from "axios";
+import { ISubjectStudyTime } from "@/types/userTypes";
 
 export const UserServices = {
   changeProfilePic: async (data: FormData, userId: string): Promise<string> => {
@@ -88,6 +89,18 @@ export const UserServices = {
         `/user-session-progress?filterBy=${filterBy}`
       );
       return response.data.graph;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getTimeBySubject: async (
+    filterBy: string
+  ): Promise<ISubjectStudyTime[] | undefined> => {
+    try {
+      const response = await userInstances.get(
+        `/time-by-subject?filterBy=${filterBy}`
+      );
+      return response.data.subjects;
     } catch (error) {
       console.log(error);
     }
