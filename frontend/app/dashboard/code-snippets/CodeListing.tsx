@@ -6,7 +6,7 @@ import { Download } from "lucide-react";
 import { codeSnippetServices } from "@/services/client/codeSnippet";
 import { ICodeSnippetTypes } from "@/types/codeSnippetTypes";
 import { ISessionTypes } from "@/types/sessionTypes";
-import { Language } from "@/context/codeEditor.context";
+import { downloadCodeSnippet } from "@/utils/download.util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 
@@ -18,29 +18,6 @@ function CodeSnippetListing() {
   useEffect(() => {
     fetchMyCodes(1, limit, "");
   }, []);
-
-  const downloadSnippet = (snippet: {
-    sourceCode: string;
-    title: string;
-    language: string;
-  }) => {
-    const extensions = {
-      javascript: "js",
-      python: "py",
-      java: "java",
-      c: "c",
-      go: "go",
-    };
-
-    const extension = extensions[snippet.language as Language] || "txt";
-    const filename = `${snippet.title || "code-snippet"}.${extension}`;
-    const blob = new Blob([snippet.sourceCode], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(link.href);
-  };
 
   async function fetchMyCodes(
     currentPage: number,
@@ -94,7 +71,7 @@ function CodeSnippetListing() {
     <div className="flex space-x-2 justify-center">
       <button
         className="text-cyan-500 hover:text-cyan-700 flex hover:cursor-pointer"
-        onClick={() => downloadSnippet(code)}
+        onClick={() => downloadCodeSnippet(code)}
       >
         <Download className="mr-2" /> download
       </button>

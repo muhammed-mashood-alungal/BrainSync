@@ -4,6 +4,9 @@ import Input from "@/components/ui/Input/Input";
 import BaseModal from "@/components/ui/modal/BaseModal";
 import Button from "@/components/ui/button/Button";
 import Dropdown from "@/components/ui/dropdown/Dropdown";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
+import TimePicker from "@/components/ui/timePicker/TimePicker";
+import { toDateValue } from "@/utils/time.util";
 import { useAuth } from "@/context/auth.context";
 import { GroupServices } from "@/services/client/group.client";
 import { SessionServices } from "@/services/client/session.client";
@@ -18,10 +21,6 @@ import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
 
 const pad = (num: number) => String(num).padStart(2, "0");
-
-// yyyy-mm-dd in local time, the format <input type="date"> expects
-const toDateInputValue = (date: Date) =>
-  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
 const getDurationLabel = (startTime: string, endTime: string) => {
   if (!startTime || !endTime) return "";
@@ -53,7 +52,7 @@ function CreateSession({
   const [formData, setFormData] = useState({
     sessionName: data?.sessionName || "",
     subject: data?.subject || "",
-    date: data?.date ? toDateInputValue(new Date(data.date)) : "",
+    date: data?.date ? toDateValue(new Date(data.date)) : "",
     startTime: data?.startTime
       ? new Date(data.startTime).toTimeString().slice(0, 5)
       : "",
@@ -73,7 +72,7 @@ function CreateSession({
   });
   const [loading, setLoading] = useState(false);
 
-  const today = toDateInputValue(new Date());
+  const today = toDateValue(new Date());
   const isToday = formData.date === today;
   const duration = getDurationLabel(formData.startTime, formData.endTime);
 
@@ -230,15 +229,12 @@ function CreateSession({
               <label htmlFor="date" className={labelClass}>
                 Date
               </label>
-              <Input
+              <DatePicker
                 id="date"
-                type="date"
-                name="date"
-                placeholder="Session Date"
-                min={today}
                 value={formData.date}
-                onChange={handleChange}
-                className="[color-scheme:dark]"
+                onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+                min={today}
+                placeholder="Select a date"
               />
               {err?.date && <span className={errorClass}>{err.date}</span>}
             </div>
@@ -264,14 +260,13 @@ function CreateSession({
                     </Button>
                   )}
                 </div>
-                <Input
+                <TimePicker
                   id="startTime"
-                  type="time"
-                  name="startTime"
-                  placeholder="Starting Time"
                   value={formData.startTime}
-                  onChange={handleChange}
-                  className="[color-scheme:dark]"
+                  onChange={(startTime) =>
+                    setFormData((prev) => ({ ...prev, startTime }))
+                  }
+                  placeholder="Start time"
                 />
                 {err?.startTime && (
                   <span className={errorClass}>{err.startTime}</span>
@@ -283,14 +278,13 @@ function CreateSession({
                 <label htmlFor="endTime" className={labelClass}>
                   End Time
                 </label>
-                <Input
+                <TimePicker
                   id="endTime"
-                  type="time"
-                  name="endTime"
-                  placeholder="End Time"
                   value={formData.endTime}
-                  onChange={handleChange}
-                  className="[color-scheme:dark]"
+                  onChange={(endTime) =>
+                    setFormData((prev) => ({ ...prev, endTime }))
+                  }
+                  placeholder="End time"
                 />
                 {err?.endTime && (
                   <span className={errorClass}>{err.endTime}</span>

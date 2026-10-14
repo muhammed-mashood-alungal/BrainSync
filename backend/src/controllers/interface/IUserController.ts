@@ -28,6 +28,11 @@ export interface IUserController {
     res: Response,
     next: NextFunction
   ): Promise<void>;
+  getTimeBySubject(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void>;
   getProfileStats(
     req: Request,
     res: Response,

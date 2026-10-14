@@ -5,11 +5,19 @@ import React, {
   KeyboardEvent,
   useEffect,
   useId,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
+import { usePopover } from "@/components/ui/popover/usePopover";
+import {
+  FieldSize,
+  FieldTheme,
+  fieldSizeClasses,
+  fieldThemeClasses,
+  fieldTriggerClass,
+  popoverClass,
+} from "@/components/ui/popover/fieldStyles";
 
 export interface DropdownOption {
   value: string;
@@ -24,43 +32,16 @@ interface DropdownProps {
   searchable?: boolean;
   searchPlaceholder?: string;
   emptyMessage?: string;
-  theme?: "primary" | "admin";
-  size?: "md" | "sm";
+  theme?: FieldTheme;
+  size?: FieldSize;
   disabled?: boolean;
   id?: string;
   className?: string;
 }
 
-interface MenuPosition {
-  top?: number;
-  bottom?: number;
-  left: number;
-  width: number;
-  maxHeight: number;
-}
-
 const MENU_MAX_HEIGHT = 288;
+const MENU_MIN_HEIGHT = 200;
 const MENU_MIN_WIDTH = 176;
-const MENU_GAP = 6;
-const VIEWPORT_PADDING = 8;
-
-const themeClasses = {
-  primary: {
-    active: "border-cyan-400",
-    focus: "focus:border-cyan-400",
-    selected: "text-[#00D2D9]",
-  },
-  admin: {
-    active: "border-[#8979FF]",
-    focus: "focus:border-[#8979FF]",
-    selected: "text-[#8979FF]",
-  },
-};
-
-const sizeClasses = {
-  md: "px-4 py-3 bg-transparent",
-  sm: "h-10 px-3 text-sm bg-gray-800",
-};
 
 function Dropdown({
   options,
@@ -79,14 +60,13 @@ function Dropdown({
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(0);
-  const [position, setPosition] = useState<MenuPosition | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const listId = useId();
 
-  const colors = themeClasses[theme];
+  const colors = fieldThemeClasses[theme];
   const selectedOption = options.find((option) => option.value === value);
 
   const filteredOptions = useMemo(() => {
@@ -115,65 +95,13 @@ function Dropdown({
     closeMenu(true);
   };
 
-  // The menu is position: fixed so it is never clipped by an overflow-hidden
-  // parent (e.g. BaseModal), but it stays inside this component's DOM so
-  // "click outside" checks on parents still treat it as inside.
-  const updatePosition = () => {
-    const rect = triggerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const spaceBelow = window.innerHeight - rect.bottom - MENU_GAP;
-    const spaceAbove = rect.top - MENU_GAP;
-    const openUpwards =
-      spaceBelow < Math.min(MENU_MAX_HEIGHT, 200) && spaceAbove > spaceBelow;
-
-    const width = Math.max(rect.width, MENU_MIN_WIDTH);
-    const left = Math.max(
-      VIEWPORT_PADDING,
-      Math.min(rect.left, window.innerWidth - width - VIEWPORT_PADDING)
-    );
-    const maxHeight = Math.min(
-      MENU_MAX_HEIGHT,
-      (openUpwards ? spaceAbove : spaceBelow) - VIEWPORT_PADDING
-    );
-
-    setPosition(
-      openUpwards
-        ? { bottom: window.innerHeight - rect.top + MENU_GAP, left, width, maxHeight }
-        : { top: rect.bottom + MENU_GAP, left, width, maxHeight }
-    );
-  };
-
-  useLayoutEffect(() => {
-    if (!isOpen) return;
-    updatePosition();
-
-    window.addEventListener("resize", updatePosition);
-    window.addEventListener("scroll", updatePosition, true);
-    return () => {
-      window.removeEventListener("resize", updatePosition);
-      window.removeEventListener("scroll", updatePosition, true);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        closeMenu();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isOpen]);
+  const position = usePopover(containerRef, triggerRef, {
+    isOpen,
+    onClose: () => closeMenu(),
+    preferredHeight: MENU_MAX_HEIGHT,
+    minHeight: MENU_MIN_HEIGHT,
+    minWidth: MENU_MIN_WIDTH,
+  });
 
   useEffect(() => {
     if (query) setHighlightedIndex(0);
@@ -241,9 +169,9 @@ function Dropdown({
         aria-expanded={isOpen}
         aria-controls={listId}
         onClick={() => (isOpen ? closeMenu() : openMenu())}
-        className={`w-full flex items-center justify-between gap-2 text-left border rounded-md transition-colors focus:outline-none hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
-          sizeClasses[size]
-        } ${isOpen ? colors.active : `border-gray-700 ${colors.focus}`}`}
+        className={`${fieldTriggerClass} ${fieldSizeClasses[size]} ${
+          isOpen ? colors.active : `border-gray-700 ${colors.focus}`
+        }`}
       >
         <span
           className={`truncate ${selectedOption ? "text-white" : "text-gray-400"}`}
@@ -260,7 +188,7 @@ function Dropdown({
 
       {isOpen && position && (
         <div
-          className="fixed z-[60] flex flex-col bg-gray-900 border border-gray-700 rounded-md shadow-xl overflow-hidden [color-scheme:dark]"
+          className={popoverClass}
           style={{
             top: position.top,
             bottom: position.bottom,

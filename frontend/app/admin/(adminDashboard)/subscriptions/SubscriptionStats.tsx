@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/components/ui/button/Button";
-import Input from "@/components/ui/Input/Input";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import React, { useEffect, useState } from "react";
 
@@ -32,26 +32,24 @@ function SubscriptionStats() {
   return (
     <>
       <div className="flex justify-end m-2">
-        <div className="m-2">
-          <Input
-            type="date"
-            name="startDate"
-            placeholder="Session Date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            onFocus={(e) => (e.target.type = "date")}
-          />
-        </div>
-        <div className="m-2">
-          <Input
-            type="date"
-            name="endDate"
-            placeholder="Session Date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            onFocus={(e) => (e.target.type = "date")}
-          />
-        </div>
+        <DatePicker
+          value={startDate}
+          onChange={setStartDate}
+          placeholder="Start Date"
+          max={endDate || undefined}
+          theme="admin"
+          size="sm"
+          className="m-2 w-48"
+        />
+        <DatePicker
+          value={endDate}
+          onChange={setEndDate}
+          placeholder="End Date"
+          min={startDate || undefined}
+          theme="admin"
+          size="sm"
+          className="m-2 w-48"
+        />
         <Button
           variant="other"
           className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md m-2 hover:cursor-pointer"

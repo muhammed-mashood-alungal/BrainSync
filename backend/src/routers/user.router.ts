@@ -34,6 +34,12 @@ userRouter.get(
 );
 
 userRouter.get(
+  '/time-by-subject',
+  authMiddleware,
+  userController.getTimeBySubject.bind(userController)
+);
+
+userRouter.get(
   '/profile-stats',
   authMiddleware,
   userController.getProfileStats.bind(userController)

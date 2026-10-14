@@ -10,3 +10,8 @@ export interface ISessionActivity extends Document {
         duration : number
     }]
 }
+export interface ISubjectStudyTime {
+    subject : string;
+    duration : number; // seconds
+    sessions : number;
+}

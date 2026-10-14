@@ -1,7 +1,11 @@
 import React from "react";
 import QuickActions from "./DashboardComponents/QuickActions";
 import ScheduledSessions from "./DashboardComponents/ScheduledSessions";
-import ProgressChart from "./DashboardComponents/ProgressChart";
+import SubjectBreakdown from "./DashboardComponents/SubjectBreakdown";
+import {
+  RecentNotes,
+  RecentSnippets,
+} from "./DashboardComponents/RecentResources";
 import UserInNav from "@/components/layouts/navbar/UserInNav";
 
 const Dashboard = () => {
@@ -23,8 +27,12 @@ const Dashboard = () => {
         {/* Scheduled Sessions */}
         <ScheduledSessions />
 
-        {/* Progress Chart*/}
-        <ProgressChart />
+        {/* Subject breakdown & recent resources */}
+        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
+          <SubjectBreakdown />
+          <RecentNotes />
+          <RecentSnippets />
+        </section>
       </div>
     </div>
   );
