@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 
 interface Column<T> {
   key: keyof T;
@@ -61,25 +62,14 @@ const AdminSideTable = <T,>({
         </div>
         <div className="flex">
           {ShowDropDown && dropDownLists && dropDownLists?.length > 0 && (
-            <div className="relative m-1">
-              <select
-                name=""
-                id=""
-                onChange={(e) => {
-                  setSelectValue(e.target.value);
-                }}
-                className="w-full h-10  p-2 border border-gray-300 bg-gray-900 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                <option value="All">All</option>
-                {dropDownLists.map((item, index) => {
-                  return (
-                    <option key={index} value={item.value}>
-                      {item.label}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+            <Dropdown
+              value={selectValue}
+              onChange={setSelectValue}
+              options={[{ value: "All", label: "All" }, ...dropDownLists]}
+              theme="admin"
+              size="sm"
+              className="m-1 w-40"
+            />
           )}
           {ShowSearchBar && (
             <div className="relative m-1">
@@ -162,7 +152,7 @@ const AdminSideTable = <T,>({
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50 hover:cursor-pointer"
           >
             Previous
           </button>
@@ -174,7 +164,7 @@ const AdminSideTable = <T,>({
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50"
+            className="px-4 py-2 bg-gray-700 text-white rounded-md disabled:opacity-50 hover:cursor-pointer"
           >
             Next
           </button>

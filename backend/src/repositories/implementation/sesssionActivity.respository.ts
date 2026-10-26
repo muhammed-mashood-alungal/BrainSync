@@ -4,6 +4,8 @@ import { ISessionActivityRepository } from '../interface/ISessionActivity.reposi
 import { SessionActivity } from '../../models/sessionActivity.model';
 import mongoose, { Types } from 'mongoose';
 import { format, startOfWeek, addDays, subDays, startOfToday } from 'date-fns';
+import Session from '../../models/session.modal';
+import { ISubjectStudyTime } from '../../types/sessionActivity.types';
 
 export class SessionActivityRepository
   extends BaseRepository<ISessionActivityModel>
@@ -156,6 +158,69 @@ export class SessionActivityRepository
     }
     console.log(graphData);
     return { graph: graphData };
+  }
+
+  async getUserTimeBySubject(
+    userId: Types.ObjectId,
+    filterBy: string
+  ): Promise<ISubjectStudyTime[]> {
+    const userIdObj = new mongoose.Types.ObjectId(userId);
+    const now = new Date();
+    let range: { $gte: Date; $lte?: Date } | null = null;
+
+    switch (filterBy) {
+      case 'Weekly':
+        range = { $gte: subDays(now, 7) };
+        break;
+      case 'Monthly':
+        range = {
+          $gte: new Date(now.getFullYear(), now.getMonth(), 1),
+          $lte: new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59),
+        };
+        break;
+      case 'Yearly':
+        range = {
+          $gte: new Date(now.getFullYear(), 0, 1),
+          $lte: new Date(now.getFullYear(), 11, 31, 23, 59, 59),
+        };
+        break;
+    }
+
+    const stats = await this.model.aggregate([
+      { $match: { userId: userIdObj } },
+      { $unwind: '$logs' },
+      ...(range ? [{ $match: { 'logs.joinTime': range } }] : []),
+      {
+        $group: {
+          _id: '$sessionCode',
+          duration: { $sum: '$logs.duration' },
+        },
+      },
+      {
+        $lookup: {
+          from: Session.collection.name,
+          localField: '_id',
+          foreignField: 'code',
+          as: 'session',
+        },
+      },
+      { $unwind: '$session' },
+      {
+        $group: {
+          _id: { $toLower: { $trim: { input: '$session.subject' } } },
+          subject: { $first: { $trim: { input: '$session.subject' } } },
+          duration: { $sum: '$duration' },
+          sessions: { $sum: 1 },
+        },
+      },
+      { $sort: { duration: -1 } },
+    ]);
+
+    return stats.map(item => ({
+      subject: item.subject,
+      duration: Math.floor(item.duration / 1000),
+      sessions: item.sessions,
+    }));
   }
 
   async totalTimeSendByUser(userId: Types.ObjectId): Promise<string> {

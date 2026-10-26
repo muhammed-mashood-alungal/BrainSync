@@ -1,7 +1,7 @@
 // GenericListing.tsx
 "use client";
 import React, { useState, useEffect, ReactNode } from "react";
-import { Search, ChevronDown } from "lucide-react";
+import { Search } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowUpWideShort,
@@ -11,6 +11,8 @@ import {
 import { toast } from "react-hot-toast";
 import SimpleStudyLoading from "@/components/ui/loading/Loading";
 import EmptyList from "@/components/ui/emptyList/EmptyList";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
 
 interface FilterOption {
   value: string;
@@ -40,6 +42,7 @@ interface GenericListingProps<T> {
   loading?: boolean;
   setLoading?: (loading: boolean) => void;
   limit?: number;
+  isAdmin? : boolean
 }
 
 const GenericListing = <T extends object>({
@@ -57,6 +60,7 @@ const GenericListing = <T extends object>({
   loading = false,
   setLoading = () => {},
   limit = 9,
+  isAdmin = false
 }: GenericListingProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterValue, setFilterValue] = useState("");
@@ -153,46 +157,33 @@ const GenericListing = <T extends object>({
 
         <div className="flex flex-col sm:flex-row gap-4">
           {filterOptions.length > 0 && (
-            <div className="relative w-full sm:w-auto">
-              <select
-                className="bg-gray-900 text-gray-300 rounded-md px-4 py-2 w-full sm:w-auto appearance-none pr-8"
-                onChange={(e) => setFilterValue(e.target.value)}
-                value={filterValue}
-              >
-                <option value="">{filterLabel}</option>
-                {filterOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={16}
-              />
-            </div>
+            <Dropdown
+              value={filterValue}
+              onChange={setFilterValue}
+              options={[{ value: "", label: filterLabel }, ...filterOptions]}
+              size="sm"
+              className="w-full sm:w-44"
+            />
           )}
 
           {showDateFilter && (
             <>
-              <input
-                type="text"
-                name="startDate"
-                placeholder="Start Date"
+              <DatePicker
                 value={startDate}
-                className="h-10 rounded p-2 bg-gray-900"
-                onChange={(e) => setStartDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
+                onChange={setStartDate}
+                placeholder="Start Date"
+                max={endDate || undefined}
+                size="sm"
+                className="w-full sm:w-48"
               />
 
-              <input
-                type="text"
-                name="endDate"
-                placeholder="End Date"
+              <DatePicker
                 value={endDate}
-                className="h-10 rounded p-2 bg-gray-900"
-                onChange={(e) => setEndDate(e.target.value)}
-                onFocus={(e) => (e.target.type = "date")}
+                onChange={setEndDate}
+                placeholder="End Date"
+                min={startDate || undefined}
+                size="sm"
+                className="w-full sm:w-48"
               />
               <div className="h-10 w-10 flex justify-center items-center bg-gray-900 rounded">
                 <FontAwesomeIcon icon={faFilter} onClick={customDateFilter} />
@@ -234,7 +225,8 @@ const GenericListing = <T extends object>({
           <div className="relative w-full sm:w-auto">
             <button
               onClick={onCreateClick}
-              className="bg-[#00D2D9] hover:bg-teal-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 w-full sm:w-auto"
+              className="bg-[#00D2D9] hover:bg-teal-600 text-white font-medium py-2 px-4 
+              rounded-md transition duration-200 w-full sm:w-auto hover:cursor-pointer"
             >
               {createButtonText}
             </button>
@@ -256,9 +248,9 @@ const GenericListing = <T extends object>({
               <button
                 key={index}
                 onClick={() => setCurrentPage(index + 1)}
-                className={`w-8 h-8 flex items-center justify-center rounded-md ${
+                className={`w-8 h-8 flex items-center justify-center rounded-md hover:cursor-pointer ${
                   currentPage === index + 1
-                    ? "bg-cyan-500 text-white"
+                    ? `${isAdmin ? "bg-[#8979FF]" : "bg-cyan-500"} text-white`
                     : "bg-gray-800 text-gray-400"
                 }`}
               >

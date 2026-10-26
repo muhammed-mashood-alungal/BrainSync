@@ -1,3 +1,5 @@
+import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
 import { IPlanError, IPlans } from "@/types/plans.types";
 import { validatePlanForm } from "@/validations";
 import React, { useState } from "react";
@@ -147,15 +149,22 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
               <label className="block text-sm font-medium text-white  mb-1">
                 Billing Interval
               </label>
-              <select
-                name="interval"
+              <Dropdown
                 value={plan.interval}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-300 bg-black rounded-md focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
+                onChange={(interval) =>
+                  setPlan({
+                    ...plan,
+                    interval: interval as Omit<IPlans, "_id">["interval"],
+                  })
+                }
+                options={[
+                  { value: "monthly", label: "Monthly" },
+                  { value: "yearly", label: "Yearly" },
+                ]}
+                theme="admin"
+                size="sm"
+                searchable={false}
+              />
               <span className="text-red-600 ml-1"> {planErr?.interval}</span>
             </div>
           </div>
@@ -165,10 +174,11 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
               <label className="block text-lg font-medium text-white">
                 Features
               </label>
-              <button
+              <Button
                 type="button"
+                variant="other"
                 onClick={addFeature}
-                className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md"
+                className="flex items-center bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md hover:cursor-pointer"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -183,7 +193,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                   />
                 </svg>
                 Add Feature
-              </button>
+              </Button>
             </div>
 
             <div className="space-y-4 h-[300px] w-full overflow-auto">
@@ -193,13 +203,14 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                   className="p-4 border border-gray-200 rounded-md "
                 >
                   <div className="flex justify-between items-start mb-3">
-                    <h4 className="text-sm font-medium text-cyan-500">
+                    <h4 className="text-sm font-medium text-[#8979FF]">
                       Feature {index + 1}
                     </h4>
-                    <button
+                    <Button
                       type="button"
+                      variant="other"
                       onClick={() => removeFeature(index)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 hover:cursor-pointer"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +224,7 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
                           clipRule="evenodd"
                         />
                       </svg>
-                    </button>
+                    </Button>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -301,19 +312,21 @@ const CreatePlan: React.FC<CreatePlanProps> = ({
           </div>
 
           <div className="flex justify-end space-x-4 pt-4">
-            <button
+            <Button
               type="button"
+              variant="other"
               onClick={onCancel}
-              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md"
+              className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-md hover:cursor-pointer"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md"
+              variant="admin-primary"
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md hover:cursor-pointer"
             >
               {initialPlan ? "Update Plan" : "Create Plan"}
-            </button>
+            </Button>
           </div>
         </div>
       </form>

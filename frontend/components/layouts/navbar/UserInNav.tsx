@@ -24,7 +24,7 @@ function UserInNav() {
     <div>
       <div>
         <div className="flex items-center gap-4">
-          <button onClick={logout} className="text-[#00D2D9] hover:underline">
+          <button onClick={logout} className="text-[#00D2D9] hover:underline hover:cursor-pointer">
             Logout
           </button>
           <div className="w-10 h-10 rounded-full overflow-hidden">

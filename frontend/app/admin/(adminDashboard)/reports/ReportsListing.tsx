@@ -4,6 +4,7 @@ import { IReportTypes } from "@/types/report.types";
 import { useCallback, useEffect, useState } from "react";
 import { format } from "date-fns";
 import AdminSideTable from "@/components/ui/table/AdminSideTable";
+import Button from "@/components/ui/button/Button";
 
 function ReportsListing() {
   const [reports, setReports] = useState<IReportTypes[]>([]);
@@ -43,7 +44,7 @@ function ReportsListing() {
 
   const handlePageChange = useCallback((page: number, limit: number) => {
     fetchReports(page, limit);
-  },[]);
+  }, []);
 
   const columns = [
     {
@@ -83,8 +84,9 @@ function ReportsListing() {
 
   const actions = (report: IReportTypes) => (
     <div className="flex space-x-2">
-      <button
-        className={`${
+      <Button
+        variant="other"
+        className={` hover:cursor-pointer ${
           report.status == "Pending"
             ? "text-red-500 hover:text-red-700"
             : "text-gray-700"
@@ -93,9 +95,10 @@ function ReportsListing() {
         disabled={report.status != "Pending"}
       >
         Solve
-      </button>
-      <button
-        className={`${
+      </Button>
+      <Button
+        variant="other"
+        className={`hover:cursor-pointer ${
           report.status == "Pending"
             ? "text-red-500 hover:text-red-700"
             : "text-gray-700"
@@ -104,7 +107,7 @@ function ReportsListing() {
         disabled={report.status != "Pending"}
       >
         Close
-      </button>
+      </Button>
     </div>
   );
 

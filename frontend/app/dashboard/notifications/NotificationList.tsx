@@ -157,7 +157,7 @@ const NotificationList: React.FC = () => {
       {!isRead && (
         <button
           onClick={() => markAsRead(notification._id)}
-          className="flex-shrink-0 text-sm text-cyan-500 hover:text-cyan-400"
+          className="flex-shrink-0 text-sm text-cyan-500 hover:text-cyan-400 hover:cursor-pointer"
         >
           Mark as read
         </button>
@@ -173,7 +173,7 @@ const NotificationList: React.FC = () => {
           {unreadNotifications.length > 0 && (
             <button
               onClick={markAllAsRead}
-              className="bg-cyan-500 hover:bg-cyan-600 text-gray-900 px-4 py-2 rounded-md font-medium transition"
+              className="bg-cyan-500 hover:bg-cyan-600 text-gray-900 px-4 py-2 rounded-md font-medium transition hover:cursor-pointer"
             >
               Mark all as read
             </button>

@@ -2,11 +2,19 @@
 
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Bell } from "lucide-react";
+import { Bell, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Sidebar() {
+interface SidebarProps {
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
+}
+
+export default function Sidebar({
+  collapsed = false,
+  onToggleCollapse,
+}: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -20,9 +28,38 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-72 min-h-screen bg-[#1E1E1E] border-r border-gray-800">
-      <div className="p-6">
-        <h1 className="text-3xl font-bold text-[#00D2D9]">Brain Sync</h1>
+    <div
+      className={`${
+        collapsed ? "w-72 lg:w-20" : "w-72"
+      } min-h-screen bg-[#1E1E1E] border-r border-gray-800 overflow-hidden transition-[width] duration-300 ease-in-out`}
+    >
+      <div
+        className={`p-6 flex items-center justify-between gap-2 ${
+          collapsed ? "lg:justify-center lg:px-0" : ""
+        }`}
+      >
+        <h1
+          className={`text-3xl font-bold text-[#00D2D9] whitespace-nowrap ${
+            collapsed ? "lg:hidden" : ""
+          }`}
+        >
+          Brain Sync
+        </h1>
+        {onToggleCollapse && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="hidden lg:flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-[#00D2D9] hover:bg-gray-800 hover:cursor-pointer transition-colors"
+          >
+            {collapsed ? (
+              <PanelLeftOpen size={20} />
+            ) : (
+              <PanelLeftClose size={20} />
+            )}
+          </button>
+        )}
       </div>
 
       <div className="mt-6 px-4">
@@ -30,7 +67,11 @@ export default function Sidebar() {
           <Link
             href={item.path}
             key={item.path}
+            title={collapsed ? item.label : undefined}
+            aria-label={item.label}
             className={`flex items-center gap-3 p-4 mb-2 rounded-md transition-colors ${
+              collapsed ? "lg:justify-center lg:px-0" : ""
+            } ${
               pathname === item.path
                 ? "bg-[#00D2D9] text-[#1E1E1E]"
                 : "text-white hover:bg-gray-800"
@@ -128,7 +169,13 @@ export default function Sidebar() {
               {item.icon == "code" && <FontAwesomeIcon icon={faCode} />}
               {item.icon == "bell" && <Bell/>}
             </span>
-            <span className="text-base font-medium">{item.label}</span>
+            <span
+              className={`text-base font-medium whitespace-nowrap ${
+                collapsed ? "lg:hidden" : ""
+              }`}
+            >
+              {item.label}
+            </span>
           </Link>
         ))}
       </div>

@@ -1,5 +1,6 @@
 "use client";
-import Input from "@/components/ui/Input/Input";
+import Button from "@/components/ui/button/Button";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
 import { subscriptionServices } from "@/services/client/subscription.client";
 import React, { useEffect, useState } from "react";
 
@@ -31,32 +32,31 @@ function SubscriptionStats() {
   return (
     <>
       <div className="flex justify-end m-2">
-        <div className="m-2">
-          <Input
-            type="date"
-            name="startDate"
-            placeholder="Session Date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            onFocus={(e) => (e.target.type = "date")}
-          />
-        </div>
-        <div className="m-2">
-          <Input
-            type="date"
-            name="endDate"
-            placeholder="Session Date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            onFocus={(e) => (e.target.type = "date")}
-          />
-        </div>
-        <button
-          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md m-2"
+        <DatePicker
+          value={startDate}
+          onChange={setStartDate}
+          placeholder="Start Date"
+          max={endDate || undefined}
+          theme="admin"
+          size="sm"
+          className="m-2 w-48"
+        />
+        <DatePicker
+          value={endDate}
+          onChange={setEndDate}
+          placeholder="End Date"
+          min={startDate || undefined}
+          theme="admin"
+          size="sm"
+          className="m-2 w-48"
+        />
+        <Button
+          variant="other"
+          className="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2 rounded-md m-2 hover:cursor-pointer"
           onClick={fetchStats}
         >
           Filter
-        </button>
+        </Button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
@@ -64,7 +64,7 @@ function SubscriptionStats() {
             <h2 className="text-gray-400 font-medium">Total Subscriptions</h2>
           </div>
           <div className="flex items-end">
-            <h3 className="text-3xl font-bold text-cyan-500">
+            <h3 className="text-3xl font-bold text-[#8979FF]">
               {stats.totalSubscriptions}
             </h3>
           </div>
@@ -74,7 +74,7 @@ function SubscriptionStats() {
             <h2 className="text-gray-400 font-medium">Total Revenue</h2>
           </div>
           <div className="flex items-end">
-            <h3 className="text-3xl font-bold text-cyan-500">
+            <h3 className="text-3xl font-bold text-[#8979FF]">
               {stats.totalRevenue}+
             </h3>
           </div>
@@ -84,7 +84,7 @@ function SubscriptionStats() {
             <h2 className="text-gray-400 font-medium">Acitve Count</h2>
           </div>
           <div className="flex items-end">
-            <h3 className="text-3xl font-bold text-cyan-500">
+            <h3 className="text-3xl font-bold text-[#8979FF]">
               {stats.activeCount}
             </h3>
           </div>
@@ -94,7 +94,7 @@ function SubscriptionStats() {
             <h2 className="text-gray-400 font-medium">Cancelled Count</h2>
           </div>
           <div className="flex items-end">
-            <h3 className="text-3xl font-bold text-cyan-500">
+            <h3 className="text-3xl font-bold text-[#8979FF]">
               {stats.cancelledCount}
             </h3>
           </div>

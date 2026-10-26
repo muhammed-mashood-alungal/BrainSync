@@ -6,7 +6,6 @@ import upload from '../configs/multer.configs';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { SessionActivityRepository } from '../repositories/implementation/sesssionActivity.respository';
 import { GroupRepository } from '../repositories/implementation/group.repository';
-import { verifyUser } from '../middlewares/verifyUser.middleware';
 
 const userRouter = Router();
 
@@ -32,6 +31,12 @@ userRouter.get(
   '/user-session-progress',
   authMiddleware,
   userController.getUserSessionProgress.bind(userController)
+);
+
+userRouter.get(
+  '/time-by-subject',
+  authMiddleware,
+  userController.getTimeBySubject.bind(userController)
 );
 
 userRouter.get(

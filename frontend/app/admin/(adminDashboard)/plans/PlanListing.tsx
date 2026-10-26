@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import CreatePlan from "./createPlan";
 import { Crown, Edit2, Power } from "lucide-react";
 import Confirm from "@/components/ui/modal/ConfirmModal";
+import Button from "@/components/ui/button/Button";
 
 interface PlansListingProps {
   plans: IPlans[];
@@ -94,21 +95,23 @@ const PlansListing: React.FC<PlansListingProps> = ({
                 </div>
 
                 <div className="flex space-x-2">
-                  <button
+                  <Button
+                    variant="other"
                     onClick={() => {
                       setInitialPlan(plan);
                       setSelectedPlan(plan._id);
                     }}
-                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2"
+                    className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded flex items-center justify-center gap-2 hover:cursor-pointer"
                   >
                     <Edit2 size={16} />
                     <span>Edit</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="other"
                     onClick={() => {
                       setToggledPlan(plan);
                     }}
-                    className={`flex-1 py-2 px-4 rounded flex items-center justify-center gap-2 ${
+                    className={`flex-1 py-2 px-4 rounded flex items-center justify-center gap-2 hover:cursor-pointer ${
                       plan.isActive
                         ? "bg-red-500 hover:bg-red-600 text-white"
                         : "bg-green-500 hover:bg-green-600 text-white"
@@ -116,7 +119,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
                   >
                     <Power size={16} />
                     <span>{plan.isActive ? "Deactivate" : "Activate"}</span>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -137,7 +140,7 @@ const PlansListing: React.FC<PlansListingProps> = ({
       </BaseModal>
       <Confirm
         isOpen={Boolean(toggledPlan?._id)}
-        onConfirm={handleOnConfirm} 
+        onConfirm={handleOnConfirm}
         onClose={() => setToggledPlan(null)}
       />
     </div>

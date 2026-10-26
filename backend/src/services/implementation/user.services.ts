@@ -12,6 +12,7 @@ import { ISessionActivityRepository } from '../../repositories/interface/ISessio
 import { IUserModel } from '../../models/user.model';
 import { IGroupRepository } from '../../repositories/interface/IGroupRepository';
 import { mapUsers } from '../../mappers/user.mappers';
+import { ISubjectStudyTime } from '../../types/sessionActivity.types';
 import { env } from 'process';
 export class UserServices implements IUserService {
   constructor(
@@ -147,6 +148,16 @@ export class UserServices implements IUserService {
     filterBy: string
   ): Promise<{ graph: any[] }> {
     return await this._sessionActiviesRepo.getUserSessionProgress(
+      userId as Types.ObjectId,
+      filterBy
+    );
+  }
+
+  async getUserTimeBySubject(
+    userId: unknown,
+    filterBy: string
+  ): Promise<ISubjectStudyTime[]> {
+    return await this._sessionActiviesRepo.getUserTimeBySubject(
       userId as Types.ObjectId,
       filterBy
     );

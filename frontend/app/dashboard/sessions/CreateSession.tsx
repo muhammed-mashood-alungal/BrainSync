@@ -2,6 +2,11 @@
 import InPageLoading from "@/components/ui/loading/InPageLoading";
 import Input from "@/components/ui/Input/Input";
 import BaseModal from "@/components/ui/modal/BaseModal";
+import Button from "@/components/ui/button/Button";
+import Dropdown from "@/components/ui/dropdown/Dropdown";
+import DatePicker from "@/components/ui/datePicker/DatePicker";
+import TimePicker from "@/components/ui/timePicker/TimePicker";
+import { toDateValue } from "@/utils/time.util";
 import { useAuth } from "@/context/auth.context";
 import { GroupServices } from "@/services/client/group.client";
 import { SessionServices } from "@/services/client/session.client";
@@ -9,11 +14,28 @@ import { IGroupType } from "@/types/groupTypes";
 import { ISessionTypes, Session } from "@/types/sessionTypes";
 import { validateSessionForm } from "@/validations";
 import { AxiosError } from "axios";
-import { ChevronDown } from "lucide-react";
+import { Clock } from "lucide-react";
 import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { SESSION_MESSAGES } from "@/constants/messages/session.messages";
 import { COMMON_MESSAGES } from "@/constants/messages/common.messages";
+
+const pad = (num: number) => String(num).padStart(2, "0");
+
+const getDurationLabel = (startTime: string, endTime: string) => {
+  if (!startTime || !endTime) return "";
+  const [startHours, startMinutes] = startTime.split(":").map(Number);
+  const [endHours, endMinutes] = endTime.split(":").map(Number);
+  const totalMinutes =
+    endHours * 60 + endMinutes - (startHours * 60 + startMinutes);
+  if (totalMinutes <= 0) return "";
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return [hours && `${hours}h`, minutes && `${minutes}m`]
+    .filter(Boolean)
+    .join(" ");
+};
 
 function CreateSession({
   onClose,
@@ -30,9 +52,7 @@ function CreateSession({
   const [formData, setFormData] = useState({
     sessionName: data?.sessionName || "",
     subject: data?.subject || "",
-    date: data?.date
-      ? new Date(data?.date).toLocaleDateString().split("T")[0]
-      : "",
+    date: data?.date ? toDateValue(new Date(data.date)) : "",
     startTime: data?.startTime
       ? new Date(data.startTime).toTimeString().slice(0, 5)
       : "",
@@ -52,13 +72,23 @@ function CreateSession({
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const today = toDateValue(new Date());
+  const isToday = formData.date === today;
+  const duration = getDurationLabel(formData.startTime, formData.endTime);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleStartNow = () => {
+    const now = new Date();
+    setFormData((prev) => ({
+      ...prev,
+      startTime: `${pad(now.getHours())}:${pad(now.getMinutes())}`,
     }));
   };
 
@@ -121,158 +151,174 @@ function CreateSession({
     fetchMyGroups();
   }, [user?.id]);
 
+  const labelClass = "block text-sm font-medium text-gray-300 mb-1.5";
+  const errorClass = "block text-sm text-red-600 mt-1 ml-1";
+
   return (
     <>
-      <BaseModal title="Create New Session" isOpen={true} onClose={onClose}>
-        <div className="px-8 py-6 w-full max-w-lg">
-          <h1 className="text-3xl font-bold text-white text-center mb-8">
-            Create Session
-          </h1>
+      <BaseModal
+        title={type == "create" ? "Create New Session" : "Edit Session"}
+        isOpen={true}
+        onClose={() => onClose()}
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className="py-2">
+          <div className="space-y-5">
+            {/* Session Name */}
+            <div>
+              <label htmlFor="sessionName" className={labelClass}>
+                Session Name
+              </label>
+              <Input
+                id="sessionName"
+                type="text"
+                name="sessionName"
+                placeholder="e.g. Weekly DSA revision"
+                value={formData.sessionName}
+                onChange={handleChange}
+              />
+              {err?.sessionName && (
+                <span className={errorClass}>{err.sessionName}</span>
+              )}
+            </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              {/* Session Name */}
+            {/* Subject */}
+            <div>
+              <label htmlFor="subject" className={labelClass}>
+                Subject
+              </label>
+              <Input
+                id="subject"
+                type="text"
+                name="subject"
+                placeholder="e.g. Data Structures"
+                value={formData.subject}
+                onChange={handleChange}
+              />
+              {err?.subject && (
+                <span className={errorClass}>{err.subject}</span>
+              )}
+            </div>
+
+            {/* Group Selector */}
+            <div>
+              <label htmlFor="groupId" className={labelClass}>
+                Group
+              </label>
+              <Dropdown
+                id="groupId"
+                value={formData.groupId}
+                onChange={(groupId) =>
+                  setFormData((prev) => ({ ...prev, groupId }))
+                }
+                options={myGroups?.map((group) => ({
+                  value: group._id,
+                  label: group.name,
+                }))}
+                placeholder="Select your group"
+                searchPlaceholder="Search groups..."
+                emptyMessage="No groups found"
+              />
+              {err?.groupId && (
+                <span className={errorClass}>{err.groupId}</span>
+              )}
+            </div>
+
+            {/* Date */}
+            <div>
+              <label htmlFor="date" className={labelClass}>
+                Date
+              </label>
+              <DatePicker
+                id="date"
+                value={formData.date}
+                onChange={(date) => setFormData((prev) => ({ ...prev, date }))}
+                min={today}
+                placeholder="Select a date"
+              />
+              {err?.date && <span className={errorClass}>{err.date}</span>}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Start Time */}
               <div>
-                <Input
-                  type="text"
-                  name="sessionName"
-                  placeholder="Session Name"
-                  value={formData.sessionName}
-                  onChange={handleChange}
-                />
-                <span className="text-red-600 ml-1"> {err?.sessionName}</span>
-              </div>
-
-              {/* Subject */}
-              <div>
-                <Input
-                  type="text"
-                  name="subject"
-                  placeholder="Subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                />
-                <span className="text-red-600 ml-1"> {err?.subject}</span>
-              </div>
-
-              <div>
-                <Input
-                  type="text"
-                  name="date"
-                  placeholder="Session Date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  onFocus={(e) => (e.target.type = "date")}
-                />
-                <span className="text-red-600 ml-1"> {err?.date}</span>
-              </div>
-
-              <div className="flex space-x-4">
-                <div className="flex-1">
-                  <Input
-                    type="time"
-                    name="startTime"
-                    placeholder="Starting Time"
-                    value={formData.startTime}
-                    onChange={handleChange}
-                  />
-                  {new Date().getDate() ==
-                    new Date(formData.date).getDate() && (
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            const now = new Date();
-                            const hours = String(now.getHours()).padStart(
-                              2,
-                              "0"
-                            );
-                            const minutes = String(now.getMinutes()).padStart(
-                              2,
-                              "0"
-                            );
-                            const currentTime = `${hours}:${minutes}`;
-
-                            setFormData((f) => ({
-                              ...f,
-                              startTime: currentTime,
-                            }));
-                          }
-                        }}
-                        className="accent-cyan-500 w-5 h-5"
-                      />
-                      <span>Start Now</span>
-                    </label>
-                  )}
-
-                  <span className="text-red-600 ml-1"> {err?.startTime}</span>
-                </div>
-                <div className="flex-1">
-                  <Input
-                    type="time"
-                    name="endTime"
-                    placeholder="End Time"
-                    value={formData.endTime}
-                    onChange={handleChange}
-                  />
-                  <span className="text-red-600 ml-1"> {err?.endTime}</span>
-                </div>
-              </div>
-
-              {/* Group Selector */}
-              <div className="relative">
-                <select
-                  name="groupId"
-                  value={formData.groupId}
-                  onChange={handleChange}
-                  className="w-full py-3 px-4 rounded-md border-gray-700 border   text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 appearance-none"
-                >
-                  <option value="" disabled>
-                    Select Your Group
-                  </option>
-                  {myGroups?.map((group) => (
-                    <option
-                      key={group._id}
-                      value={group._id}
-                      className="text-black"
-                    >
-                      {group.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                  <ChevronDown size={20} className="text-white" />
-                </div>
-                <span className="text-red-600 ml-1"> {err?.groupId}</span>
-              </div>
-
-              {/* Actions */}
-              <div className="pt-6 flex flex-col items-center">
-                {loading ? (
-                  <InPageLoading />
-                ) : (
-                  <button
-                    type="submit"
-                    className="w-full max-w-xs py-3 px-6 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-500 transition duration-150"
-                    style={{ backgroundColor: "#00D2D9" }}
+                <div className="flex items-center justify-between mb-1.5">
+                  <label
+                    htmlFor="startTime"
+                    className="text-sm font-medium text-gray-300"
                   >
-                    {type == "create" ? "Create Session" : "Update Session"}
-                  </button>
+                    Start Time
+                  </label>
+                  {isToday && (
+                    <Button
+                      type="button"
+                      variant="text-like"
+                      onClick={handleStartNow}
+                      className="text-xs hover:cursor-pointer"
+                    >
+                      Start now
+                    </Button>
+                  )}
+                </div>
+                <TimePicker
+                  id="startTime"
+                  value={formData.startTime}
+                  onChange={(startTime) =>
+                    setFormData((prev) => ({ ...prev, startTime }))
+                  }
+                  placeholder="Start time"
+                />
+                {err?.startTime && (
+                  <span className={errorClass}>{err.startTime}</span>
                 )}
+              </div>
 
-                <button
-                  type="button"
-                  onClick={() => onClose()}
-                  className="mt-4 text-cyan-400 hover:text-cyan-300 focus:outline-none"
-                  style={{ color: "#00D2D9" }}
-                >
-                  Cancel
-                </button>
+              {/* End Time */}
+              <div>
+                <label htmlFor="endTime" className={labelClass}>
+                  End Time
+                </label>
+                <TimePicker
+                  id="endTime"
+                  value={formData.endTime}
+                  onChange={(endTime) =>
+                    setFormData((prev) => ({ ...prev, endTime }))
+                  }
+                  placeholder="End time"
+                />
+                {err?.endTime && (
+                  <span className={errorClass}>{err.endTime}</span>
+                )}
               </div>
             </div>
-          </form>
-        </div>
+
+            {duration && (
+              <p className="flex items-center gap-2 text-sm text-gray-400 -mt-1">
+                <Clock size={14} className="text-[#00D2D9]" />
+                Duration: <span className="text-white">{duration}</span>
+              </p>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-700">
+              <Button
+                type="button"
+                variant="text-like"
+                onClick={() => onClose()}
+                className="px-2 hover:cursor-pointer"
+              >
+                Cancel
+              </Button>
+              {loading ? (
+                <InPageLoading />
+              ) : (
+                <Button type="submit" variant="primary" className="px-6">
+                  {type == "create" ? "Create Session" : "Update Session"}
+                </Button>
+              )}
+            </div>
+          </div>
+        </form>
       </BaseModal>
     </>
   );

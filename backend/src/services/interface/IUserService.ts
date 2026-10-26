@@ -1,6 +1,7 @@
 import { Types } from 'mongoose';
 import { IMappedUser, IUser } from '../../types/user.types';
 import { IUserModel } from '../../models/user.model';
+import { ISubjectStudyTime } from '../../types/sessionActivity.types';
 
 export interface IUserService {
   changeProfilePic(
@@ -29,6 +30,7 @@ export interface IUserService {
   isStudentsBlocked(id: unknown): Promise<boolean>;
   deleteProfilePic(userId: unknown): Promise<Boolean>;
   getUserSessionProgress(userId : unknown , filterBy : string) : Promise<{graph : any[]}>
+  getUserTimeBySubject(userId : unknown , filterBy : string) : Promise<ISubjectStudyTime[]>
   getAllPremiumUsers():Promise<IMappedUser[]>
   getUserOverallStats(userId : unknown) : Promise<{totalGroups : number , totalTimeSpend : string , totalSessionsAttended : number}>
   totalUsersCount(): Promise<number>

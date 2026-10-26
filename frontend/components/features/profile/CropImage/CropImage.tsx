@@ -158,7 +158,7 @@ export default function ImageCropModal({
           <h2 className="text-xl font-bold text-white">Crop Image</h2>
           <button
             onClick={handleClose}
-            className="p-1 rounded-full hover:bg-gray-700 transition-colors"
+            className="p-1 rounded-full hover:bg-gray-700 transition-colors hover:cursor-pointer"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -203,14 +203,14 @@ export default function ImageCropModal({
         <div className="flex justify-end mt-6 gap-4">
           <button
             onClick={handleClose}
-            className="px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition-colors"
+            className="px-4 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition-colors hover:cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={!imgSrc || isLoading}
-            className={`px-4 py-2 rounded-md flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-md flex items-center gap-2 hover:cursor-pointer ${
               !imgSrc || isLoading
                 ? "bg-gray-600 cursor-not-allowed"
                 : "bg-[#00D2D9] text-[#1E1E1E] hover:bg-[#00BDC3]"
