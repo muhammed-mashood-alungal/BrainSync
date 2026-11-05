@@ -40,6 +40,15 @@ export class NoteService implements INoteService {
 
     const textContent = cheerio.load(htmlContent)('body').text().trim();
 
+    if (!textContent.length) {
+      return { pdfFileId: '', status: false };
+    }
+
+    const existingNote = await this._noteRepository.findNoteBySessionAndUser(
+      session._id as Types.ObjectId,
+      userId
+    );
+
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
     const bufferStream = new stream.PassThrough();
     const chunks: Buffer[] = [];
@@ -54,11 +63,9 @@ export class NoteService implements INoteService {
     doc.end();
 
     const pdfBuffer = await bufferPromise;
-    const fileName = `${session._id}.pdf`;
+    const fileName = `${session._id}-Note.pdf`;
 
-    await this._noteRepository.deletePdfByName(fileName);
-
-    const pdfFileId = await this._noteRepository.uploadPdfToGridFS(
+    const newPdfFileId = await this._noteRepository.uploadPdfToGridFS(
       pdfBuffer,
       fileName
     );
@@ -66,11 +73,19 @@ export class NoteService implements INoteService {
     await this._noteRepository.createNote(
       session._id as Types.ObjectId,
       userId,
-      pdfFileId,
+      newPdfFileId,
       session.sessionName
     );
 
-    return { pdfFileId: pdfFileId.toString(), status: true };
+
+    if (
+      existingNote?.pdfFileId &&
+      existingNote.pdfFileId.toString() !== newPdfFileId.toString()
+    ) {
+      await this._noteRepository.deletePdfById(existingNote.pdfFileId);
+    }
+
+    return { pdfFileId: newPdfFileId.toString(), status: true };
   }
 
   async getNotePdf(fileId: string): Promise<GridFSBucketReadStream> {
@@ -93,10 +108,10 @@ export class NoteService implements INoteService {
     limit: unknown
   ): Promise<{ notes: INoteModel[]; count: number }> {
     const { notes, count } = await this._noteRepository.myNotes(
-      userId as Types.ObjectId,
+      new mongoose.Types.ObjectId(userId as string),
       query,
-      skip as number,
-      limit as number
+      Number(skip) || 0,
+      Number(limit) || 10
     );
     return { notes, count };
   }

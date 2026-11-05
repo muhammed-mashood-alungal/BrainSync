@@ -9,7 +9,6 @@ import { BaseRepository } from '../base.repositry';
 import { INoteModel, Notes } from '../../models/note.model';
 import { GridFSBucketReadStream } from 'mongodb';
 
-
 export class NoteRepository
   extends BaseRepository<INoteModel>
   implements INoteRepository
@@ -18,6 +17,13 @@ export class NoteRepository
   constructor() {
     super(Notes);
     this.gfs = null;
+  }
+
+  private async getBucket(): Promise<GridFSBucket> {
+    if (!this.gfs) {
+      this.gfs = await mongoDBConfig.getGridFSBucket();
+    }
+    return this.gfs;
   }
 
   async writeNote(
@@ -41,11 +47,9 @@ export class NoteRepository
     buffer: Buffer,
     fileName: string
   ): Promise<Types.ObjectId> {
-    if (!this.gfs) {
-      this.gfs = await mongoDBConfig.getGridFSBucket();
-    }
+    const bucket = await this.getBucket();
 
-    const uploadStream = this.gfs.openUploadStream(fileName, {
+    const uploadStream = bucket.openUploadStream(fileName, {
       contentType: 'application/pdf',
     });
 
@@ -63,11 +67,31 @@ export class NoteRepository
     }
   }
 
-  async getPdfStream(fileId: Types.ObjectId): Promise<GridFSBucketReadStream> {
-    if (!this.gfs) {
-      this.gfs = await mongoDBConfig.getGridFSBucket();
+  async deletePdfById(fileId: Types.ObjectId): Promise<void> {
+    try {
+      const bucket = await this.getBucket();
+      await bucket.delete(fileId);
+    } catch (err: any) {
+      if (err?.message?.includes('FileNotFound') || err?.code === 'ENOENT') {
+        return;
+      }
+      throw err;
     }
-    return this.gfs?.openDownloadStream(fileId);
+  }
+
+  async findNoteBySessionAndUser(
+    sessionId: Types.ObjectId,
+    userId: string
+  ): Promise<INoteModel | null> {
+    return await this.model.findOne({
+      sessionId,
+      userId: new Types.ObjectId(userId),
+    });
+  }
+
+  async getPdfStream(fileId: Types.ObjectId): Promise<GridFSBucketReadStream> {
+    const bucket = await this.getBucket();
+    return bucket.openDownloadStream(fileId);
   }
 
   async createNote(
@@ -76,25 +100,25 @@ export class NoteRepository
     pdfFileId: Types.ObjectId,
     sessionName: string
   ): Promise<void> {
+    const userObjectId = new Types.ObjectId(userId);
     await this.model.updateOne(
-      { sessionId, userId },
-      { $set: { pdfFileId: pdfFileId, noteName: sessionName + '-note' } },
+      { sessionId, userId: userObjectId },
+      {
+        $set: { pdfFileId: pdfFileId },
+        $setOnInsert: { noteName: sessionName + '-note' },
+      },
       { upsert: true }
     );
   }
 
   private async findFilesByName(fileName: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      const files: any[] = [];
-      this.gfs!.find({ filename: fileName })
-        .toArray()
-        .then(docs => resolve(docs))
-        .catch(err => reject(err));
-    });
+    const bucket = await this.getBucket();
+    return bucket.find({ filename: fileName }).toArray();
   }
 
   private async deleteFile(fileId: Types.ObjectId): Promise<void> {
-    return await this.gfs!.delete(fileId);
+    const bucket = await this.getBucket();
+    await bucket.delete(fileId);
   }
 
   async myNotes(
@@ -103,7 +127,7 @@ export class NoteRepository
     skip: number,
     limit: number
   ): Promise<{ notes: INoteModel[]; count: number }> {
-    let find: any = { userId };
+    let find: any = { userId: new Types.ObjectId(userId.toString()) };
     if (query && query.trim().length) {
       find.noteName = { $regex: query, $options: 'i' };
     }

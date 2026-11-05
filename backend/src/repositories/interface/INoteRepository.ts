@@ -1,6 +1,5 @@
-import { Types, Unpacked } from 'mongoose';
+import { Types } from 'mongoose';
 import { GridFSBucketReadStream } from 'mongodb';
-import { INoteTypes } from '../../types/note.types';
 import { INoteModel } from '../../models/note.model';
 
 export interface INoteRepository {
@@ -9,7 +8,7 @@ export interface INoteRepository {
   uploadPdfToGridFS(
     buffer: Buffer,
     fileName: string
-  ): Promise<Types.ObjectId> 
+  ): Promise<Types.ObjectId>;
   getPdfStream(fileId: Types.ObjectId): Promise<GridFSBucketReadStream>;
   createNote(
     sessionId: Types.ObjectId,
@@ -23,5 +22,10 @@ export interface INoteRepository {
     skip: number,
     limit: number
   ): Promise<{ notes: INoteModel[]; count: number }>;
-  deletePdfByName(fileName: string): Promise<void>
+  deletePdfByName(fileName: string): Promise<void>;
+  deletePdfById(fileId: Types.ObjectId): Promise<void>;
+  findNoteBySessionAndUser(
+    sessionId: Types.ObjectId,
+    userId: string
+  ): Promise<INoteModel | null>;
 }

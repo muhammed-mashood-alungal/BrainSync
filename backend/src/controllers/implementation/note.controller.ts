@@ -66,6 +66,7 @@ export class NoteController implements INoteController {
         'Content-Disposition',
         `attachment; filename="note-${fileId}.pdf"`
       );
+      pdfStream.on('error', err => next(err));
       pdfStream.pipe(res);
     } catch (error) {
       next(error);
